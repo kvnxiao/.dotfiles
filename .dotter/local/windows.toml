@@ -1,1 +1,1 @@
-packages = ["pwsh"]
+packages = ["pwsh", "git"]
