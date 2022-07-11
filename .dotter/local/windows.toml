@@ -1,1 +1,1 @@
-packages = ["pwsh", "git", "wezterm"]
+packages = ["pwsh", "git", "wezterm", "scoop"]
