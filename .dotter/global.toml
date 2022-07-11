@@ -10,3 +10,6 @@
 
 [scoop.files]
 "scoop/config.json" = { target = "~/.config/scoop/config.json", type = "template" }
+
+[zsh.files]
+"zsh/.zshrc" = "~/.zshrc"
