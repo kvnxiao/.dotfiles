@@ -3,3 +3,7 @@
 
 [git.files]
 "git/.gitconfig" = "~/.gitconfig"
+
+[wezterm.files]
+"wezterm/wezterm.lua" = "~/.config/wezterm/wezterm.lua"
+"wezterm/catppuccin.lua" = "~/.config/wezterm/catppuccin.lua"
