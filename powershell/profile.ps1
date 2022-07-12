@@ -1,9 +1,13 @@
 # Aliases
 Set-Alias -Name open -Value explorer.exe
-Set-Alias -Name ls -Value lsd.exe
 Set-Alias -Name vim -Value nvim.exe
 
 # Function setup
+function listall {
+    lsd.exe -a @args
+}
+Set-Alias -Name ls -Value listall
+
 function vid2mkv([Parameter(ValueFromPipeline = $true)][string]$file) {
     process {
         if (-not (Test-Path -Path $file -PathType Leaf)) {
