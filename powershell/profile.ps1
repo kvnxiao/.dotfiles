@@ -1,6 +1,7 @@
 # Aliases
 Set-Alias -Name open -Value explorer.exe
 Set-Alias -Name vim -Value nvim.exe
+Set-Alias -Name vi -Value nvim.exe
 
 # Function setup
 function listall {

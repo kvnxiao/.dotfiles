@@ -1,5 +1,6 @@
 [core]
 	autocrlf = false
+	editor = nvim
 [user]
 	email = xlzqwerty1@gmail.com
 	name = Kevin Xiao
