@@ -7,8 +7,19 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   default_prog = {
     "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
   }
+  font = wezterm.font_with_fallback({
+    "FiraCode NF",
+    "FiraCode Nerd Font",
+    "JetBrains Mono",
+  })
+  font_size = 14
 else
-  default_prog = {"zsh"}
+  default_prog = {"/bin/zsh", "-l"}
+  font = wezterm.font_with_fallback({
+    "FiraCode Nerd Font",
+    "JetBrains Mono",
+  })
+  font_size = 16
 end
 
 return {
@@ -20,10 +31,8 @@ return {
   cursor_blink_rate = 600,
   enable_scroll_bar = true,
 
-  font = wezterm.font_with_fallback({
-    "FiraCode NF",
-    "Consolas",
-  }),
+  font = font,
+  font_size = font_size,
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
 

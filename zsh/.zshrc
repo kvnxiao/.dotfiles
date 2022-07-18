@@ -65,15 +65,14 @@ source "$HOME/.fzf.zsh"
 
 eval "$(zoxide init zsh)"
 
-# Keybinds
+# Keybinds (macOS -- wezterm)
 bindkey '^[[A' history-substring-search-up      # UP
 bindkey '^[[B' history-substring-search-down    # DOWN
-bindkey '^[[1;5D' backward-word                 # CTRL+LEFT
-bindkey '^[[1;5C' forward-word                  # CTRL+RIGHT
-bindkey '\b' backward-kill-word                 # CTRL+BACKSPACE for Konsole
-bindkey '^[[3;5~' kill-word                     # CTRL+DELETE
-bindkey '^[[1~' beginning-of-line               # HOME
-bindkey '^[[4~' end-of-line                     # END
+bindkey '^[[1;3D' backward-word                 # CTRL+LEFT
+bindkey '^[[1;3C' forward-word                  # CTRL+RIGHT
+bindkey '^[[3;3~' kill-word                     # CTRL+DELETE
+bindkey '^[[H' beginning-of-line                # HOME
+bindkey '^[[F' end-of-line                      # END
 bindkey '^[[3~' delete-char                     # DELETE
 
 eval "$(fnm env --use-on-cd)"
