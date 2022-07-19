@@ -12,7 +12,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     "FiraCode Nerd Font",
     "JetBrains Mono",
   })
-  font_size = 14
+  font_size = 13
 else
   default_prog = {"/bin/zsh", "-l"}
   font = wezterm.font_with_fallback({
