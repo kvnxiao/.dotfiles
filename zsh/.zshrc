@@ -47,14 +47,26 @@ zgenom autoupdate
 if ! zgenom saved; then
   echo "Creating a zgenom save"
   zgenom load zsh-users/zsh-autosuggestions
-  zgenom load zdharma-continuum/fast-syntax-highlighting
   zgenom load zsh-users/zsh-history-substring-search
   zgenom load zsh-users/zsh-completions
+  zgenom load olets/zsh-abbr
+  zgenom load zdharma-continuum/fast-syntax-highlighting
   # save all to init script
   zgenom save
   # Compile zsh files
   zgenom compile "$HOME/.zshrc"
 fi
+
+# Abbreviations
+abbr --quiet -S gaa="git add ."
+abbr --quiet -S gsm="git checkout master"
+abbr --quiet -S gpu="git push"
+abbr --quiet -S gpuf="git push -f"
+abbr --quiet -S gcm="git commit -m"
+abbr --quiet -S gcam="git commit --amend --no-edit"
+abbr --quiet -S gcmnf="git commit --no-verify -m"
+abbr --quiet -S gsmp="git checkout master && git pull"
+abbr --quiet -S gp="git pull"
 
 # Fuzzy finder
 if [[ ! -f "$HOME/.fzf.zsh" ]]; then
