@@ -59,14 +59,17 @@ fi
 
 # Abbreviations
 abbr --quiet -S gaa="git add ."
-abbr --quiet -S gsm="git checkout master"
+abbr --quiet -S gsm="git switch master"
 abbr --quiet -S gpu="git push"
+abbr --quiet -S gpuo="git push -u origin $(git branch --show-current)"
 abbr --quiet -S gpuf="git push -f"
 abbr --quiet -S gcm="git commit -m"
 abbr --quiet -S gcam="git commit --amend --no-edit"
 abbr --quiet -S gcmnf="git commit --no-verify -m"
-abbr --quiet -S gsmp="git checkout master && git pull"
+abbr --quiet -S gsmp="git switch master && git pull"
 abbr --quiet -S gp="git pull"
+abbr --quiet -S gsn="git switch -c"
+abbr --quiet -S gsw="git switch"
 
 # Fuzzy finder
 if [[ ! -f "$HOME/.fzf.zsh" ]]; then
