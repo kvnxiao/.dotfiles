@@ -59,9 +59,10 @@ fi
 
 # Abbreviations
 abbr --quiet -S gaa="git add ."
+abbr --quiet -S gst="git status"
 abbr --quiet -S gsm="git switch master"
 abbr --quiet -S gpu="git push"
-abbr --quiet -S gpuo="git push -u origin $(git branch --show-current)"
+abbr --quiet -S gpuo="git push -u origin \"\$(git branch --show-current)\""
 abbr --quiet -S gpuf="git push -f"
 abbr --quiet -S gcm="git commit -m"
 abbr --quiet -S gcam="git commit --amend --no-edit"
