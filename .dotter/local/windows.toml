@@ -1,4 +1,3 @@
-packages = ["git", "pwsh", "scoop", "wezterm"]
+includes = [".dotter/windows.toml"]
 
-[variables]
-"ssh_public_key" = "C:\\Users\\kvnxiao\\.ssh\\id_ed25519.pub"
+packages = ["git", "pwsh", "scoop", "wezterm"]
