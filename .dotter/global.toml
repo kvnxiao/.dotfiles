@@ -3,10 +3,11 @@
 
 [git.files]
 "git/.gitconfig" = "~/.gitconfig"
+[git.variables]
+"ssh_public_key" = "~/.ssh/id_ed25519.pub"
 
 [wezterm.files]
 "wezterm/wezterm.lua" = "~/.config/wezterm/wezterm.lua"
-"wezterm/catppuccin.lua" = "~/.config/wezterm/catppuccin.lua"
 
 [scoop.files]
 "scoop/config.json" = { target = "~/.config/scoop/config.json", type = "template" }

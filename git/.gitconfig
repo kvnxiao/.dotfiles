@@ -1,6 +1,23 @@
 [core]
 	autocrlf = false
 	editor = nvim
+	pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false
+[delta]
+    navigate = true
+    light = false
+[merge]
+    conflictstyle = diff3
+[diff]
+    colorMoved = default	
 [user]
 	email = xlzqwerty1@gmail.com
 	name = Kevin Xiao
+	signingkey = {{read_to_str ssh_public_key}}
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true

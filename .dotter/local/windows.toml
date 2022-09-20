@@ -1,1 +1,4 @@
 packages = ["git", "pwsh", "scoop", "wezterm"]
+
+[variables]
+"ssh_public_key" = "C:\\Users\\kvnxiao\\.ssh\\id_ed25519.pub"
