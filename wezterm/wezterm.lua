@@ -112,7 +112,7 @@ return {
         local has_selection = win:get_selection_text_for_pane(pane) ~= ""
         if has_selection then
           win:perform_action(wezterm.action { CopyTo = "ClipboardAndPrimarySelection" }, pane)
-          window:perform_action("ClearSelection", pane)
+          win:perform_action("ClearSelection", pane)
         else
           win:perform_action(wezterm.action { SendKey = { key = "c", mods = "CTRL" } }, pane)
         end
