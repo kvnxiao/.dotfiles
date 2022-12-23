@@ -20,6 +20,10 @@ function vid2mkv([Parameter(ValueFromPipeline = $true)][string]$file) {
     }
 }
 
+function unzipjis {
+    7z.exe x @args -mcp=932
+}
+
 # Setup interactive shell
 fnm env --use-on-cd | Out-String | Invoke-Expression
 
@@ -33,3 +37,5 @@ $env:FZF_DEFAULT_OPTS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 Invoke-Expression (&starship init powershell)
+
+Import-Module 'C:\Users\kvnxiao\github\vcpkg\scripts\posh-vcpkg'
