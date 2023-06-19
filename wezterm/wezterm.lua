@@ -3,6 +3,7 @@ local wezterm = require "wezterm";
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   default_prog = {
     "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
+      -- "C:\\Program Files\\nu\\bin\\nu.exe"
     -- "C:\\msys64\\usr\\bin\\env.exe",
     -- "MSYS=enable_pcon winsymlinks:nativestrict",
     -- "MSYS2_PATH_TYPE=inherit",
