@@ -1,0 +1,40 @@
+# focus window
+ctrl + alt - i : yabai -m window --focus north
+ctrl + alt - j : yabai -m window --focus west
+ctrl + alt - k : yabai -m window --focus south
+ctrl + alt - l : yabai -m window --focus east
+
+# swap window
+ctrl + shift + alt - i : yabai -m window --swap north
+ctrl + shift + alt - j : yabai -m window --swap west
+ctrl + shift + alt - k : yabai -m window --swap south
+ctrl + shift + alt - l : yabai -m window --swap east
+
+# flip tree
+ctrl + alt - u : yabai -m space --mirror y-axis
+ctrl + alt - o : yabai -m space --mirror x-axis
+
+# equalize size of windows
+ctrl + alt - b : yabai -m space --balance
+
+# toggle gap and padding
+ctrl + alt - g : yabai -m space --toggle gap; yabai -m space --toggle padding
+
+# toggle split
+ctrl + alt - x : yabai -m window --toggle split
+
+# increase / decrease gap and padding size with '-' or '+'
+ctrl + alt - 0x1B : yabai -m space --gap rel:-5; yabai -m space --padding rel:-5:-5:-5:-5
+ctrl + alt - 0x18 : yabai -m space --gap rel:5; yabai -m space --padding rel:5:5:5:5
+
+# toggle float
+ctrl + alt + shift - a : yabai -m window --toggle float
+ctrl + alt + shift - z : yabai -m space --layout bsp
+ctrl + alt + shift - x : yabai -m space --layout float
+
+# toggle fullscreen
+ctrl + alt - f : yabai -m window --toggle zoom-fullscreen
+ctrl + alt - e : yabai -m window --toggle native-fullscreen
+
+# restart yabai
+ctrl + alt + cmd - r : yabai --restart-service

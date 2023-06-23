@@ -14,3 +14,9 @@
 
 [zsh.files]
 "zsh/.zshrc" = "~/.zshrc"
+
+[yabai.files]
+"yabai/.yabairc" = "~/.yabairc"
+
+[skhd.files]
+"skhd/.skhdrc" = "~/.skhdrc"

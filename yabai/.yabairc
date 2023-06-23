@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+yabai -m config external_bar                 all:22:0
+yabai -m config top_padding                  15
+yabai -m config bottom_padding               15
+yabai -m config left_padding                 15
+yabai -m config right_padding                15
+yabai -m config window_gap                   15
+yabai -m config layout bsp
+
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^Authy Desktop$" manage=off
+yabai -m rule --add app="^KeePassXC$" manage=off
+yabai -m rule --add app="^Digital Colou?r Meter$" manage=off
+yabai -m rule --add app="^Calendar" manage=off
+yabai -m rule --add app="^Activity Monitor" manage=off
+yabai -m rule --add app="^JetBrains Toolbox$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^QMK Toolbox$" manage=off
+yabai -m rule --add app="^IINA$" manage=off
+yabai -m rule --add app="^Karabiner-EventViewer$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
