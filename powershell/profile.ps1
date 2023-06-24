@@ -24,6 +24,24 @@ function unzipjis {
     7z.exe x @args -mcp=932
 }
 
+# Git abbreviation functions
+Remove-Alias -Name gcm -Force
+Remove-Alias -Name gp -Force
+Remove-Alias -Name gsn -Force
+function gaa { git add . @args }
+function gst { git status @args }
+function gsm { git switch master @args }
+function gpu { git push @args }
+function gpuo { git push -u origin \"\$(git branch --show-current)\" @args }
+function gpuf { git push -f @args }
+function gcm { git commit -m @args }
+function gcam { git commit --amend --no-edit @args }
+function gcmnf { git commit --no-verify -m @args }
+function gsmp { git switch master && git pull @args }
+function gp { git pull @args }
+function gsn { git switch -c @args }
+function gsw { git switch @args }
+
 # Setup interactive shell
 fnm env --use-on-cd | Out-String | Invoke-Expression
 
