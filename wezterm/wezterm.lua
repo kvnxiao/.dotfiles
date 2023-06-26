@@ -16,6 +16,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     "JetBrains Mono",
   })
   font_size = 13
+  window_decorations = "TITLE | RESIZE"
 else
   default_prog = { "/bin/zsh", "-l" }
   font = wezterm.font_with_fallback({
@@ -23,6 +24,7 @@ else
     "JetBrains Mono",
   })
   font_size = 16
+  window_decorations = "RESIZE"
 end
 
 return {
@@ -38,6 +40,7 @@ return {
   font_size = font_size,
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
+  window_decorations = window_decorations,
 
   color_scheme = "Catppuccin Mocha",
   --[[colors = {

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-yabai -m config external_bar                 all:22:0
+yabai -m config external_bar                 all:40:0
 yabai -m config top_padding                  10
 yabai -m config bottom_padding               10
 yabai -m config left_padding                 10
