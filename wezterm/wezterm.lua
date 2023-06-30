@@ -1,34 +1,73 @@
 local wezterm = require "wezterm";
 
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-  default_prog = {
-    "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
+local function get_windows_config()
+  return {
+    default_prog = {
+      "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
       -- "C:\\Program Files\\nu\\bin\\nu.exe"
-    -- "C:\\msys64\\usr\\bin\\env.exe",
-    -- "MSYS=enable_pcon winsymlinks:nativestrict",
-    -- "MSYS2_PATH_TYPE=inherit",
-    -- "MSYSTEM=MSYS",
-    -- "/usr/bin/zsh", "--login",
+      -- "C:\\msys64\\usr\\bin\\env.exe",
+      -- "MSYS=enable_pcon winsymlinks:nativestrict",
+      -- "MSYS2_PATH_TYPE=inherit",
+      -- "MSYSTEM=MSYS",
+      -- "/usr/bin/zsh", "--login",
+    },
+    font = wezterm.font_with_fallback({
+      "FiraCode NF",
+      "FiraCode Nerd Font",
+      "JetBrains Mono",
+    }),
+    font_size = 13,
+    window_decorations = "TITLE | RESIZE",
+    keys = {
+      {
+        key = "c",
+        mods = "CTRL",
+        action = wezterm.action_callback(function(win, pane)
+          local has_selection = win:get_selection_text_for_pane(pane) ~= ""
+          if has_selection then
+            win:perform_action(wezterm.action { CopyTo = "ClipboardAndPrimarySelection" }, pane)
+            win:perform_action("ClearSelection", pane)
+          else
+            win:perform_action(wezterm.action { SendKey = { key = "c", mods = "CTRL" } }, pane)
+          end
+        end)
+      },
+      {
+        key = "t",
+        mods = "CTRL",
+        action = wezterm.action.SpawnTab "CurrentPaneDomain"
+      },
+      {
+        key = "w",
+        mods = "CTRL",
+        action = wezterm.action.CloseCurrentTab { confirm = false },
+      }
+    }
   }
-  font = wezterm.font_with_fallback({
-    "FiraCode NF",
-    "FiraCode Nerd Font",
-    "JetBrains Mono",
-  })
-  font_size = 13
-  window_decorations = "TITLE | RESIZE"
+end
+
+local function get_unix_config()
+  return {
+    default_prog = { "/bin/zsh", "-l" },
+    font = wezterm.font_with_fallback({
+      "FiraCode Nerd Font",
+      "JetBrains Mono",
+    }),
+    font_size = 16,
+    window_decorations = "RESIZE",
+    keys = {}
+  }
+end
+
+local platform_config
+if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  platform_config = get_windows_config()
 else
-  default_prog = { "/bin/zsh", "-l" }
-  font = wezterm.font_with_fallback({
-    "FiraCode Nerd Font",
-    "JetBrains Mono",
-  })
-  font_size = 16
-  window_decorations = "RESIZE"
+  platform_config = get_unix_config()
 end
 
 return {
-  default_prog = default_prog,
+  default_prog = platform_config.default_prog,
   initial_cols = 88,
   initial_rows = 24,
   default_cursor_style = "BlinkingBlock",
@@ -36,11 +75,11 @@ return {
   cursor_blink_rate = 600,
   enable_scroll_bar = true,
 
-  font = font,
-  font_size = font_size,
+  font = platform_config.font,
+  font_size = platform_config.font_size,
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
-  window_decorations = window_decorations,
+  window_decorations = platform_config.window_decorations,
 
   color_scheme = "Catppuccin Mocha",
   --[[colors = {
@@ -108,19 +147,5 @@ return {
     },
   },
 
-  keys = {
-    {
-      key = "c",
-      mods = "CTRL",
-      action = wezterm.action_callback(function(win, pane)
-        local has_selection = win:get_selection_text_for_pane(pane) ~= ""
-        if has_selection then
-          win:perform_action(wezterm.action { CopyTo = "ClipboardAndPrimarySelection" }, pane)
-          win:perform_action("ClearSelection", pane)
-        else
-          win:perform_action(wezterm.action { SendKey = { key = "c", mods = "CTRL" } }, pane)
-        end
-      end)
-    }
-  }
+  keys = platform_config.keys
 }
