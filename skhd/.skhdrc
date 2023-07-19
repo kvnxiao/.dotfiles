@@ -10,18 +10,16 @@ ctrl + shift + alt - j : yabai -m window --swap west
 ctrl + shift + alt - k : yabai -m window --swap south
 ctrl + shift + alt - l : yabai -m window --swap east
 
-# flip tree
-ctrl + alt - u : yabai -m space --mirror y-axis
-ctrl + alt - o : yabai -m space --mirror x-axis
+# flip tree / toggle horizontal or vertical split
+ctrl + alt - h : yabai -m space --mirror y-axis
+ctrl + alt - u : yabai -m space --mirror x-axis
+ctrl + alt - y : yabai -m window --toggle split
 
 # equalize size of windows
 ctrl + alt - b : yabai -m space --balance
 
 # toggle gap and padding
 ctrl + alt - g : yabai -m space --toggle gap; yabai -m space --toggle padding
-
-# toggle split
-ctrl + alt - x : yabai -m window --toggle split
 
 # increase / decrease gap and padding size with '-' or '+'
 ctrl + alt - 0x1B : yabai -m space --gap rel:-5; yabai -m space --padding rel:-5:-5:-5:-5
