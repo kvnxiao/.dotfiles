@@ -16,7 +16,7 @@
 [user]
 	email = xlzqwerty1@gmail.com
 	name = Kevin Xiao
-	signingkey = {{read_to_str ssh_public_key}}
+	signingkey = {{ssh_public_key}}
 [gpg]
 	format = ssh
 [commit]
