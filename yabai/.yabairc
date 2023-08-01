@@ -24,3 +24,5 @@ yabai -m rule --add app="^QMK Toolbox$" manage=off
 yabai -m rule --add app="^IINA$" manage=off
 yabai -m rule --add app="^Karabiner-EventViewer$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^Honkai: Star Rail$" manage=off
+yabai -m rule --add app="^Genshin Impact$" manage=off
