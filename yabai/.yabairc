@@ -26,3 +26,5 @@ yabai -m rule --add app="^Karabiner-EventViewer$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
 yabai -m rule --add app="^Honkai: Star Rail$" manage=off
 yabai -m rule --add app="^Genshin Impact$" manage=off
+yabai -m rule --add app="^Azur Lane$" manage=off
+yabai -m rule --add app="^OneDrive$" manage=off
