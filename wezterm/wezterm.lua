@@ -26,7 +26,6 @@ local function get_windows_config()
       "/usr/bin/zsh", "--login",
     },
     font = wezterm.font_with_fallback({
-      "FiraCode NF",
       "FiraCode Nerd Font",
       "JetBrains Mono",
     }),
