@@ -6,7 +6,7 @@ source "$HOME/.fzf/shell/key-bindings.zsh"
 
 function open {
   # Replace MSYS-style unix path with Windows path
-  explorer.exe "$(sed -r 's/\"//g; s/^\/([a-z])\//\U\1:\//; s/\//\\/g' <<<$1)"
+  explorer.exe "$(cygpath -w $1)"
 }
 
 function winget {
