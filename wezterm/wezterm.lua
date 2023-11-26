@@ -47,6 +47,11 @@ local function get_windows_config()
         end)
       },
       {
+        key = "v",
+        mods = "CTRL",
+        action = wezterm.action { PasteFrom = "Clipboard" }
+      },
+      {
         key = "t",
         mods = "CTRL",
         action = wezterm.action.SpawnTab "CurrentPaneDomain"
