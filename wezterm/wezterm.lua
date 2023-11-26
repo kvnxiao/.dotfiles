@@ -1,15 +1,31 @@
 local wezterm = require "wezterm";
 
+local function scheme_for_appearance(appearance)
+  if appearance:find "Dark" then
+    return "Catppuccin Mocha"
+  else
+    return "Catppuccin Latte"
+  end
+end
+
 local function get_windows_config()
   return {
+    set_environment_variables = {
+      MSYS2_ARG_CONV_EXCL = "*",
+      MSYS = "winsymlinks:nativestrict",
+      CHERE_INVOKING = "1",
+      MSYSTEM = "MINGW64",
+      MSYS2_PATH_TYPE = "inherit",
+      SHELL = "/usr/bin/zsh",
+    },
     default_prog = {
-      "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
-      -- "C:\\Program Files\\nu\\bin\\nu.exe"
-      -- "C:\\msys64\\usr\\bin\\env.exe",
-      -- "MSYS=enable_pcon winsymlinks:nativestrict",
-      -- "MSYS2_PATH_TYPE=inherit",
-      -- "MSYSTEM=MSYS",
-      -- "/usr/bin/zsh", "--login",
+      -- "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
+      "C:\\msys64\\usr\\bin\\env.exe",
+      "MSYS2_ARG_CONV_EXCL=*",
+      "MSYS=enable_pcon winsymlinks:nativestrict",
+      "MSYS2_PATH_TYPE=inherit",
+      "MSYSTEM=MSYS",
+      "/usr/bin/zsh", "--login",
     },
     font = wezterm.font_with_fallback({
       "FiraCode NF",
@@ -17,7 +33,7 @@ local function get_windows_config()
       "JetBrains Mono",
     }),
     font_size = 13,
-    window_decorations = "TITLE | RESIZE",
+    window_decorations = "RESIZE",
     keys = {
       {
         key = "c",
@@ -49,6 +65,7 @@ end
 local function get_unix_config()
   return {
     default_prog = { "/bin/zsh", "-l" },
+    set_environment_variables = {},
     font = wezterm.font_with_fallback({
       "FiraCode Nerd Font",
       "JetBrains Mono",
@@ -68,50 +85,22 @@ end
 
 return {
   default_prog = platform_config.default_prog,
+  set_environment_variables = platform_config.set_environment_variables,
   initial_cols = 88,
   initial_rows = 24,
   default_cursor_style = "BlinkingBlock",
+  animation_fps = 1,
+  cursor_blink_ease_in = "Constant",
+  cursor_blink_ease_out = "Constant",
   use_fancy_tab_bar = false,
-  cursor_blink_rate = 600,
   enable_scroll_bar = true,
-
   font = platform_config.font,
   font_size = platform_config.font_size,
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
   window_decorations = platform_config.window_decorations,
-
-  color_scheme = "Catppuccin Mocha",
-  --[[colors = {
-      -- The default text color
-      foreground = "#D0CEC3",
-      -- The default background color
-      background = "#1F2430",
-
-      -- Overrides the cell background color when the current cell is occupied by the
-      -- cursor and the cursor style is set to Block
-      cursor_bg = "#ECEADD",
-      -- Overrides the text color when the current cell is occupied by the cursor
-      cursor_fg = "#000000",
-      -- Specifies the border color of the cursor when the cursor style is set to Block,
-      -- or the color of the vertical or horizontal bar when the cursor style is set to
-      -- Bar or Underline.
-      cursor_border = "#41B487",
-
-      -- the foreground color of selected text
-      selection_fg = "#000000",
-      -- the background color of selected text
-      selection_bg = "#ECEADD",
-
-      -- The color of the scrollbar "thumb"; the portion that represents the current viewport
-      scrollbar_thumb = "#222222",
-
-      -- The color of the split lines between panes
-      split = "#333842",
-
-      ansi = {"#111418", "#FC1827", "#75A805", "#FECD6D", "#42A4E0", "#9161C0", "#41B487", "#607387"},
-      brights = {"#383C44", "#EA5965", "#ADE46B", "#FFEC88", "#4EC5E0", "#C9AEFF", "#86E2BF", "#FFFFFF"},
-  },--]]
+  window_close_confirmation = "NeverPrompt",
+  color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
 
   mouse_bindings = {
     -- Change the default selection behavior so that it only selects text,

@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-if [[ `uname` == "Darwin" ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
   local_os="macos"
 else
   local_os="linux"

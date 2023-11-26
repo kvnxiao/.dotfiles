@@ -1,3 +1,3 @@
 includes = [".dotter/windows.toml"]
 
-packages = ["git", "pwsh", "scoop", "wezterm"]
+packages = ["git", "pwsh", "scoop", "wezterm", "zsh"]
