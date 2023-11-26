@@ -44,6 +44,7 @@ if ! zgenom saved; then
   zgenom load zsh-users/zsh-autosuggestions
   zgenom load zsh-users/zsh-history-substring-search
   zgenom load zsh-users/zsh-completions
+  zgenom load lincheney/fzf-tab-completion zsh/fzf-zsh-completion.sh
   zgenom load olets/zsh-abbr
   zgenom load zdharma-continuum/fast-syntax-highlighting
   # save all to init script

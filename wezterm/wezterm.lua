@@ -11,7 +11,6 @@ end
 local function get_windows_config()
   return {
     set_environment_variables = {
-      MSYS2_ARG_CONV_EXCL = "*",
       MSYS = "winsymlinks:nativestrict",
       CHERE_INVOKING = "1",
       MSYSTEM = "MINGW64",
@@ -21,7 +20,6 @@ local function get_windows_config()
     default_prog = {
       -- "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
       "C:\\msys64\\usr\\bin\\env.exe",
-      "MSYS2_ARG_CONV_EXCL=*",
       "MSYS=enable_pcon winsymlinks:nativestrict",
       "MSYS2_PATH_TYPE=inherit",
       "MSYSTEM=MSYS",

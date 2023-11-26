@@ -10,8 +10,7 @@ function open {
 }
 
 function winget {
-  # Note that MSYS2_ARG_CONV_EXCL="*" is required to prevent path conversion on "/C"
-  cmd.exe /C winget $@
+  cmd.exe //C winget $@
 }
 
 # Allow passing asterisk as raw string to winget and scoop
