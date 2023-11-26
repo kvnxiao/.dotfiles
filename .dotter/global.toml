@@ -20,3 +20,8 @@
 
 [skhd.files]
 "skhd/.skhdrc" = "~/.skhdrc"
+
+[zsh-config.files]
+"zsh-config/macos.zsh" = "~/.zsh/macos.zsh"
+"zsh-config/windows.zsh" = "~/.zsh/windows.zsh"
+"zsh-config/shared.zsh" = "~/.zsh/shared.zsh"

@@ -1,1 +1,1 @@
-packages = ["git", "wezterm", "skhd", "yabai", "zsh"]
+packages = ["git", "wezterm", "skhd", "yabai", "zsh", "zsh-config"]
