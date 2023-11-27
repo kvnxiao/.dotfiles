@@ -35,7 +35,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # preview directory's content with lsd when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
 # switch group using `,` and `.`
-zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Load zgenom
 if [[ ! -f "$HOME/.zgenom/zgenom.zsh" ]]; then
