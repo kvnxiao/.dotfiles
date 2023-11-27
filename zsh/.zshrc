@@ -18,16 +18,24 @@ zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
 zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
-
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+# set list-colors to enable filename colorizing
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# preview directory's content with lsd when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
+# switch group using `,` and `.`
+zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # Load zgenom
 if [[ ! -f "$HOME/.zgenom/zgenom.zsh" ]]; then
@@ -44,7 +52,7 @@ if ! zgenom saved; then
   zgenom load zsh-users/zsh-autosuggestions
   zgenom load zsh-users/zsh-history-substring-search
   zgenom load zsh-users/zsh-completions
-  zgenom load lincheney/fzf-tab-completion zsh/fzf-zsh-completion.sh
+  zgenom load Aloxaf/fzf-tab
   zgenom load olets/zsh-abbr
   zgenom load zdharma-continuum/fast-syntax-highlighting
   # save all to init script
