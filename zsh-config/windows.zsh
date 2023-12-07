@@ -1,7 +1,6 @@
 ## Windows config
 
 export TEMP="$HOME/AppData/Local/Temp"
-export PATH="$PATH:$HOME/.fvm/stable/bin"
 
 # fzf autocompletions and keybindings setup
 [[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2>/dev/null

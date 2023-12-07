@@ -1,5 +1,9 @@
 ## Shared config is loaded after platform specific configs
 
+# Flutter version management
+export FVM_HOME="$HOME/.fvm"
+export PATH="$PATH:$HOME/.fvm/default/bin"
+
 # Aliases
 alias ls="lsd -a"
 alias vi="nvim"

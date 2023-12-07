@@ -3,10 +3,6 @@
 # Install fzf via homebrew and run the install command for completions & keybindings
 source "$HOME/.fzf.zsh"
 
-# Flutter version management
-export FVM_HOME="$HOME/.fvm"
-export PATH="$PATH:$HOME/.fvm/default/bin"
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/src/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/src/google-cloud-sdk/path.zsh.inc"; fi
 
