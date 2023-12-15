@@ -11,10 +11,6 @@ function open {
   explorer.exe "$(cygpath -w $1)"
 }
 
-function winget {
-  cmd.exe //C winget $@
-}
-
 # Allow passing asterisk as raw string to winget and scoop
 alias winget="noglob winget"
 alias scoop="noglob scoop"
