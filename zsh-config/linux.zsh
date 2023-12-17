@@ -1,5 +1,8 @@
 ## Linux config
 
+# Install fzf manually and run the install command for completions & keybindings
+source "$HOME/.fzf.zsh"
+
 # Keybinds (Linux -- wezterm)
 bindkey '^[[A' history-substring-search-up   # UP
 bindkey '^[[B' history-substring-search-down # DOWN
