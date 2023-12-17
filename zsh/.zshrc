@@ -70,7 +70,7 @@ fi
 if [[ $OSTYPE == msys ]]; then
   # Windows specific configs
   source "$HOME/.zsh/windows.zsh"
-elif [[ $OSTYPE == linux* ]]; then
+elif [[ $OSTYPE == linux-gnu ]]; then
   # Linux specific configs
   source "$HOME/.zsh/linux.zsh"
 elif [[ $OSTYPE == darwin* ]]; then
