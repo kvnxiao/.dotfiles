@@ -15,6 +15,11 @@ function open {
 alias winget="noglob winget"
 alias scoop="noglob scoop"
 
+# Replace MSYS-style unix path with Windows path using forward slashes
+function pwd {
+  cygpath -w "$PWD" | sed 's/\\/\//g'
+}
+
 # Keybinds (Windows -- wezterm)
 bindkey '^[[A' history-substring-search-up   # UP
 bindkey '^[[B' history-substring-search-down # DOWN
