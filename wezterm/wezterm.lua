@@ -11,19 +11,16 @@ end
 local function get_windows_config()
   return {
     set_environment_variables = {
-      MSYS = "winsymlinks:nativestrict",
+      MSYS = "enable_pcon winsymlinks:nativestrict",
       CHERE_INVOKING = "1",
-      MSYSTEM = "MINGW64",
+      MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "inherit",
       SHELL = "/usr/bin/zsh",
     },
     default_prog = {
       -- "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
-      "C:\\msys64\\usr\\bin\\env.exe",
-      "MSYS=enable_pcon winsymlinks:nativestrict",
-      "MSYS2_PATH_TYPE=inherit",
-      "MSYSTEM=MSYS",
-      "/usr/bin/zsh", "--login",
+      "C:\\msys64\\usr\\bin\\zsh.exe",
+      "-i", "--login",
     },
     font = wezterm.font_with_fallback({
       { family = "FiraCode Nerd Font Mono", weight = "Regular", stretch = "Normal", style = "Normal" },
