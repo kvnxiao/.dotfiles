@@ -1,6 +1,8 @@
 ## Windows config
 
+# Set temp directory to Windows temp directory
 export TEMP="$HOME/AppData/Local/Temp"
+export TMP=$TEMP
 
 # fzf autocompletions and keybindings setup
 [[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2>/dev/null
