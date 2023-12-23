@@ -28,6 +28,7 @@ local function get_windows_config()
     }),
     font_size = 13,
     window_decorations = "RESIZE",
+    max_fps = 120,
     keys = {
       {
         key = "c",
@@ -69,6 +70,7 @@ local function get_unix_config()
       "FiraCode Nerd Font",
       "JetBrains Mono",
     }),
+    max_fps = 120,
     font_size = 16,
     window_decorations = "RESIZE",
     keys = {}
