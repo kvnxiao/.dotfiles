@@ -20,6 +20,10 @@ function pwd {
   cygpath -w "$PWD" | sed 's/\\/\//g'
 }
 
+function unzipjis {
+  7z.exe x $1 -mcp=932
+}
+
 # Keybinds (Windows -- wezterm)
 bindkey '^[[A' history-substring-search-up   # UP
 bindkey '^[[B' history-substring-search-down # DOWN
