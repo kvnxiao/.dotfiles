@@ -8,6 +8,7 @@ export PATH="$PATH:$HOME/.fvm/default/bin"
 alias ls="lsd -a"
 alias vi="nvim"
 alias vim="nvim"
+alias vcpkg="$HOME/github/vcpkg/vcpkg"
 
 # Abbreviations
 abbr --quiet -S gaa="git add ."
