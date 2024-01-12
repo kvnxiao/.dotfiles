@@ -1,5 +1,3 @@
 {
-  "7ZIPEXTRACT_USE_EXTERNAL": true,
-  "SCOOP_REPO": "https://github.com/ScoopInstaller/Scoop",
-  "SCOOP_BRANCH": "master"
+  "use_external_7zip": true
 }
