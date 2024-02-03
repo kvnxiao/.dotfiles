@@ -61,10 +61,13 @@ if ! zgenom saved; then
   zgenom compile "$HOME/.zshrc"
 fi
 
-# fzf fuzzy finder
+# fzf fuzzy finder (shell completions and keybindings)
 if [[ ! -d "$HOME/.fzf" ]]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
+  # Only install fzf if the command is not available
+  if [[ ! -x "$(command -v fzf)" ]]; then
+    ~/.fzf/install
+  fi
 fi
 
 if [[ $OSTYPE == msys ]]; then
