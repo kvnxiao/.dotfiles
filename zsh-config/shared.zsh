@@ -9,6 +9,7 @@ alias ls="lsd -a"
 alias vi="nvim"
 alias vim="nvim"
 alias vcpkg="$HOME/github/vcpkg/vcpkg"
+alias cd="z"
 
 # Abbreviations
 abbr --quiet -S gaa="git add ."
