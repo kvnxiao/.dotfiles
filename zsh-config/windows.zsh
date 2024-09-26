@@ -30,6 +30,22 @@ function av1-search {
   ab-av1 crf-search --encoder av1_nvenc --preset p7 --pix-format yuv420p10le -i $1
 }
 
+function mpv {
+  mpv.exe $@
+}
+
+# Upscale image 2x using CuNNY denoise preset
+function mpv-upscale {
+  local size_str=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 $1)
+  local wh=(${(@s:,:)size_str//[!0-9,]/})
+  local w=${wh[@]:0:1}
+  local h=${wh[@]:1:1}
+  local w2=$(($w * 2))
+  local h2=$(($h * 2))
+  mkdir -p upscaled
+  mpv --vo=gpu-next --gpu-api=vulkan --vf=gpu="w=${w2}:h=${h2}" $1 --glsl-shaders="~~/shaders/CuNNy-8x32-DS-Q.glsl" --image-display-duration=0 --no-hidpi-window-scale --screenshot-format=webp --sigmoid-upscaling --deband=no --dither-depth=no --screenshot-high-bit-depth=no --osc=no -o="upscaled/${1:t:r}.webp"
+}
+
 # Encode video to AV1 using NVENC
 function av1-encode {
   zmodload zsh/zutil
