@@ -46,6 +46,10 @@ function mpv-upscale {
   mpv --vo=gpu-next --gpu-api=vulkan --vf=gpu="w=${w2}:h=${h2}" $1 --glsl-shaders="~~/shaders/CuNNy-8x32-DS-Q.glsl" --image-display-duration=0 --no-hidpi-window-scale --screenshot-format=webp --sigmoid-upscaling --deband=no --dither-depth=no --screenshot-high-bit-depth=no --osc=no -o="upscaled/${1:t:r}.webp"
 }
 
+function cbz {
+  7z a -tzip ${1}.cbz *.webp -i\!details.json
+}
+
 # Encode video to AV1 using NVENC
 function av1-encode {
   zmodload zsh/zutil
