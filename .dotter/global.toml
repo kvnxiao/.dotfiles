@@ -26,3 +26,6 @@
 "zsh-config/linux.zsh" = "~/.zsh/linux.zsh"
 "zsh-config/windows.zsh" = "~/.zsh/windows.zsh"
 "zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
+
+[aerospace.files]
+"aerospace/.aerospace.toml" = "~/.aerospace.toml"
