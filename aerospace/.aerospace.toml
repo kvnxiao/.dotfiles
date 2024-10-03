@@ -12,7 +12,12 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+after-startup-command = ['exec-and-forget sketchybar', ]
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
 
 # Start AeroSpace at login
 start-at-login = false
@@ -44,6 +49,45 @@ key-mapping.preset = 'qwerty'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm' # WezTerm
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'org.yanex.marta' # Marta file manager
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap' # Slack
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 1']
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser' # Arc
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 2']
+
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 3']
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord' # Discord
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 8']
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client' # Spotify
+if.during-aerospace-startup = true
+run = ['move-node-to-workspace 9']
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout tiling'
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
@@ -56,7 +100,7 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 0
 outer.bottom = 0
-outer.top = 40
+outer.top = 0
 outer.right = 0
 
 # 'main' binding mode declaration
@@ -89,48 +133,49 @@ outer.right = 0
 # '''
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt-slash = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
+alt-shift-h = 'layout tiles horizontal'
+alt-shift-u = 'layout tiles vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-cmd-alt-j = 'focus left'
-cmd-alt-k = 'focus down'
-cmd-alt-i = 'focus up'
-cmd-alt-l = 'focus right'
+alt-j = 'focus left'
+alt-k = 'focus down'
+alt-i = 'focus up'
+alt-l = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-cmd-alt-shift-h = 'move left'
-cmd-alt-shift-j = 'move down'
-cmd-alt-shift-k = 'move up'
-cmd-alt-shift-l = 'move right'
+alt-shift-j = 'move left'
+alt-shift-k = 'move down'
+alt-shift-i = 'move up'
+alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-cmd-alt-minus = 'resize smart -50'
-cmd-alt-equal = 'resize smart +50'
+alt-shift-minus = 'resize smart -50'
+alt-shift-equal = 'resize smart +50'
+alt-shift-b = 'balance-sizes'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-cmd-alt-1 = 'workspace 1'
-cmd-alt-2 = 'workspace 2'
-cmd-alt-3 = 'workspace 3'
-cmd-alt-4 = 'workspace 4'
-cmd-alt-5 = 'workspace 5'
-cmd-alt-6 = 'workspace 6'
-cmd-alt-7 = 'workspace 7'
-cmd-alt-8 = 'workspace 8'
-cmd-alt-9 = 'workspace 9'
-cmd-alt-0 = 'workspace 10'
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-ctrl-alt-1 = 'move-node-to-workspace 1'
-ctrl-alt-2 = 'move-node-to-workspace 2'
-ctrl-alt-3 = 'move-node-to-workspace 3'
-ctrl-alt-4 = 'move-node-to-workspace 4'
-ctrl-alt-5 = 'move-node-to-workspace 5'
-ctrl-alt-6 = 'move-node-to-workspace 6'
-ctrl-alt-7 = 'move-node-to-workspace 7'
-ctrl-alt-8 = 'move-node-to-workspace 8'
-ctrl-alt-9 = 'move-node-to-workspace 9'
-ctrl-alt-0 = 'move-node-to-workspace 10'
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 cmd-alt-shift-semicolon = 'mode service'
