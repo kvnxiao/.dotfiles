@@ -85,6 +85,18 @@ if.during-aerospace-startup = true
 run = ['move-node-to-workspace 9']
 
 [[on-window-detected]]
+if.app-id = 'com.YoStarEN.AzurLane' # Azur Lane
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.HoYoverse.hkrpgoversea' # Honkai Star Rail
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.miHoYo.GenshinImpact' # Genshin Impact
+run = 'layout floating'
+
+[[on-window-detected]]
 check-further-callbacks = true
 run = 'layout tiling'
 
@@ -100,7 +112,7 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 0
 outer.bottom = 0
-outer.top = 0
+outer.top = [{ monitor."PG27AQDP" = 40 }, 0]
 outer.right = 0
 
 # 'main' binding mode declaration
