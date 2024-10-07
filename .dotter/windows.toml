@@ -3,3 +3,8 @@
 
 [mpv.files]
 "mpv/config" = { target = "~/AppData/Roaming/mpv", type = "symbolic" }
+
+[komorebi.files]
+"komorebi/komorebi.json" = "~/komorebi.json"
+"komorebi/komorebi.bar.json" = "~/komorebi.bar.json"
+"komorebi/whkdrc" = "~/.config/whkdrc"
