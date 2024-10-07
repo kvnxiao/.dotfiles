@@ -1,2 +1,5 @@
 [git.variables]
 "ssh_public_key" = 'C:\\Users\\kvnxiao\\.ssh\\id_ed25519.pub'
+
+[mpv.files]
+"mpv/config" = { target = "~/AppData/Roaming/mpv", type = "symbolic" }
