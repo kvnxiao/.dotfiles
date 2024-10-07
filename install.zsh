@@ -1,5 +1,10 @@
 #!/bin/zsh
 
+if [[ "$OSTYPE" == "msys"* ]]; then
+  echo "Detected Windows OS under msys. Please use the install.ps1 PowerShell script instead."
+  exit 1
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   local_os="macos"
 else
