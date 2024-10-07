@@ -86,15 +86,23 @@ run = ['move-node-to-workspace 9']
 
 [[on-window-detected]]
 if.app-id = 'com.YoStarEN.AzurLane' # Azur Lane
-run = 'layout floating'
+run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
 if.app-id = 'com.HoYoverse.hkrpgoversea' # Honkai Star Rail
-run = 'layout floating'
+run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
 if.app-id = 'com.miHoYo.GenshinImpact' # Genshin Impact
-run = 'layout floating'
+run = ['layout floating', 'move-node-to-workspace 8']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences' # System Preferences
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.toolbox' # JetBrains Toolbox
+run = ['layout floating']
 
 [[on-window-detected]]
 check-further-callbacks = true
