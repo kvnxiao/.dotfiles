@@ -12,11 +12,13 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = ['exec-and-forget sketchybar', ]
+after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
-exec-on-workspace-change = ['/bin/bash', '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
 # Start AeroSpace at login
@@ -52,48 +54,48 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm' # WezTerm
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 1']
+run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
-if.app-id = 'org.yanex.marta' # Marta file manager
+if.app-id = 'org.yanex.marta'      # Marta file manager
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 1']
+run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap' # Slack
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 1']
+run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
 if.app-id = 'company.thebrowser.Browser' # Arc
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 2']
+run = ['layout tiling', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 3']
+run = ['layout tiling', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
-if.app-id = 'com.hnc.Discord' # Discord
+if.app-id = 'com.hnc.Discord'      # Discord
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 8']
+run = ['layout tiling', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client' # Spotify
+if.app-id = 'com.spotify.client'   # Spotify
 if.during-aerospace-startup = true
-run = ['move-node-to-workspace 9']
+run = ['layout tiling', 'move-node-to-workspace 9']
 
 [[on-window-detected]]
-if.app-id = 'com.YoStarEN.AzurLane' # Azur Lane
+if.app-id = 'com.YoStarEN.AzurLane'                   # Azur Lane
 run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
-if.app-id = 'com.HoYoverse.hkrpgoversea' # Honkai Star Rail
+if.app-id = 'com.HoYoverse.hkrpgoversea'              # Honkai Star Rail
 run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
-if.app-id = 'com.miHoYo.GenshinImpact' # Genshin Impact
+if.app-id = 'com.miHoYo.GenshinImpact'                # Genshin Impact
 run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
@@ -167,6 +169,7 @@ alt-shift-j = 'move left'
 alt-shift-k = 'move down'
 alt-shift-i = 'move up'
 alt-shift-l = 'move right'
+alt-shift-f = 'fullscreen'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
@@ -198,7 +201,7 @@ alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-0 = 'move-node-to-workspace 10'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-cmd-alt-shift-semicolon = 'mode service'
+alt-shift-semicolon = 'mode service'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
