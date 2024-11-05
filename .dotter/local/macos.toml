@@ -1,1 +1,1 @@
-packages = ["aerospace", "git", "wezterm", "zsh", "zsh-config"]
+packages = ["aerospace", "git", "wezterm", "zsh", "zsh-config", "mpv"]

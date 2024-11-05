@@ -29,3 +29,6 @@
 
 [aerospace.files]
 "aerospace/.aerospace.toml" = "~/.aerospace.toml"
+
+[mpv.files]
+"mpv/config" = { target = "~/.config/mpv", type = "symbolic" }
