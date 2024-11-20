@@ -14,14 +14,6 @@ if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then sou
 [[ -f ~/.dart-cli-completion/zsh-config.zsh ]] && . ~/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
-# pnpm
-export PNPM_HOME="~/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 export PATH="~/.shorebird/bin:$PATH"
 
 # Keybinds (macOS -- wezterm)
