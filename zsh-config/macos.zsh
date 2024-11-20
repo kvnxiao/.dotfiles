@@ -11,10 +11,18 @@ if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then sou
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/kvnxiao/.dart-cli-completion/zsh-config.zsh ]] && . /Users/kvnxiao/.dart-cli-completion/zsh-config.zsh || true
+[[ -f ~/.dart-cli-completion/zsh-config.zsh ]] && . ~/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
-export PATH="/Users/kvnxiao/.shorebird/bin:$PATH"
+# pnpm
+export PNPM_HOME="~/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+export PATH="~/.shorebird/bin:$PATH"
 
 # Keybinds (macOS -- wezterm)
 bindkey '^[[A' history-substring-search-up   # UP
