@@ -33,7 +33,8 @@ local user_opts = {
     -- OSC behaviour and scaling
     hidetimeout = 1500,                    -- time (in ms) before OSC hides if no mouse movement
     seek_resets_hidetimeout = true,        -- if seeking should reset the hidetimeout
-    fadeduration = 250,                    -- fade-out duration (in ms), set to 0 for no fade
+    fadeduration = 200,                    -- fade-out duration (in ms), set to 0 for no fade
+    fadein = false,                        -- whether to enable fade-in effect
     minmousemove = 0,                      -- minimum mouse movement (in pixels) required to show OSC
     bottomhover = true,                    -- show OSC only when hovering at the bottom
     bottomhover_zone = 130,                -- height of hover zone for bottomhover (in pixels)
@@ -2864,9 +2865,15 @@ local function show_osc()
     --remember last time of invocation (mouse move)
     state.showtime = mp.get_time()
 
-    osc_visible(true)
-
-    if user_opts.fadeduration > 0 then
+    if user_opts.fadeduration <= 0 then
+        osc_visible(true)
+    elseif user_opts.fadein then
+        if not state.osc_visible then
+            state.anitype = "in"
+            request_tick()
+        end
+    else
+        osc_visible(true)
         state.anitype = nil
     end
 end
@@ -3349,10 +3356,16 @@ mp.observe_property("seeking", "native", function(_, seeking)
     if user_opts.seek_resets_hidetimeout then
         reset_timeout()
     end
-    if seeking and user_opts.osc_on_seek and not state.new_file_flag then
-        show_osc()
-    elseif state.new_file_flag then
+
+    if state.new_file_flag then
         state.new_file_flag = false
+        return
+    end
+
+    if seeking and user_opts.osc_on_seek then
+        mp.register_event("seek", show_osc) -- show OSC while seeking
+    else
+        mp.unregister_event(show_osc) -- remove event when seeking stops
     end
 end)
 mp.observe_property("fullscreen", "bool", function(_, val)
