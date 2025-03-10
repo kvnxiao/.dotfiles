@@ -99,6 +99,10 @@ if.app-id = 'com.miHoYo.GenshinImpact'                # Genshin Impact
 run = ['layout floating', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
+if.app-id = 'com.Sunborn.SnqxExilium.Glo'             # GFL2 EXILIUM
+run = ['layout floating', 'move-node-to-workspace 8']
+
+[[on-window-detected]]
 if.app-id = 'com.apple.systempreferences' # System Preferences
 run = ['layout floating']
 
@@ -122,7 +126,7 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 0
 outer.bottom = 0
-outer.top = [{ monitor."PG27AQDP" = 40 }, 0]
+outer.top = [{ monitor."PG27AQDP" = 40 }, { monitor."C34J79x" = 40}, 0]
 outer.right = 0
 
 # 'main' binding mode declaration
