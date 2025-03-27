@@ -23,4 +23,7 @@
 	gpgsign = true
 [pull]
 	ff = only
+[alias]
+	l = log --graph --pretty=\"%C(yellow)%h %C(cyan)%ai       %C(green)%s%n%C(blue)%an (%ae)  %C(magenta)%D%n\"
+	la = log --graph --pretty=\"%C(yellow)%h %C(cyan)%ai       %C(green)%s%n%C(blue)%an (%ae)  %C(magenta)%D%n\" --all
 

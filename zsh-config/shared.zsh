@@ -27,6 +27,8 @@ abbr --quiet -S gsn="git switch -c"
 abbr --quiet -S gsw="git switch"
 abbr --quiet -S gop="gh browse --branch \"\$(git branch --show-current)\""
 abbr --quiet -S gopm="gh browse"
+abbr --quiet -S gl="git l"
+abbr --quiet -S gla="git la"
 
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
