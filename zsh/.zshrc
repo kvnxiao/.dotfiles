@@ -83,5 +83,3 @@ fi
 
 # Shared configs
 source "$HOME/.zsh/shared.zsh"
-
-source /Users/kvnxiao/.config/broot/launcher/bash/br
