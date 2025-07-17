@@ -70,7 +70,7 @@ if [[ ! -d "$HOME/.fzf" ]]; then
   fi
 fi
 
-if [[ $OSTYPE == msys ]]; then
+if [[ $OSTYPE == msys ]] || [[ $OSTYPE == cygwin ]]; then
   # Windows specific configs
   source "$HOME/.zsh/windows.zsh"
 elif [[ $OSTYPE == linux-gnu ]]; then
