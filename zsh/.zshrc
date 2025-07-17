@@ -83,3 +83,11 @@ fi
 
 # Shared configs
 source "$HOME/.zsh/shared.zsh"
+
+# pnpm
+export PNPM_HOME="/Users/kvnxiao/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

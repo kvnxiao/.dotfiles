@@ -32,3 +32,6 @@
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic" }
+
+[act.files]
+"act/.actrc" = "~/.actrc"
