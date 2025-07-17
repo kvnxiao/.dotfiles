@@ -1,5 +1,12 @@
 ## Shared config is loaded after platform specific configs
 
+# pnpm
+export PNPM_HOME="~/.pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
 # Flutter version management
 export FVM_CACHE_PATH="$HOME/.fvm"
 export PATH="$PATH:$HOME/.fvm/default/bin"
