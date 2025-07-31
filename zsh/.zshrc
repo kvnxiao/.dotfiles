@@ -70,6 +70,9 @@ if [[ ! -d "$HOME/.fzf" ]]; then
   fi
 fi
 
+# Shared configs
+source "$HOME/.zsh/shared.zsh"
+
 if [[ $OSTYPE == msys ]] || [[ $OSTYPE == cygwin ]]; then
   # Windows specific configs
   source "$HOME/.zsh/windows.zsh"
@@ -81,5 +84,6 @@ elif [[ $OSTYPE == darwin* ]]; then
   source "$HOME/.zsh/macos.zsh"
 fi
 
-# Shared configs
-source "$HOME/.zsh/shared.zsh"
+eval "$(zoxide init zsh)"
+eval "$(fnm env --use-on-cd)"
+eval "$(starship init zsh)"

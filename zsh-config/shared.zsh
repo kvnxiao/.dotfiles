@@ -61,7 +61,3 @@ function br {
         return "$code"
     fi
 }
-
-eval "$(zoxide init zsh)"
-eval "$(fnm env --use-on-cd)"
-eval "$(starship init zsh)"
