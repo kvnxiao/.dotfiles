@@ -36,11 +36,13 @@ function gpuo { git push -u origin "$(git branch --show-current)" @args }
 function gpuf { git push -f @args }
 function gcm { git commit -m @args }
 function gcam { git commit --amend --no-edit @args }
-function gcmnf { git commit --no-verify -m @args }
+function gcnv { git commit --no-verify -m @args }
 function gsmp { git switch main && git pull @args }
-function gp { git pull @args }
+function gpl { git pull @args }
 function gsn { git switch -c @args }
 function gsw { git switch @args }
+function gl { git l }
+function gla { git la }
 
 # Setup interactive shell
 fnm env --use-on-cd | Out-String | Invoke-Expression
