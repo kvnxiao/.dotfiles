@@ -37,12 +37,12 @@ function gpuf { git push -f @args }
 function gcm { git commit -m @args }
 function gcam { git commit --amend --no-edit @args }
 function gcnv { git commit --no-verify -m @args }
-function gsmp { git switch main && git pull @args }
+function gsmp { git switch main && git fetch --all && git pull }
 function gpl { git pull @args }
 function gsn { git switch -c @args }
 function gsw { git switch @args }
-function gl { git l }
-function gla { git la }
+function gl { git l @args }
+function gla { git la @args }
 
 # Setup interactive shell
 fnm env --use-on-cd | Out-String | Invoke-Expression

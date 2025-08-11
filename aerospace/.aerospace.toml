@@ -126,7 +126,7 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 0
 outer.bottom = 0
-outer.top = [{ monitor."PG27AQDP" = 40 }, { monitor."C34J79x" = 40}, { monitor."S34C65xT" = 40}, 0]
+outer.top = [{ monitor."PG27AQDP" = 40 }, { monitor."C34J79x" = 40}, { monitor."S34C65xT" = 40}, { monitor."XG2703-GS" = 40}, 0]
 outer.right = 0
 
 # 'main' binding mode declaration
