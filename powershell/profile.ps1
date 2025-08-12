@@ -35,7 +35,8 @@ function gpu { git push @args }
 function gpuo { git push -u origin "$(git branch --show-current)" @args }
 function gpuf { git push -f @args }
 function gcm { git commit -m @args }
-function gcam { git commit --amend --no-edit @args }
+function gcam { git commit --amend @args }
+function gcan { git commit --amend --no-edit @args }
 function gcnv { git commit --no-verify -m @args }
 function gsmp { git switch main && git fetch --all && git pull }
 function gpl { git pull @args }
