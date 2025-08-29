@@ -110,6 +110,19 @@ run = ['layout floating']
 if.app-id = 'com.jetbrains.toolbox' # JetBrains Toolbox
 run = ['layout floating']
 
+### Force floating window for certain browser windows and apps
+
+# Google Meet sharing indicator
+[[on-window-detected]]
+if.window-title-regex-substring = 'sharing indicator'
+run = ['layout floating']
+
+# Slack huddle floating indicator
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+if.window-title-regex-substring = '^slack$'
+run = ['layout floating']
+
 [[on-window-detected]]
 check-further-callbacks = true
 run = 'layout tiling'
