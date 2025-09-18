@@ -28,7 +28,8 @@
 "zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
 
 [aerospace.files]
-"aerospace/.aerospace.toml" = "~/.aerospace.toml"
+"aerospace/.aerospace.toml" = "~/.config/aerospace/aerospace.toml"
+"aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic" }

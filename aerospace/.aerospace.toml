@@ -12,7 +12,7 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = ['exec-and-forget sketchybar']
+after-startup-command = []
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
@@ -50,6 +50,11 @@ key-mapping.preset = 'qwerty'
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+[[on-window-detected]]
+if.app-id = 'com.glzr.zebar' # Zebar status bar
+if.during-aerospace-startup = true
+run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm' # WezTerm

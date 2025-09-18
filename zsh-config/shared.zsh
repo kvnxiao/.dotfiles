@@ -10,6 +10,7 @@ esac
 # Flutter version management
 export FVM_CACHE_PATH="$HOME/.fvm"
 export PATH="$PATH:$HOME/.fvm/default/bin"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Aliases
 alias ls="lsd -a"
