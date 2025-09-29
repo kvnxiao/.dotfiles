@@ -178,7 +178,8 @@ outer.right = 0
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
 alt-shift-h = 'layout tiles horizontal'
-alt-shift-u = 'layout tiles vertical'
+alt-shift-v = 'layout tiles vertical'
+alt-shift-a = 'layout accordion'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-j = 'focus left'
@@ -192,6 +193,7 @@ alt-shift-k = 'move down'
 alt-shift-i = 'move up'
 alt-shift-l = 'move right'
 alt-shift-f = 'fullscreen'
+ctrl-alt-shift-f = 'macos-native-fullscreen'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
