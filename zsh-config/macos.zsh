@@ -1,7 +1,7 @@
 ## MacOS config
 
 # Install fzf via homebrew and run the install command for completions & keybindings
-source "$HOME/.fzf.zsh"
+source <(fzf --zsh)
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"; fi
