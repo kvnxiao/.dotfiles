@@ -77,6 +77,21 @@ if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
+if.app-id = 'com.figma.Desktop' # Figma
+if.during-aerospace-startup = true
+run = ['layout tiling', 'move-node-to-workspace 4']
+
+[[on-window-detected]]
+if.app-id = 'com.linear' # Linear Desktop
+if.during-aerospace-startup = true
+run = ['layout tiling', 'move-node-to-workspace 5']
+
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen' # Zen browser
+if.during-aerospace-startup = true
+run = ['layout tiling', 'move-node-to-workspace 2']
+
+[[on-window-detected]]
 if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 3']
