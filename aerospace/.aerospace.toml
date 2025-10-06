@@ -52,57 +52,57 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
-if.app-id = 'com.glzr.zebar' # Zebar status bar
+if.app-id = 'com.glzr.zebar'       # Zebar status bar
 if.during-aerospace-startup = true
 run = ['layout floating']
 
 [[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm' # WezTerm
+if.app-id = 'com.github.wez.wezterm'                # WezTerm
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
-if.app-id = 'org.yanex.marta'      # Marta file manager
+if.app-id = 'org.yanex.marta'                       # Marta file manager
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap' # Slack
+if.app-id = 'com.tinyspeck.slackmacgap'             # Slack
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser' # Arc
+if.app-id = 'company.thebrowser.Browser'            # Arc
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
-if.app-id = 'com.figma.Desktop' # Figma
+if.app-id = 'com.figma.Desktop'                     # Figma
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 4']
 
 [[on-window-detected]]
-if.app-id = 'com.linear' # Linear Desktop
+if.app-id = 'com.linear'                            # Linear Desktop
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 5']
 
 [[on-window-detected]]
-if.app-id = 'app.zen-browser.zen' # Zen browser
+if.app-id = 'app.zen-browser.zen'                   # Zen browser
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 2']
 
 [[on-window-detected]]
-if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
+if.app-id = 'com.todesktop.230313mzl4w4u92'         # Cursor
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
-if.app-id = 'com.hnc.Discord'      # Discord
+if.app-id = 'com.hnc.Discord'                       # Discord
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 8']
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client'   # Spotify
+if.app-id = 'com.spotify.client'                    # Spotify
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 9']
 
@@ -133,7 +133,7 @@ run = ['layout floating']
 ### Force floating window for certain browser windows and apps
 
 [[on-window-detected]]
-if.app-id = 'app.zen-browser.zen' # Zen browser PiP mode
+if.app-id = 'app.zen-browser.zen'                      # Zen browser PiP mode
 if.window-title-regex-substring = 'Picture-in-Picture'
 run = ['layout floating']
 
@@ -164,7 +164,13 @@ inner.horizontal = 10
 inner.vertical = 10
 outer.left = 0
 outer.bottom = 0
-outer.top = [{ monitor."PG27AQDP" = 40 }, { monitor."C34J79x" = 40}, { monitor."S34C65xT" = 40}, { monitor."XG2703-GS" = 40}, 0]
+outer.top = [
+  { monitor."PG27AQDP" = 40 },
+  { monitor."C34J79x" = 40 },
+  { monitor."S34C65xT" = 40 },
+  { monitor."XG2703-GS" = 40 },
+  0,
+]
 outer.right = 0
 
 # 'main' binding mode declaration
