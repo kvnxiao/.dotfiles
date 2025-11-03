@@ -12,6 +12,10 @@ export FVM_CACHE_PATH="$HOME/.fvm"
 export PATH="$PATH:$HOME/.fvm/default/bin"
 export XDG_CONFIG_HOME="$HOME/.config"
 
+## FVM completions
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f ~/.config/.dart-cli-completion/zsh-config.zsh ]] && . ~/.config/.dart-cli-completion/zsh-config.zsh || true
+
 # Aliases
 alias ls="lsd -a"
 alias vi="nvim"
