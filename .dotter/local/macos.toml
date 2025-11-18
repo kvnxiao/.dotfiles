@@ -1,1 +1,12 @@
-packages = ["aerospace", "git", "wezterm", "zsh", "zsh-config", "mpv", "act"]
+includes = [".dotter/macos.toml"]
+
+packages = [
+  "aerospace",
+  "git",
+  "wezterm",
+  "zsh",
+  "zsh-config",
+  "mpv",
+  "act",
+  "karabiner",
+]

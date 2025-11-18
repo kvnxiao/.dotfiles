@@ -15,21 +15,11 @@
 [zsh.files]
 "zsh/.zshrc" = "~/.zshrc"
 
-[yabai.files]
-"yabai/.yabairc" = "~/.yabairc"
-
-[skhd.files]
-"skhd/.skhdrc" = "~/.skhdrc"
-
 [zsh-config.files]
 "zsh-config/macos.zsh" = "~/.zsh/macos.zsh"
 "zsh-config/linux.zsh" = "~/.zsh/linux.zsh"
 "zsh-config/windows.zsh" = "~/.zsh/windows.zsh"
 "zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
-
-[aerospace.files]
-"aerospace/.aerospace.toml" = "~/.config/aerospace/aerospace.toml"
-"aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic" }

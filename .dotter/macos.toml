@@ -1,0 +1,12 @@
+[yabai.files]
+"yabai/.yabairc" = "~/.yabairc"
+
+[skhd.files]
+"skhd/.skhdrc" = "~/.skhdrc"
+
+[aerospace.files]
+"aerospace/.aerospace.toml" = "~/.config/aerospace/aerospace.toml"
+"aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
+
+[karabiner.files]
+"karabiner/karabiner.json" = "~/.config/karabiner/karabiner.json"
