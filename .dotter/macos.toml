@@ -9,4 +9,4 @@
 "aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
 
 [karabiner.files]
-"karabiner/karabiner.json" = "~/.config/karabiner/karabiner.json"
+"karabiner/karabiner.json" = { target = "~/.config/karabiner/karabiner.json", type = "symbolic" }
