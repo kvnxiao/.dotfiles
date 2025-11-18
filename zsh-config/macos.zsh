@@ -23,7 +23,5 @@ bindkey '^[[1;3D' backward-word              # CTRL+LEFT
 bindkey '^[[1;3C' forward-word               # CTRL+RIGHT
 bindkey '^[[3;3~' kill-word                  # CTRL+DELETE
 bindkey '^[[H' beginning-of-line             # HOME
-bindkey '^[[D' beginning-of-line             # HOME with custom key mapping
 bindkey '^[[F' end-of-line                   # END
-bindkey '^[[C' end-of-line                   # END with custom key mapping
 bindkey '^[[3~' delete-char                  # DELETE
