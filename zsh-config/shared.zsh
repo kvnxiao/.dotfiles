@@ -7,6 +7,14 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# ~/.local/bin
+if [[ -d "$HOME/.local/bin" ]]; then
+  case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) export PATH="$HOME/.local/bin:$PATH" ;;
+  esac
+fi
+
 # Flutter version management
 export FVM_CACHE_PATH="$HOME/.fvm"
 export PATH="$PATH:$HOME/.fvm/default/bin"
