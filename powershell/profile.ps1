@@ -1,3 +1,9 @@
+# Load abbreviations module
+. "$HOME\.config\powershell\PSAbbreviations.ps1"
+
+# Load custom commands
+. "$HOME\.config\powershell\commands.ps1"
+
 # Aliases
 Set-Alias -Name open -Value explorer.exe
 Set-Alias -Name vim -Value nvim.exe
@@ -9,41 +15,31 @@ function listall {
 }
 Set-Alias -Name ls -Value listall
 
-function vid2mkv([Parameter(ValueFromPipeline = $true)][string]$file) {
-    process {
-        if (-not (Test-Path -Path $file -PathType Leaf)) {
-            Write-Output "Please provide a valid video file"
-            return
-        }
-        $output = [System.IO.Path]::ChangeExtension($file, ".mkv")
-        ffmpeg.exe -i $file -vcodec copy -acodec copy $output
-    }
-}
-
-function unzipjis {
-    7z.exe x @args -mcp=932
-}
-
-# Git abbreviation functions
+# Force remove some functions that clash with abbreviations below
 Remove-Alias -Name gcm -Force
 Remove-Alias -Name gp -Force
 Remove-Alias -Name gsn -Force
-function gaa { git add . @args }
-function gst { git status @args }
-function gsm { git switch main @args }
-function gpu { git push @args }
-function gpuo { git push -u origin "$(git branch --show-current)" @args }
-function gpuf { git push -f @args }
-function gcm { git commit -m @args }
-function gcam { git commit --amend @args }
-function gcan { git commit --amend --no-edit @args }
-function gcnv { git commit --no-verify -m @args }
-function gsmp { git switch main && git fetch --all && git pull }
-function gpl { git pull @args }
-function gsn { git switch -c @args }
-function gsw { git switch @args }
-function gl { git l @args }
-function gla { git la @args }
+
+# Abbreviations
+abbr 'gaa=git add .'
+abbr 'gst=git status'
+abbr 'gsm=git switch main'
+abbr 'gpu=git push'
+abbr 'gpuo=git push -u origin "$(git branch --show-current)"'
+abbr 'gpuf=git push -f'
+abbr 'gcm=git commit -m "%"'
+abbr 'gcam=git commit --amend'
+abbr 'gcan=git commit --amend --no-edit'
+abbr 'gcnv=git commit --no-verify -m'
+abbr 'gsmp=git switch main && git pull'
+abbr 'gsmp=git switch main && git fetch --all && git pull'
+abbr 'gpl=git pull'
+abbr 'gsn=git switch -c'
+abbr 'gsw=git switch'
+abbr 'gop=gh browse --branch "$(git branch --show-current)"'
+abbr 'gopm=gh browse'
+abbr 'gl=git l'
+abbr 'gla=git la'
 
 # Setup interactive shell
 fnm env --use-on-cd | Out-String | Invoke-Expression
@@ -53,7 +49,5 @@ $env:FZF_DEFAULT_OPTS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 Invoke-Expression (&starship init powershell)
-
-Import-Module 'C:\Users\kvnxiao\github\vcpkg\scripts\posh-vcpkg'
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })

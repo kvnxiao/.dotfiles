@@ -1,5 +1,7 @@
 [pwsh.files]
-"powershell/profile.ps1" = "~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+"powershell/profile.ps1" = "~/OneDrive/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+"powershell/abbr.ps1" = "~/.config/powershell/PSAbbreviations.ps1"
+"powershell/commands.ps1" = "~/.config/powershell/commands.ps1"
 
 [git.files]
 "git/.gitconfig" = "~/.gitconfig"
