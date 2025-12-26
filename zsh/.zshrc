@@ -86,4 +86,5 @@ fi
 
 eval "$(zoxide init zsh)"
 eval "$(fnm env --use-on-cd)"
+eval "$(atuin init zsh)"
 eval "$(starship init zsh)"
