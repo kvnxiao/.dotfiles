@@ -28,3 +28,6 @@
 
 [act.files]
 "act/.actrc" = "~/.actrc"
+
+[atuin.files]
+"atuin/config.toml" = "~/.config/atuin/config.toml"

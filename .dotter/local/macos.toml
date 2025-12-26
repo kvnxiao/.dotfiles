@@ -9,4 +9,5 @@ packages = [
   "mpv",
   "act",
   "karabiner",
+  "atuin",
 ]

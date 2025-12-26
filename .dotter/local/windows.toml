@@ -10,4 +10,5 @@ packages = [
   "mpv",
   "komorebi",
   "windows-terminal",
+  "atuin",
 ]
