@@ -8,3 +8,6 @@
 "komorebi/komorebi.json" = "~/komorebi.json"
 "komorebi/komorebi.bar.json" = "~/komorebi.bar.json"
 "komorebi/whkdrc" = "~/.config/whkdrc"
+
+[windows-terminal.files]
+"windows-terminal/settings.json" = { target = "~/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json", type = "symbolic" }

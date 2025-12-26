@@ -9,4 +9,5 @@ packages = [
   "zsh-config",
   "mpv",
   "komorebi",
+  "windows-terminal",
 ]
