@@ -24,6 +24,9 @@
             "type": "remainingProfiles"
         }
     ],
+    "initialCols": 88,
+    "initialRows": 24,
+    "showTabsInTitlebar": true,
     "profiles": {
         "defaults": {
             "colorScheme": "Catppuccin Mocha",
