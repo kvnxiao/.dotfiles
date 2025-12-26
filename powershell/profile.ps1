@@ -48,5 +48,5 @@ $env:FZF_DEFAULT_OPTS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 Invoke-Expression (&starship init powershell)
-Invoke-Expression (& { (atuin init powershell | Out-String) })
+Invoke-Expression (& { (atuin init powershell --disable-up-arrow | Out-String) })
 Invoke-Expression (& { (zoxide init powershell | Out-String) })

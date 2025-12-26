@@ -86,5 +86,5 @@ fi
 
 eval "$(zoxide init zsh)"
 eval "$(fnm env --use-on-cd)"
-eval "$(atuin init zsh)"
+eval "$(atuin init zsh --disable-up-arrow)"
 eval "$(starship init zsh)"
