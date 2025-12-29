@@ -7,6 +7,7 @@
 [aerospace.files]
 "aerospace/.aerospace.toml" = "~/.config/aerospace/aerospace.toml"
 "aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
+"aerospace/aerospace-follow-workspace.sh" = "~/.config/aerospace/aerospace-follow-workspace.sh"
 
 [karabiner.files]
 "karabiner/karabiner.json" = { target = "~/.config/karabiner/karabiner.json", type = "symbolic" }
