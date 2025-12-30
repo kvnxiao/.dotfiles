@@ -4,8 +4,8 @@
 sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
 
 # Whitelist: window titles (partial match) or app IDs (exact match)
-WHITELIST_TITLES=("Versualizer")
-WHITELIST_APP_IDS=()
+WHITELIST_TITLES=()
+WHITELIST_APP_IDS=("com.versualizer.app")
 
 # Get current workspace
 current_workspace=$(aerospace list-workspaces --focused) || exit 1

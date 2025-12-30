@@ -130,11 +130,11 @@ run = ['layout floating']
 if.app-id = 'com.jetbrains.toolbox' # JetBrains Toolbox
 run = ['layout floating']
 
-[[on-window-detected]]
-if.window-title-regex-substring = 'versualizer-dioxus' # versualizer-dioxus
-run = ['layout floating', 'move-node-to-workspace 1']
-
 ### Force floating window for certain browser windows and apps
+
+[[on-window-detected]]
+if.app-id = 'com.versualizer.app' # versualizer-dioxus
+run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'app.zen-browser.zen' # Zen browser PiP mode
