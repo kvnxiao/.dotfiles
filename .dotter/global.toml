@@ -45,3 +45,5 @@
 "claude/rules/rust/rust-testing.md" = "~/.claude/rules/rust/rust-testing.md"
 "claude/rules/rust/rust-unsafe.md" = "~/.claude/rules/rust/rust-unsafe.md"
 "claude/rules/rust/rust-workspaces.md" = "~/.claude/rules/rust/rust-workspaces.md"
+"claude/skills/docs-review/SKILL.md" = "~/.claude/skills/docs-review/SKILL.md"
+"claude/skills/docs-review/references/examples.md" = "~/.claude/skills/docs-review/references/examples.md"
