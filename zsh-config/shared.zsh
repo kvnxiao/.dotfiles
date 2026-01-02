@@ -75,3 +75,6 @@ function br {
         return "$code"
     fi
 }
+
+# Claude experimental env vars
+export ENABLE_EXPERIMENTAL_MCP_CLI=true
