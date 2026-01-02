@@ -35,3 +35,13 @@
 [claude.files]
 "claude/settings.json" = "~/.claude/settings.json"
 "claude/commands/reflection.md" = "~/.claude/commands/reflection.md"
+"claude/rules/rust/rust-code-quality.md" = "~/.claude/rules/rust/rust-code-quality.md"
+"claude/rules/rust/rust-defensive-programming.md" = "~/.claude/rules/rust/rust-defensive-programming.md"
+"claude/rules/rust/rust-dependencies.md" = "~/.claude/rules/rust/rust-dependencies.md"
+"claude/rules/rust/rust-documentation.md" = "~/.claude/rules/rust/rust-documentation.md"
+"claude/rules/rust/rust-error-handling.md" = "~/.claude/rules/rust/rust-error-handling.md"
+"claude/rules/rust/rust-linting.md" = "~/.claude/rules/rust/rust-linting.md"
+"claude/rules/rust/rust-performance.md" = "~/.claude/rules/rust/rust-performance.md"
+"claude/rules/rust/rust-testing.md" = "~/.claude/rules/rust/rust-testing.md"
+"claude/rules/rust/rust-unsafe.md" = "~/.claude/rules/rust/rust-unsafe.md"
+"claude/rules/rust/rust-workspaces.md" = "~/.claude/rules/rust/rust-workspaces.md"
