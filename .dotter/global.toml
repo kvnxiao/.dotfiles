@@ -31,3 +31,6 @@
 
 [atuin.files]
 "atuin/config.toml" = "~/.config/atuin/config.toml"
+
+[claude.files]
+"claude/settings.json" = "~/.claude/settings.json"

@@ -11,4 +11,5 @@ packages = [
   "komorebi",
   "windows-terminal",
   "atuin",
+  "claude",
 ]
