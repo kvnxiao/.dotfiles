@@ -34,3 +34,4 @@
 
 [claude.files]
 "claude/settings.json" = "~/.claude/settings.json"
+"claude/commands/reflection.md" = "~/.claude/commands/reflection.md"
