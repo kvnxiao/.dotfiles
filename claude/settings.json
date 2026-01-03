@@ -67,5 +67,6 @@
     "slack@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
     "firebase@claude-plugins-official": true
-  }
+  },
+  "outputStyle": "Terse Technical"
 }

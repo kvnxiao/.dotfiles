@@ -47,3 +47,4 @@
 "claude/rules/rust/rust-workspaces.md" = "~/.claude/rules/rust/rust-workspaces.md"
 "claude/skills/docs-review/SKILL.md" = "~/.claude/skills/docs-review/SKILL.md"
 "claude/commands/review-docs.md" = "~/.claude/commands/review-docs.md"
+"claude/output-styles/terse-technical.md" = "~/.claude/output-styles/terse-technical.md"
