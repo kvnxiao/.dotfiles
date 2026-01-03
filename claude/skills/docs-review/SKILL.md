@@ -1,11 +1,11 @@
 ---
 name: docs-review
-description: Review and improve repository documentation including both human-readable docs (`docs/`) and AI agent memory context files (CLAUDE.md, .claude/rules/*, AGENTS.md, cursor rules, etc.) for clarity, minimal duplication, and modularity. Use when asked to audit, refactor, or improve documentation structure, consolidate rules, reduce redundancy, establish shared standards, or modularize monolithic instruction files.
+description: Review and improve repository documentation including both human-readable docs (`docs/`), `README.md`, and AI agent memory context files (`CLAUDE.md`, `.claude/rules/*`, `AGENTS.md`, `.cursorrules`, etc.) for clarity, minimal duplication, and modularity. Use when asked to review, audit, refactor, or improve documentation structure, consolidate rules, reduce redundancy, establish shared standards, or modularize monolithic instruction files.
 ---
 
 # Documentation Review Skill
 
-Review and improve repository documentation—both human-readable docs and AI agent context files—to ensure clarity, minimal duplication, and modularity.
+Review and improve repository documentation for both human-readable docs and AI agent context files to ensure clarity, minimal duplication, and modularity.
 
 ## Target Files
 
@@ -34,7 +34,8 @@ repo/
 │   │   ├── frontend/
 │   │   │   ├── typescript.md
 │   │   │   ├── react.md
-│   │   │   └── tailwindcss.md
+│   │   │   └── styling.md
+│   │   │   └── state.md
 │   │   ├── backend/
 │   │   │   ├── api.md
 │   │   │   └── database.md
@@ -45,9 +46,9 @@ repo/
 │   ├── 03-architecture.md
 │   └── 04-debugging.md
 │
+├── CLAUDE.md                      # Project context (root-level)
 └── .claude/
     ├── rules/                      # Agent-only (behavioral)
-    │   ├── _overview.md
     │   └── workflow/
     │       ├── testing.md
     │       └── pr-process.md
@@ -70,8 +71,13 @@ repo/
 **Standards:** No prefix, organized by domain subfolder
 - `docs/standards/frontend/react.md`, `docs/standards/backend/api.md`
 
-**Agent rules:** Underscore prefix for load-first files
-- `_overview.md` loads before other rules
+**Agent context:** Root-level CLAUDE.md for project overview
+- `CLAUDE.md` at repository root provides project context
+
+**General rules:**
+- Folders: lowercase, single word when possible (`frontend/`, `backend/`)
+- Files: kebab-case, descriptive (`typescript-patterns.md` not `ts.md`)
+- Avoid generic names: `firebase-auth.md` not `auth.md`
 
 ### How Each Layer References Standards
 
@@ -84,23 +90,26 @@ repo/
 For specific coding patterns, see `docs/standards/`.
 ```
 
-**In `.claude/rules/_overview.md` (agent rules):**
+**In `CLAUDE.md` (project context at repo root):**
 ```markdown
 # Project Context
 
 Brief project summary.
 
+## Before You Start
+
+**CRITICAL**: Before making any changes or answering questions about this project, **ALWAYS consult the `docs/` folder first** as it is the source of truth for architectural decisions, conventions, patterns, standards, and project specific workflows
+
 ## Standards
 
 Follow all patterns in `docs/standards/`:
-- `docs/standards/frontend/` — React, TypeScript, Tailwind
-- `docs/standards/backend/` — API and database patterns
-- `docs/standards/git.md` — Commit and branching
+- `docs/standards/frontend/` — example: React, TypeScript, Tailwind
+- `docs/standards/backend/` — example: API and database patterns
+- `docs/standards/git.md` — example: Commit and branching
 
-## Agent-Specific Rules
+## Before Marking Complete
 
-- Run `pnpm lint && pnpm test` before marking complete
-- Don't modify files in `src/generated/`
+- Run linter and test commands and apply any necessary fixes to ensure they pass.
 ```
 
 ### Avoid Auto-Importing Docs
@@ -128,6 +137,7 @@ Scan the repository for all documentation and agent context files:
 
 ```bash
 # Find human docs
+ls -la README.md 2>/dev/null
 ls -la docs/ 2>/dev/null
 ls -la docs/standards/ 2>/dev/null
 
@@ -157,7 +167,7 @@ For each file, evaluate against these criteria:
 | **Duplication** | No repeated content across files |
 | **Three-layer separation** | Standards, human docs, and agent rules clearly separated |
 | **Modularity** | Related content grouped; unrelated content separated |
-| **Naming** | Human docs numbered; standards by domain; rules with underscore prefix |
+| **Naming** | Human docs numbered in-order; standards by domain; CLAUDE.md at root |
 | **Discoverability** | File/section names reflect content |
 | **Maintainability** | Easy to update without side effects |
 | **No auto-imports** | Rules reference docs explicitly, not via `@` |
@@ -269,33 +279,7 @@ Use moment.js for date handling.  # Project now uses date-fns
 
 ### When to Modularize
 
-Modularize when CLAUDE.md exceeds ~200 lines or covers 3+ unrelated domains.
-
-### Suggested Structure
-
-Prefer **subfolders by domain** for better organization:
-
-```
-.claude/
-├── rules/
-│   ├── _overview.md                  # Project-wide context (underscore = load first)
-│   ├── frontend/
-│   │   ├── react.md                  # Component patterns, hooks
-│   │   ├── typescript-patterns.md    # Frontend-specific TS conventions
-│   │   └── tailwindcss.md            # Styling conventions
-│   ├── backend/
-│   │   ├── api-design.md             # REST/GraphQL patterns
-│   │   ├── database.md               # Schema, queries, migrations
-│   │   └── authentication.md         # Auth flows, session handling
-│   ├── infrastructure/
-│   │   ├── firebase.md               # Firebase-specific patterns
-│   │   ├── deployment.md             # CI/CD, environments
-│   │   └── monitoring.md             # Logging, alerts
-│   └── workflow/
-│       ├── git.md                    # Commits, branching, PRs
-│       └── testing.md                # Test conventions, coverage
-└── settings.json
-```
+Modularize when CLAUDE.md exceeds ~200 lines or covers 3+ unrelated domains. See "Recommended Structure" above for the target organization.
 
 **Flat structure** is acceptable for smaller projects (<10 rule files):
 ```
@@ -305,13 +289,6 @@ Prefer **subfolders by domain** for better organization:
 ├── testing.md
 └── git.md
 ```
-
-### Naming Conventions
-
-- **Folders:** lowercase, single word when possible (`frontend/`, `backend/`)
-- **Files:** kebab-case, descriptive (`typescript-patterns.md` not `ts.md`)
-- **Prefix with underscore** for files that should load first: `_overview.md`
-- Avoid generic names: `firebase-auth.md` not `auth.md`
 
 ### Cross-References
 
@@ -352,19 +329,27 @@ Follow component naming from `frontend/react.md` for test files.
 
 When improving existing documentation:
 
-- [ ] Identify all agent context files in repository
-- [ ] Identify existing `docs/` that overlap with rules
+### 1. Discovery
+- [ ] Locate all docs (`docs/`, `README.md`) and agent context files (`CLAUDE.md`, `.claude/rules/`, etc.)
 - [ ] Identify actionable patterns that belong in `docs/standards/`
-- [ ] Map content overlap between files
-- [ ] Flag contradictions and stale instructions
-- [ ] Check for `@` imports of docs (convert to explicit references)
-- [ ] Propose modular structure if monolithic
-- [ ] Ensure human docs are numbered (`01-`, `02-`, etc.)
-- [ ] Ensure standards are unnumbered, organized by domain subfolder
-- [ ] Verify naming reflects content
-- [ ] Check for orphaned references
-- [ ] Validate rules against current codebase
-- [ ] Confirm three-layer boundary is clear (standards / human docs / agent rules)
+
+### 2. Audit
+- [ ] Map content overlap and flag contradictions
+- [ ] Flag stale instructions and `@` imports
+
+### 3. Restructure
+- [ ] Modularize monolithic files (>200 lines or 3+ domains)
+- [ ] Apply naming conventions (numbered human docs, domain-organized standards)
+- [ ] Ensure three-layer separation (standards / human docs / agent rules)
+
+### 4. Validate
+- [ ] Check for orphaned references and broken links
+- [ ] Verify CLAUDE.md includes pre-session requirements and post-session checks
+
+### 5. Final Audit Pass
+- [ ] Re-run analysis criteria from §2 against all changed files
+- [ ] Confirm no new duplication, contradictions, or anti-patterns introduced
+- [ ] Verify changes maintain clarity, scope, and discoverability
 
 ## Output
 
