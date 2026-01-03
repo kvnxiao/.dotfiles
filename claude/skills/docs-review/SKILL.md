@@ -21,6 +21,8 @@ Review and improve repository documentation for both human-readable docs and AI 
 - `.cursor/rules/*.mdc` or `.cursorrules` — Cursor-specific rules
 - `.github/copilot-instructions.md` — GitHub Copilot context
 
+**Note:** It's acceptable for `CLAUDE.md` and `AGENTS.md` to be symlinked to each other if the project uses identical context for both.
+
 ## When to Use This Skill
 
 **Good fit:**
