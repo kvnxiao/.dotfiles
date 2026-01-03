@@ -1,6 +1,6 @@
 ---
 name: docs-review
-description: Review and improve repository documentation including both human-readable docs (`docs/`), `README.md`, and AI agent memory context files (`CLAUDE.md`, `.claude/rules/*`, `AGENTS.md`, `.cursorrules`, etc.) for clarity, minimal duplication, and modularity. Use when asked to review, audit, refactor, or improve documentation structure, consolidate rules, reduce redundancy, establish shared standards, or modularize monolithic instruction files.
+description: Review and improve repository documentation including both human-readable docs (`docs/`), `README.md`, and AI agent memory context files (`CLAUDE.md`, `CODEX.md`, `AGENTS.md`, `.cursorrules`, etc.) for clarity, minimal duplication, and modularity. Use when asked to review, audit, refactor, or improve documentation structure, consolidate rules, reduce redundancy, establish shared standards, or modularize monolithic instruction files.
 ---
 
 # Documentation Review Skill
@@ -19,11 +19,13 @@ Review and improve repository documentation for both human-readable docs and AI 
 ### Agent Context Files
 - `CLAUDE.md` — Claude Code project context
 - `.claude/rules/*.md` — Modular Claude rules
-- `AGENTS.md` — Multi-agent context (Cursor, etc.)
+- `CODEX.md` — OpenAI Codex CLI project context
+- `.codex/instructions.md` — Codex instructions file
+- `AGENTS.md` — Multi-agent context (shared across tools)
 - `.cursor/rules/*.mdc` or `.cursorrules` — Cursor-specific rules
 - `.github/copilot-instructions.md` — GitHub Copilot context
 
-**Note:** It's acceptable for `CLAUDE.md` and `AGENTS.md` to be symlinked to each other if the project uses identical context for both.
+**Note:** It's acceptable for `CLAUDE.md`, `CODEX.md`, and `AGENTS.md` to be symlinked to each other if the project uses identical context.
 
 ## When to Use This Skill
 
@@ -169,17 +171,14 @@ For API patterns, consult `docs/standards/api.md`.
 Scan the repository for all documentation and agent context files:
 
 ```bash
-# Find human docs
+# Find human docs (README + all markdown in docs/)
 ls -la README.md 2>/dev/null
-ls -la docs/ 2>/dev/null
-ls -la docs/README.md 2>/dev/null
-ls -la docs/standards/ 2>/dev/null
-ls -la docs/onboarding/ 2>/dev/null
-ls -la docs/architecture/ 2>/dev/null
+find docs/ -type f -name "*.md" 2>/dev/null
 
 # Find agent context files
 find . -type f \( \
   -name "CLAUDE.md" -o \
+  -name "CODEX.md" -o \
   -name "AGENTS.md" -o \
   -name ".cursorrules" -o \
   -name "copilot-instructions.md" -o \
@@ -187,8 +186,7 @@ find . -type f \( \
 \) 2>/dev/null
 
 # Check for rules directories
-ls -la .claude/rules/ 2>/dev/null
-ls -la .cursor/rules/ 2>/dev/null
+ls -la .claude/rules/ .codex/ .cursor/rules/ 2>/dev/null
 ```
 
 ### 2. Analysis
