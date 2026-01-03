@@ -18,12 +18,26 @@ Review and improve repository documentation for both human-readable docs and AI 
 - `CLAUDE.md` — Claude Code project context
 - `.claude/rules/*.md` — Modular Claude rules
 - `AGENTS.md` — Multi-agent context (Cursor, etc.)
-- `.cursor/rules/*.md` or `.cursorrules` — Cursor-specific rules
+- `.cursor/rules/*.mdc` or `.cursorrules` — Cursor-specific rules
 - `.github/copilot-instructions.md` — GitHub Copilot context
+
+## When to Use This Skill
+
+**Good fit:**
+- Repos with scattered or duplicated documentation
+- Monolithic CLAUDE.md files (>200 lines)
+- Projects needing clear human vs. agent content separation
+
+**May not apply:**
+- Small projects with minimal docs (single README is fine)
+- Monorepos with per-package documentation conventions
+- Projects with intentionally different structures (adapt to their conventions first)
 
 ## Docs vs Rules Separation
 
 Many repositories have both human-readable documentation (`docs/`) and agent context files (`.claude/rules/`). Avoid duplication by establishing clear boundaries.
+
+**Important:** If the repo has existing documentation conventions, evaluate whether to adopt them or propose migration. Don't force the recommended structure if the existing approach is working well.
 
 ### Recommended Structure
 
@@ -31,14 +45,10 @@ Many repositories have both human-readable documentation (`docs/`) and agent con
 repo/
 ├── docs/
 │   ├── standards/                  # Shared source of truth (humans + agents)
-│   │   ├── frontend/
-│   │   │   ├── typescript.md
-│   │   │   ├── react.md
-│   │   │   └── styling.md
-│   │   │   └── state.md
-│   │   ├── backend/
-│   │   │   ├── api.md
-│   │   │   └── database.md
+│   │   ├── code-style.md
+│   │   ├── api.md
+│   │   ├── database.md
+│   │   ├── testing.md
 │   │   └── git.md
 │   │
 │   ├── 01-overview.md              # Human-only (numbered for reading order)
@@ -68,16 +78,16 @@ repo/
 **Human docs:** Numbered prefix, zero-padded for sort order
 - `01-overview.md`, `02-getting-started.md`, ... `12-advanced-topics.md`
 
-**Standards:** No prefix, organized by domain subfolder
-- `docs/standards/frontend/react.md`, `docs/standards/backend/api.md`
+**Standards:** No prefix, organized by domain if needed
+- `docs/standards/[domain].md` (e.g., `api.md`, `testing.md`)
 
 **Agent context:** Root-level CLAUDE.md for project overview
 - `CLAUDE.md` at repository root provides project context
 
 **General rules:**
-- Folders: lowercase, single word when possible (`frontend/`, `backend/`)
-- Files: kebab-case, descriptive (`typescript-patterns.md` not `ts.md`)
-- Avoid generic names: `firebase-auth.md` not `auth.md`
+- Folders: lowercase, single word when possible (`[domain]/`)
+- Files: kebab-case, descriptive (`[domain]-patterns.md` not `[abbrev].md`)
+- Avoid overly generic names: `[service]-authentication.md` not `auth.md`
 
 ### How Each Layer References Standards
 
@@ -103,9 +113,9 @@ Brief project summary.
 ## Standards
 
 Follow all patterns in `docs/standards/`:
-- `docs/standards/frontend/` — example: React, TypeScript, Tailwind
-- `docs/standards/backend/` — example: API and database patterns
-- `docs/standards/git.md` — example: Commit and branching
+- `docs/standards/frontend/` — [list relevant standards]
+- `docs/standards/backend/` — [list relevant standards]
+- `docs/standards/git.md` — Commit and branching
 
 ## Before Marking Complete
 
@@ -118,10 +128,10 @@ Do not use `@` imports to pull docs into rules:
 
 ```markdown
 <!-- Avoid: Auto-imports entire doc, bloats context -->
-See @docs/standards/frontend/react.md for details.
+See @docs/standards/api.md for details.
 
 <!-- Prefer: Explicit reference, agent reads if needed -->
-For React patterns, consult `docs/standards/frontend/react.md`.
+For API patterns, consult `docs/standards/api.md`.
 ```
 
 **Why:**
@@ -204,10 +214,10 @@ Generate findings using this structure:
 **Problem:** Same instruction appears in multiple files.
 ```
 # In CLAUDE.md
-Use TypeScript strict mode for all files.
+Run tests before committing.
 
-# In .claude/rules/typescript.md  
-Always enable TypeScript strict mode.
+# In .claude/rules/testing.md
+Always run the test suite before commits.
 ```
 
 **Solution:** Single source of truth, reference from other locations if needed.
@@ -217,7 +227,7 @@ Always enable TypeScript strict mode.
 **Problem:** Single file covers unrelated domains.
 ```
 # CLAUDE.md (500+ lines)
-## TypeScript Rules
+## Code Style
 ## Database Conventions
 ## API Design
 ## Testing Strategy
@@ -225,17 +235,14 @@ Always enable TypeScript strict mode.
 ## Deployment
 ```
 
-**Solution:** Extract to `.claude/rules/` with domain subfolders:
+**Solution:** Extract to `.claude/rules/`:
 ```
 .claude/rules/
-├── frontend/
-│   └── typescript.md
-├── backend/
-│   ├── database.md
-│   └── api.md
-└── workflow/
-    ├── testing.md
-    └── git.md
+├── code-style.md
+├── database.md
+├── api.md
+├── testing.md
+└── git.md
 ```
 
 ### Vague Instructions
@@ -257,11 +264,11 @@ Name boolean variables with is/has/should prefix.
 
 **Problem:** Conflicting rules across files.
 ```
-# In typescript.md
-Prefer interfaces over types.
+# In code-style.md
+Use 2-space indentation.
 
-# In api.md
-Use type aliases for API response shapes.
+# In testing.md
+Use 4-space indentation for test files.
 ```
 
 **Solution:** Resolve conflicts, document exceptions with rationale.
@@ -270,7 +277,7 @@ Use type aliases for API response shapes.
 
 **Problem:** Outdated instructions that no longer apply.
 ```
-Use moment.js for date handling.  # Project now uses date-fns
+Use [old-library] for [task].  # Project migrated to [new-library]
 ```
 
 **Solution:** Regular audits, tie instructions to current dependencies.
@@ -281,7 +288,10 @@ Use moment.js for date handling.  # Project now uses date-fns
 
 Modularize when CLAUDE.md exceeds ~200 lines or covers 3+ unrelated domains. See "Recommended Structure" above for the target organization.
 
-**Flat structure** is acceptable for smaller projects (<10 rule files):
+### Small Projects: Keep It Simple
+
+For smaller projects, avoid over-engineering. A flat structure works well:
+
 ```
 .claude/rules/
 ├── code-style.md
@@ -290,12 +300,18 @@ Modularize when CLAUDE.md exceeds ~200 lines or covers 3+ unrelated domains. See
 └── git.md
 ```
 
+**Signs you don't need the full three-layer structure:**
+- Fewer than 10 rule files total
+- Single developer or small team
+- Limited documentation beyond README
+- No existing `docs/` folder
+
 ### Cross-References
 
 When rules in one file depend on another:
 ```markdown
-<!-- In workflow/testing.md -->
-Follow component naming from `frontend/react.md` for test files.
+<!-- In testing.md -->
+Follow naming conventions from `code-style.md` for test files.
 ```
 
 ## Writing Effective Rules
@@ -347,7 +363,7 @@ When improving existing documentation:
 - [ ] Verify CLAUDE.md includes pre-session requirements and post-session checks
 
 ### 5. Final Audit Pass
-- [ ] Re-run analysis criteria from §2 against all changed files
+- [ ] Re-run analysis criteria (Review Workflow > Analysis) against all changed files
 - [ ] Confirm no new duplication, contradictions, or anti-patterns introduced
 - [ ] Verify changes maintain clarity, scope, and discoverability
 
