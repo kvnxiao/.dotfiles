@@ -10,9 +10,11 @@ Review and improve repository documentation for both human-readable docs and AI 
 ## Target Files
 
 ### Human Documentation
-- `docs/*.md` — Numbered human-readable docs (`01-overview.md`, etc.)
+- `docs/README.md` — Docs overview + navigation (only file at docs root)
+- `docs/onboarding/` — First-time setup guides (experience-agnostic)
+- `docs/architecture/` — System design, diagrams, rationale, ADRs
 - `docs/standards/` — Shared actionable patterns (humans + agents)
-- `README.md` — Project introduction
+- `README.md` — Project introduction (repo root)
 
 ### Agent Context Files
 - `CLAUDE.md` — Claude Code project context
@@ -46,17 +48,26 @@ Many repositories have both human-readable documentation (`docs/`) and agent con
 ```
 repo/
 ├── docs/
+│   ├── README.md                   # Only file at docs root (overview + navigation)
+│   │
 │   ├── standards/                  # Shared source of truth (humans + agents)
-│   │   ├── code-style.md
+│   │   ├── code-style.md           # No numbered prefix in standards
 │   │   ├── api.md
 │   │   ├── database.md
 │   │   ├── testing.md
 │   │   └── git.md
 │   │
-│   ├── 01-overview.md              # Human-only (numbered for reading order)
-│   ├── 02-getting-started.md
-│   ├── 03-architecture.md
-│   └── 04-debugging.md
+│   ├── onboarding/                 # Human first-time setup (experience-agnostic)
+│   │   ├── 01-getting-started.md   # Numbered files for reading order
+│   │   ├── 02-local-development.md
+│   │   └── 03-troubleshooting.md
+│   │
+│   └── architecture/               # System design + decisions
+│       ├── 01-overview.md          # High-level diagrams + rationale
+│       ├── 02-data-flow.md
+│       └── decisions/              # Optional: Architecture Decision Records
+│           ├── 001-use-postgresql.md
+│           └── 002-event-driven-design.md
 │
 ├── CLAUDE.md                      # Project context (root-level)
 └── .claude/
@@ -71,16 +82,25 @@ repo/
 
 | Location | Purpose | Audience | Content Type |
 |----------|---------|----------|--------------|
+| `docs/README.md` | Overview + navigation | Both | Project summary, links to subfolders |
 | `docs/standards/` | Actionable patterns | Both | Do's/don'ts, code examples |
-| `docs/*.md` | Onboarding, context | Humans | Explanatory, diagrams, rationale |
+| `docs/onboarding/` | First-time setup | Humans | Step-by-step guides, experience-agnostic |
+| `docs/architecture/` | System design | Humans | Diagrams, rationale, ADRs |
 | `.claude/rules/` | Agent behavior | Agents | Workflow, constraints, pointers |
 
 ### Naming Conventions
 
-**Human docs:** Numbered prefix, zero-padded for sort order
-- `01-overview.md`, `02-getting-started.md`, ... `12-advanced-topics.md`
+**Docs root:** Only `README.md` at docs folder root
+- `docs/README.md` — Project overview + navigation to subfolders
 
-**Standards:** No prefix, organized by domain if needed
+**Human doc folders:** No numbered prefix, lowercase names
+- `docs/onboarding/`, `docs/architecture/`
+
+**Human doc files:** Numbered prefix for reading order (except in `standards/`)
+- `docs/onboarding/01-getting-started.md`, `docs/architecture/02-data-flow.md`
+
+**Standards:** No numbered prefix, organized by domain
+- `docs/standards/` — Shared patterns for humans + agents
 - `docs/standards/[domain].md` (e.g., `api.md`, `testing.md`)
 
 **Agent context:** Root-level CLAUDE.md for project overview
@@ -93,13 +113,14 @@ repo/
 
 ### How Each Layer References Standards
 
-**In `docs/03-architecture.md` (human doc):**
+**In `docs/architecture/01-overview.md` (human doc):**
 ```markdown
-# Architecture
+# Architecture Overview
 
 [Diagrams, rationale, history]
 
 For specific coding patterns, see `docs/standards/`.
+For decision rationale, see `docs/architecture/decisions/`.
 ```
 
 **In `CLAUDE.md` (project context at repo root):**
@@ -151,7 +172,10 @@ Scan the repository for all documentation and agent context files:
 # Find human docs
 ls -la README.md 2>/dev/null
 ls -la docs/ 2>/dev/null
+ls -la docs/README.md 2>/dev/null
 ls -la docs/standards/ 2>/dev/null
+ls -la docs/onboarding/ 2>/dev/null
+ls -la docs/architecture/ 2>/dev/null
 
 # Find agent context files
 find . -type f \( \
@@ -179,7 +203,7 @@ For each file, evaluate against these criteria:
 | **Duplication** | No repeated content across files |
 | **Three-layer separation** | Standards, human docs, and agent rules clearly separated |
 | **Modularity** | Related content grouped; unrelated content separated |
-| **Naming** | Human docs numbered in-order; standards by domain; CLAUDE.md at root |
+| **Naming** | Doc files numbered (`01-overview.md`); standards unnumbered; only README.md at docs root |
 | **Discoverability** | File/section names reflect content |
 | **Maintainability** | Easy to update without side effects |
 | **No auto-imports** | Rules reference docs explicitly, not via `@` |
@@ -348,7 +372,7 @@ Follow naming conventions from `code-style.md` for test files.
 When improving existing documentation:
 
 ### 1. Discovery
-- [ ] Locate all docs (`docs/`, `README.md`) and agent context files (`CLAUDE.md`, `.claude/rules/`, etc.)
+- [ ] Locate all docs (`docs/README.md`, `docs/onboarding/`, `docs/architecture/`, `docs/standards/`) and agent context files (`CLAUDE.md`, `.claude/rules/`, etc.)
 - [ ] Identify actionable patterns that belong in `docs/standards/`
 
 ### 2. Audit
@@ -357,7 +381,7 @@ When improving existing documentation:
 
 ### 3. Restructure
 - [ ] Modularize monolithic files (>200 lines or 3+ domains)
-- [ ] Apply naming conventions (numbered human docs, domain-organized standards)
+- [ ] Apply naming conventions (numbered doc files, unnumbered folders, domain-organized standards, only README.md at docs root)
 - [ ] Ensure three-layer separation (standards / human docs / agent rules)
 
 ### 4. Validate
