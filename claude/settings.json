@@ -48,6 +48,7 @@
       "mcp__github__get_file_contents"
     ]
   },
+  "model": "opus",
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
@@ -64,10 +65,8 @@
     "hookify@claude-plugins-official": true,
     "sentry@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "slack@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
     "firebase@claude-plugins-official": true
   },
-  "outputStyle": "Terse Technical",
-  "model": "opus"
+  "outputStyle": "Terse Technical"
 }
