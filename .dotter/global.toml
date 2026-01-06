@@ -48,7 +48,3 @@
 "claude/skills/docs-review/SKILL.md" = "~/.claude/skills/docs-review/SKILL.md"
 "claude/commands/review-docs.md" = "~/.claude/commands/review-docs.md"
 "claude/output-styles/terse-technical.md" = "~/.claude/output-styles/terse-technical.md"
-"claude/skills/planning-with-persistent-files/SKILL.md" = "~/.claude/skills/planning-with-persistent-files/SKILL.md"
-"claude/skills/planning-with-persistent-files/templates.md" = "~/.claude/skills/planning-with-persistent-files/templates.md"
-"claude/skills/planning-with-persistent-files/examples.md" = "~/.claude/skills/planning-with-persistent-files/examples.md"
-"claude/skills/planning-with-persistent-files/reference.md" = "~/.claude/skills/planning-with-persistent-files/reference.md"
