@@ -68,5 +68,6 @@
     "vercel@claude-plugins-official": true,
     "firebase@claude-plugins-official": true
   },
-  "outputStyle": "Terse Technical"
+  "outputStyle": "Terse Technical",
+  "model": "opus"
 }

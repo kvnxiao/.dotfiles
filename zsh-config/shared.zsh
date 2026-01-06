@@ -77,4 +77,5 @@ function br {
 }
 
 # Claude experimental env vars
+export ENABLE_LSP_TOOL=1
 export ENABLE_EXPERIMENTAL_MCP_CLI=true
