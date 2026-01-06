@@ -24,7 +24,7 @@
 "zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
 
 [mpv.files]
-"mpv/config" = { target = "~/.config/mpv", type = "symbolic" }
+"mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }
 
 [act.files]
 "act/.actrc" = "~/.actrc"
@@ -34,4 +34,4 @@
 
 [claude.files]
 # Symbolic link on all files in the claude directory
-"claude" = { type = "symbolic", target = "~/.claude", recurse = true }
+"claude" = { target = "~/.claude", type = "symbolic", recurse = true }
