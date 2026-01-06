@@ -33,18 +33,5 @@
 "atuin/config.toml" = "~/.config/atuin/config.toml"
 
 [claude.files]
-"claude/settings.json" = "~/.claude/settings.json"
-"claude/commands/reflection.md" = "~/.claude/commands/reflection.md"
-"claude/rules/rust/rust-code-quality.md" = "~/.claude/rules/rust/rust-code-quality.md"
-"claude/rules/rust/rust-defensive-programming.md" = "~/.claude/rules/rust/rust-defensive-programming.md"
-"claude/rules/rust/rust-dependencies.md" = "~/.claude/rules/rust/rust-dependencies.md"
-"claude/rules/rust/rust-documentation.md" = "~/.claude/rules/rust/rust-documentation.md"
-"claude/rules/rust/rust-error-handling.md" = "~/.claude/rules/rust/rust-error-handling.md"
-"claude/rules/rust/rust-linting.md" = "~/.claude/rules/rust/rust-linting.md"
-"claude/rules/rust/rust-performance.md" = "~/.claude/rules/rust/rust-performance.md"
-"claude/rules/rust/rust-testing.md" = "~/.claude/rules/rust/rust-testing.md"
-"claude/rules/rust/rust-unsafe.md" = "~/.claude/rules/rust/rust-unsafe.md"
-"claude/rules/rust/rust-workspaces.md" = "~/.claude/rules/rust/rust-workspaces.md"
-"claude/skills/docs-review/SKILL.md" = "~/.claude/skills/docs-review/SKILL.md"
-"claude/commands/review-docs.md" = "~/.claude/commands/review-docs.md"
-"claude/output-styles/terse-technical.md" = "~/.claude/output-styles/terse-technical.md"
+# Symbolic link on all files in the claude directory
+"claude" = { type = "symbolic", target = "~/.claude", recurse = true }
