@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "AskUserQuestion",
       "Skill",
       "Glob",
       "Grep",
