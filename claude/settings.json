@@ -40,10 +40,6 @@
       "Bash(cargo doc:*)",
       "Bash(cargo tree:*)",
       "Bash(just:*)",
-      "Bash(beans prime:*)",
-      "Bash(beans query:*)",
-      "Bash(beans create:*)",
-      "Bash(beans update:*)",
       "mcp__github__search_code",
       "mcp__github__get_file_contents"
     ]
