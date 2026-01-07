@@ -61,7 +61,8 @@
     "hookify@claude-plugins-official": true,
     "sentry@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "get-shit-done@get-shit-done": true
   },
   "outputStyle": "Terse Technical"
 }
