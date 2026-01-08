@@ -49,7 +49,7 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory
 
 # Claude Code
 $env:ENABLE_LSP_TOOL=1
-$env:ENABLE_EXPERIMENTAL_MCP_CLI=true
+$env:ENABLE_EXPERIMENTAL_MCP_CLI="true"
 $env:ANTHROPIC_MODEL="claude-opus-4-5-20251101"
 
 Invoke-Expression (&starship init powershell)
