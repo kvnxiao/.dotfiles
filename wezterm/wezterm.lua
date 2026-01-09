@@ -10,6 +10,7 @@ end
 
 local function get_windows_config()
   return {
+    audible_bell = "Disabled",
     set_environment_variables = {
       MSYS = "enable_pcon winsymlinks:nativestrict",
       CHERE_INVOKING = "1",
