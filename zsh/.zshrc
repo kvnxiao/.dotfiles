@@ -84,7 +84,9 @@ elif [[ $OSTYPE == darwin* ]]; then
   source "$HOME/.zsh/macos.zsh"
 fi
 
-eval "$(zoxide init zsh)"
-eval "$(fnm env --use-on-cd)"
-eval "$(atuin init zsh --disable-up-arrow)"
-eval "$(starship init zsh)"
+if [[ "$CLAUDECODE" != "1" ]]; then
+  eval "$(zoxide init zsh)"
+  eval "$(fnm env --use-on-cd)"
+  eval "$(atuin init zsh --disable-up-arrow)"
+  eval "$(starship init zsh)"
+fi
