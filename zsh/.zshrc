@@ -89,4 +89,5 @@ if [[ "$CLAUDECODE" != "1" ]]; then
   eval "$(fnm env --use-on-cd)"
   eval "$(atuin init zsh --disable-up-arrow)"
   eval "$(starship init zsh)"
+  alias cd="z"
 fi
