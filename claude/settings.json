@@ -50,7 +50,9 @@
       "Bash(cargo tree:*)",
       "Bash(just:*)",
       "mcp__github__search_code",
-      "mcp__github__get_file_contents"
+      "mcp__github__get_file_contents",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ]
   },
   "model": "opus",
