@@ -9,4 +9,5 @@
 ## Tooling and MCP use
 
 - Always use `gh` CLI to access GitHub, never the GitHub MCP tool
+- Use react-aria MCP to get latest documentation on React Aria Components
 - Use Context7 MCP to validate current documentation about software libraries
