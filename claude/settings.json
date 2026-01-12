@@ -76,7 +76,8 @@
     "hookify@claude-plugins-official": true,
     "sentry@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "claude-mem@thedotmack": true
   },
   "outputStyle": "Terse Engineering"
 }
