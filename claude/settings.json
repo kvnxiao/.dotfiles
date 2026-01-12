@@ -55,7 +55,11 @@
       "mcp__plugin_context7_context7__query-docs"
     ]
   },
-  "model": "opus",
+  "statusLine": {
+    "type": "command",
+    "command": "ccstat-rs",
+    "padding": 0
+  },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
