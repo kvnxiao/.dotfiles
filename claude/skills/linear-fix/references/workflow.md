@@ -27,11 +27,13 @@ grep -qxF '.worktrees' .gitignore || echo '.worktrees' >> .gitignore
 Run worktree script and cd into it:
 
 ```bash
-eval $(TICKET_ID="$TICKET_ID" ./scripts/create-git-worktree.sh)
+eval $(TICKET_ID="$TICKET_ID" TICKET_URL="$TICKET_URL" ./scripts/create-git-worktree.sh)
 cd "$WORKTREE_PATH"
 ```
 
 This sets: `BRANCH_NAME`, `WORKTREE_PATH`, `DEFAULT_BRANCH`
+
+Note: `TICKET_URL` from the Linear API response is used for branch naming (e.g., `kevin/epd-123/fix-the-bug`)
 
 Install dependencies (`just install`, `pnpm install`, etc.)
 
