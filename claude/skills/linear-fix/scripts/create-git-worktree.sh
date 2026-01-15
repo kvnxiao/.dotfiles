@@ -25,7 +25,7 @@
 #   TICKET_ID="ENG-123" ./create-git-worktree.sh
 #   # Creates worktree, outputs:
 #   # BRANCH_NAME=kevin/eng-123
-#   # WORKTREE_PATH=/path/to/repo/worktrees/eng-123
+#   # WORKTREE_PATH=/path/to/repo/.worktrees/eng-123
 #   # DEFAULT_BRANCH=main
 # =============================================================================
 
@@ -33,19 +33,23 @@
 OS_USER=$(whoami)
 TICKET_LOWER=$(echo "$TICKET_ID" | tr '[:upper:]' '[:lower:]')
 BRANCH_NAME="${OS_USER}/${TICKET_LOWER}"
-WORKTREE_PATH="$(pwd)/worktrees/$TICKET_LOWER"
+WORKTREE_PATH="$(pwd)/.worktrees/$TICKET_LOWER"
 
 # Get the default branch name
 DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
 
 # Create worktree
 echo "🌳 Creating worktree at $WORKTREE_PATH" >&2
-if ! git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "origin/$DEFAULT_BRANCH"; then
+if ! git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "origin/$DEFAULT_BRANCH" >&2; then
   echo "Error: Failed to create worktree" >&2
   exit 1
 fi
 
 echo "✅ Worktree created at $WORKTREE_PATH" >&2
+echo "" >&2
+echo "📦 Remember to install dependencies in the new worktree:" >&2
+echo "   cd $WORKTREE_PATH && <package-manager> install" >&2
+echo "   (e.g., pnpm install, npm install, yarn, bun install, etc.)" >&2
 
 # Output variables for caller to capture
 echo "BRANCH_NAME=$BRANCH_NAME"

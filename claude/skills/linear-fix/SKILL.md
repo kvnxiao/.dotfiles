@@ -1,7 +1,7 @@
 ---
 name: linear-fix
 description: Autonomously completes Linear tickets via git worktrees. Use when user says "fix ENG-123", "complete LIN-456", "work on linear ticket", provides a linear.app URL, or mentions a ticket ID pattern like ABC-123. Creates git worktree, implements fix via autonomous planning/review loop, opens GitHub PR with full reasoning.
-allowed-tools: Read, Bash(gh:*), Bash(linear-cli:*), Bash(), Task
+allowed-tools: Read, Bash(), Task
 ---
 
 # Linear Fix
@@ -40,6 +40,12 @@ TICKET_COMMENTS=$(linear-cli comments list "$TICKET_ID")
 Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`
 
 ### Step 2: Create Git Worktree
+
+Ensure `.worktrees` is gitignored (if not already):
+
+```bash
+grep -qxF '.worktrees' .gitignore || echo '.worktrees' >> .gitignore
+```
 
 Run @./scripts/create-git-worktree.sh and capture output variables:
 
@@ -111,7 +117,7 @@ Optional: `COMMIT_TYPE` (default: fix), `DESCRIPTION`, `STATE`, `PRIORITY`, plan
 
 ## Notes
 
-- Worktrees are created in a subfolder relative to repo root `./worktrees/`
+- Worktrees are created in a subfolder relative to repo root `./.worktrees/`
 - Branch names use format `[username]/[ticket-lowercase]` (e.g., `kevin/eng-123`)
 - Commit messages follow conventional format: `fix(TICKET-ID): Title`
 - PR automatically includes Linear ticket link and details
@@ -130,7 +136,7 @@ This skill operates **without user interaction**:
 
 | Issue | Solution |
 |-------|----------|
-| Worktree already exists | `git worktree remove ./worktrees/<ticket>` then retry |
+| Worktree already exists | `git worktree remove ./.worktrees/<ticket>` then retry |
 | Branch already exists | `git branch -D <branch>` or use existing branch |
 | `linear-cli` auth expired | `linear-cli auth login` |
 | Merge conflicts | Resolve manually, then continue workflow |
@@ -141,7 +147,7 @@ This skill operates **without user interaction**:
 After PR is merged, clean up worktree:
 
 ```bash
-git worktree remove ./worktrees/<ticket-lowercase>
+git worktree remove ./.worktrees/<ticket-lowercase>
 git branch -D <branch-name>  # if not auto-deleted
 ```
 
