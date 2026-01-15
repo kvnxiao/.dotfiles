@@ -18,7 +18,7 @@ Autonomous Linear ticket completion: fetch issue → create worktree → plan �
 
 ## Workflow
 
-Follow 6 steps in @./references/workflow.md:
+Follow 6 steps (see `./references/workflow.md` for full details):
 
 1. **Gather Context** - Extract ticket ID, fetch comprehensive details via `linear-cli`:
    - **Always use `--output json`** for all Linear CLI commands
@@ -26,11 +26,11 @@ Follow 6 steps in @./references/workflow.md:
    - Fetch issue comments: `linear-cli cm list <id> --output json`
    - Check for uploaded files/attachments in both issue description AND comments
    - Use `/linear-uploads` skill to download any attachments (images, screenshots, files)
-2. **Create Worktree** - Run @./scripts/create-git-worktree.sh, cd into it, install deps
-3. **Plan** - Task tool with `subagent_type=Plan`, use @./references/planner-prompt.md
-4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, use @./references/reviewer-prompt.md
-5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer` with @./references/code-reviewer-prompt.md
-6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. See @./references/workflow.md Step 6
+2. **Create Worktree** - Run `./scripts/create-git-worktree.sh`, cd into it, install deps
+3. **Plan** - Task tool with `subagent_type=Plan`, read `./references/planner-prompt.md` for template
+4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, read `./references/reviewer-prompt.md` for template
+5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`, read `./references/code-reviewer-prompt.md`
+6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. Read `./references/workflow.md` Step 6 for PR body format
 
 ## Autonomous Loops
 
@@ -44,4 +44,9 @@ Follow 6 steps in @./references/workflow.md:
 - Implement → Code reviewer reviews → fix if needed
 - Max 2 iterations; then proceed with caveats
 
-**IMPORTANT**: Only proceed to Step 6 (Create PR) after code review is APPROVED. All reasoning captured in PR body under collapsible section.
+**IMPORTANT**: Only proceed to Step 6 (Create PR) after code review is APPROVED.
+
+**PR Body Requirements** (see workflow.md for details):
+
+1. Extract variables from Step 4 "Extract from approved review" section
+2. **Always append** the "🤖 Autonomous Planning Reasoning" collapsible section from Step 6b — use the EXACT template format

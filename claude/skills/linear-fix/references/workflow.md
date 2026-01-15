@@ -1,5 +1,16 @@
 # Linear Fix Workflow
 
+## Contents
+
+1. [Gather Context](#step-1-gather-context) - Fetch ticket details via linear-cli
+2. [Create Git Worktree](#step-2-create-git-worktree) - Isolated workspace for implementation
+3. [Autonomous Planning](#step-3-autonomous-planning) - Generate implementation approaches
+4. [Autonomous Plan Review](#step-4-autonomous-plan-review) - Architect approval loop, extract variables
+5. [Implement and Review](#step-5-implement-and-review) - Code implementation and review loop
+6. [Commit, Push, and Create PR](#step-6-commit-push-and-create-pr) - PR with planning reasoning
+
+---
+
 ## Step 1: Gather Context
 
 Extract ticket ID and fetch details:
@@ -41,20 +52,22 @@ Install dependencies (`just install`, `pnpm install`, etc.)
 
 Use Task tool with `subagent_type=Plan`.
 
-Use prompt template from @./planner-prompt.md, substituting `$TICKET_ID`, `$TICKET_JSON`, `$TICKET_COMMENTS`.
+Read `./planner-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$TICKET_COMMENTS`.
 
 ## Step 4: Autonomous Plan Review
 
 Use Task tool with `subagent_type=feature-dev:code-architect`.
 
-Use prompt template from @./reviewer-prompt.md, substituting `$TICKET_ID`, `$TICKET_JSON`, `$PLANNER_OUTPUT`.
+Read `./reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$PLANNER_OUTPUT`.
 
 **Multi-Round Loop:**
+
 - `## Review Decision: REVISION REQUESTED` → pass feedback back to planner (Step 3)
 - `## Review Decision: APPROVED` → proceed to implementation
 - Max 3 iterations; after 3, reviewer MUST select best available with caveats
 
 **Extract from approved review:**
+
 - `SELECTED_APPROACH` ← value after "## Selected Approach"
 - `REVIEW_REASONING` ← content under "## Reasoning"
 - `TRADEOFFS_ACCEPTED` ← content under "## Additional Considerations"
@@ -71,7 +84,7 @@ Implement approved plan. Validate (tests, lint, build) pass before review.
 
 Use Task tool with `subagent_type=feature-dev:code-reviewer`.
 
-Use prompt template from @./code-reviewer-prompt.md, substituting `$TICKET_ID`, `$TICKET_JSON`, `$SELECTED_APPROACH`.
+Read `./code-reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$SELECTED_APPROACH`.
 
 **Review Loop:**
 
@@ -86,7 +99,7 @@ Use prompt template from @./code-reviewer-prompt.md, substituting `$TICKET_ID`, 
 ### 6a: Commit and Push
 
 1. Determine `COMMIT_TYPE`: `fix` (bug), `feat` (feature), `chore`, `refactor`, `docs`, `test`
-2. Run @../scripts/commit-and-push.sh
+2. Run `../scripts/commit-and-push.sh`
 
 ### 6b: Prepare PR Body
 
@@ -96,7 +109,7 @@ Check for PR template and fill it out:
 2. **If template exists**: Read it and fill each section with ticket details and implementation info
 3. **If no template**: Create body with: Overview (link to Linear ticket), Description, Changes summary
 
-**Always append** collapsible planning section:
+**IMPORTANT**: ALWAYS APPEND collapsible planning section to PR body:
 
 ```markdown
 <details>
@@ -122,7 +135,7 @@ $ITERATION_COUNT iteration(s) before approval
 
 ### 6c: Create PR
 
-Run @../scripts/create-github-pr.sh with env vars:
+Run `../scripts/create-github-pr.sh` with env vars:
 
 - Required: `TICKET_ID`, `TITLE`, `BRANCH_NAME`, `DEFAULT_BRANCH`, `PR_BODY`
 - Optional: `COMMIT_TYPE` (default: fix), `TICKET_URL`, `WORKTREE_PATH`
