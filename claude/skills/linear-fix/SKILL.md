@@ -12,6 +12,7 @@ Automates the complete workflow for a Linear ticket ID or Linear issue URL: fetc
 
 - ALWAYS use `linear-cli` for Linear CLI, never Linear MCP tool. Use `linear-cli --help` to see all commands.
 - ALWAYS use `gh` GitHub CLI, never GitHub MCP tool. Use `gh --help` to see all commands.
+- ALWAYS create a git worktree for the task. Use the id of the linear ticket as the worktree folder name and branch name.
 
 # Usage
 
@@ -23,38 +24,17 @@ Automates the complete workflow for a Linear ticket ID or Linear issue URL: fetc
 
 ## Implementation
 
-First, extract the ticket ID from the input (handles both formats) using @./scripts/extract-linear-issue-id.sh .
+ALWAYS follow this 4 step process:
 
-Then, fetch ticket details using `linear-cli`, on both the issue fields and additional comments:
+1. Extract the ticket ID from the input (handles both formats) using @./scripts/extract-linear-issue-id.sh . Then, fetch ticket details using `linear-cli`, on both the issue fields and additional comments:
+   - Issue JSON: `linear-cli issues get "$TICKET_ID" --output json`
+   - Issue comments: `linear-cli comments list "$TICKET_ID"`
 
-- Issue JSON: `linear-cli issues get "$TICKET_ID" --output json`
-- Issue comments: `linear-cli comments list "$TICKET_ID"`
+2. Create git worktree with ticket-based branch using @./scripts/create-git-worktree.sh . Ensure the working directory is in the worktree folder directory.
 
-Create git worktree with ticket-based branch:
+3. Implement the fix, adhering to the repository's docs and coding standards.
 
-```bash
-# Generate branch name from ticket ID (lowercase)
-BRANCH_NAME=$(echo "$TICKET_ID" | tr '[:upper:]' '[:lower:]')
-WORKTREE_PATH="./worktrees/$BRANCH_NAME"
-
-# Get the default branch name
-DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
-
-# Create worktree
-echo "🌳 Creating worktree at $WORKTREE_PATH"
-git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "origin/$DEFAULT_BRANCH"
-
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to create worktree"
-  exit 1
-fi
-
-cd "$WORKTREE_PATH"
-```
-
-Implement the fix, adhering to the repository's docs and coding standards.
-
-Commit and push changes:
+4. Commit and push changes:
 
 ```bash
 # Stage all changes
