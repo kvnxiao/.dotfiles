@@ -79,9 +79,46 @@ Use prompt template from @./code-reviewer-prompt.md, substituting `$TICKET_ID`, 
 
 ## Step 6: Commit, Push, and Create PR
 
-1. Determine `COMMIT_TYPE`: `fix` (bug), `feat` (feature), `chore`, `refactor`, `docs`, `test`
-2. Commit and push: @../scripts/commit-and-push.sh
-3. Create PR: @../scripts/create-github-pr.sh
+### 6a: Commit and Push
 
-Required env vars: `TICKET_ID`, `TITLE`, `BRANCH_NAME`, `DEFAULT_BRANCH`
-Optional: `COMMIT_TYPE` (default: fix), `TICKET_URL`, `DESCRIPTION`, `STATE`, `PRIORITY`, planning variables
+1. Determine `COMMIT_TYPE`: `fix` (bug), `feat` (feature), `chore`, `refactor`, `docs`, `test`
+2. Run @../scripts/commit-and-push.sh
+
+### 6b: Prepare PR Body
+
+Check for PR template and fill it out:
+
+1. Look for `.github/pull_request_template.md` or `.github/PULL_REQUEST_TEMPLATE.md`
+2. **If template exists**: Read it and fill each section with ticket details and implementation info
+3. **If no template**: Create body with: Overview (link to Linear ticket), Description, Changes summary
+
+**Always append** collapsible planning section:
+
+```markdown
+<details>
+<summary>🤖 Autonomous Planning Reasoning</summary>
+
+### Selected Approach
+$SELECTED_APPROACH
+
+### Why This Approach
+$REVIEW_REASONING
+
+### Trade-offs Accepted
+$TRADEOFFS_ACCEPTED
+
+### Edge Cases Handled
+$EDGE_CASES
+
+### Planning Iterations
+$ITERATION_COUNT iteration(s) before approval
+
+</details>
+```
+
+### 6c: Create PR
+
+Run @../scripts/create-github-pr.sh with env vars:
+
+- Required: `TICKET_ID`, `TITLE`, `BRANCH_NAME`, `DEFAULT_BRANCH`, `PR_BODY`
+- Optional: `COMMIT_TYPE` (default: fix), `TICKET_URL`, `WORKTREE_PATH`

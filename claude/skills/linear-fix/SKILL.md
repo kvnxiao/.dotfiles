@@ -28,7 +28,7 @@ Follow 6 steps in @./references/workflow.md:
 3. **Plan** - Task tool with `subagent_type=Plan`, use @./references/planner-prompt.md
 4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, use @./references/reviewer-prompt.md
 5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer` with @./references/code-reviewer-prompt.md
-6. **Create PR** - Run @./scripts/commit-and-push.sh then @./scripts/create-github-pr.sh
+6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. See @./references/workflow.md Step 6
 
 ## Autonomous Loops
 

@@ -2,7 +2,7 @@
 # =============================================================================
 # create-github-pr.sh
 # =============================================================================
-# Creates a GitHub pull request with Linear ticket details and planning reasoning.
+# Creates a GitHub pull request with the provided body content.
 #
 # Usage:
 #   ./create-github-pr.sh  (with required env vars set)
@@ -12,27 +12,12 @@
 #   TITLE          - Short description for PR title
 #   BRANCH_NAME    - Source branch for the PR
 #   DEFAULT_BRANCH - Target branch (e.g., "main")
+#   PR_BODY        - The complete PR body (pre-filled by Claude)
 #
-# Optional environment variables (ticket metadata):
+# Optional environment variables:
 #   COMMIT_TYPE    - Conventional commit type (default: "fix")
-#   TICKET_URL     - Linear ticket URL (from linear-cli JSON output)
-#   DESCRIPTION    - Ticket description
-#   STATE          - Ticket state (e.g., "In Progress")
-#   PRIORITY       - Ticket priority (e.g., "High")
 #   WORKTREE_PATH  - Path to worktree (for success message)
-#
-# Optional environment variables (autonomous planning):
-#   SELECTED_APPROACH  - Name of the selected implementation approach
-#   REVIEW_REASONING   - Why this approach was selected
-#   TRADEOFFS_ACCEPTED - Trade-offs accepted in this approach
-#   EDGE_CASES         - Edge cases handled
-#   ITERATION_COUNT    - Number of planning iterations
-#
-# PR body includes:
-#   - Overview and description
-#   - Linear ticket link with status/priority
-#   - Collapsible planning reasoning section
-#   - Repository PR template (if exists)
+#   TICKET_URL     - Linear ticket URL (for success message)
 #
 # Exit codes:
 #   0 - Success (PR created)
@@ -40,70 +25,17 @@
 #
 # Example:
 #   TICKET_ID="ENG-123" TITLE="Fix bug" BRANCH_NAME="kevin/eng-123" \
-#   DEFAULT_BRANCH="main" ./create-github-pr.sh
+#   DEFAULT_BRANCH="main" PR_BODY="..." ./create-github-pr.sh
 # =============================================================================
 
-if [ -z "$TICKET_ID" ] || [ -z "$TITLE" ] || [ -z "$BRANCH_NAME" ] || [ -z "$DEFAULT_BRANCH" ]; then
-  echo "Error: TICKET_ID, TITLE, BRANCH_NAME, and DEFAULT_BRANCH must be set" >&2
+if [ -z "$TICKET_ID" ] || [ -z "$TITLE" ] || [ -z "$BRANCH_NAME" ] || [ -z "$DEFAULT_BRANCH" ] || [ -z "$PR_BODY" ]; then
+  echo "Error: TICKET_ID, TITLE, BRANCH_NAME, DEFAULT_BRANCH, and PR_BODY must be set" >&2
   exit 1
 fi
 
 # Default commit type to "fix" if not specified
 COMMIT_TYPE="${COMMIT_TYPE:-fix}"
 PR_TITLE="$COMMIT_TYPE($TICKET_ID): $TITLE"
-
-# Check if PR template exists
-PR_TEMPLATE=""
-if [ -f ".github/pull_request_template.md" ]; then
-  PR_TEMPLATE=".github/pull_request_template.md"
-elif [ -f ".github/PULL_REQUEST_TEMPLATE.md" ]; then
-  PR_TEMPLATE=".github/PULL_REQUEST_TEMPLATE.md"
-fi
-
-# Generate PR body with planning reasoning
-PR_BODY="## Overview
-Fixes Linear ticket: $TICKET_ID
-
-## Description
-$DESCRIPTION
-
-## Changes
-- Implemented fix for $TICKET_ID
-
-## Linear Ticket
-- [$TICKET_ID](${TICKET_URL:-https://linear.app/issue/$TICKET_ID})
-- Status: $STATE
-- Priority: $PRIORITY
-
-<details>
-<summary>🤖 Autonomous Planning Reasoning</summary>
-
-### Selected Approach
-$SELECTED_APPROACH
-
-### Why This Approach
-$REVIEW_REASONING
-
-### Trade-offs Accepted
-$TRADEOFFS_ACCEPTED
-
-### Edge Cases Handled
-$EDGE_CASES
-
-### Planning Iterations
-$ITERATION_COUNT iteration(s) before approval
-
-</details>"
-
-# If template exists, append it
-if [ -n "$PR_TEMPLATE" ]; then
-  TEMPLATE_CONTENT=$(cat "$PR_TEMPLATE")
-  PR_BODY="$PR_BODY
-
----
-
-$TEMPLATE_CONTENT"
-fi
 
 # Create PR
 echo "🚀 Creating pull request"
