@@ -12,7 +12,7 @@ Automates the complete workflow for a Linear ticket ID or Linear issue URL: fetc
 
 - ALWAYS use `linear-cli` for Linear CLI, never Linear MCP tool. Use `linear-cli --help` to see all commands.
 - ALWAYS use `gh` GitHub CLI, never GitHub MCP tool. Use `gh --help` to see all commands.
-- ALWAYS create a git worktree for the task. Use the id of the linear ticket as the worktree folder name and branch name.
+- ALWAYS create a git worktree BEFORE working on the task. Use the id of the linear ticket as the worktree folder name and branch name.
 
 # Usage
 
@@ -32,7 +32,7 @@ ALWAYS follow this 4 step process:
 
 2. Create git worktree with ticket-based branch using @./scripts/create-git-worktree.sh . Ensure the working directory is in the worktree folder directory.
 
-3. Implement the fix, adhering to the repository's docs and coding standards.
+3. Implement the fix, adhering to the repository's docs and coding standards. NEVER implement the fix before creating the worktree.
 
 4. Commit and push changes:
 
