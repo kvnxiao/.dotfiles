@@ -6,13 +6,15 @@ Extract ticket ID and fetch details:
 
 ```bash
 TICKET_ID=$(./scripts/extract-linear-issue-id.sh "<user-input>")
-TICKET_JSON=$(linear-cli issues get "$TICKET_ID" --output json)
-TICKET_COMMENTS=$(linear-cli comments list "$TICKET_ID")
+TICKET_JSON=$(linear-cli i get "$TICKET_ID" --output json)
+TICKET_COMMENTS=$(linear-cli cm list "$TICKET_ID" --output json)
 ```
+
+**Always use `--output json`** for all Linear CLI commands.
 
 Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`, `TICKET_URL` (the `url` field)
 
-**IMPORTANT**: If description or comments contain uploads (images, files), ALWAYS download them via `/linear-uploads` skill for additional context before planning.
+**IMPORTANT**: Check BOTH `TICKET_JSON` (issue description) AND `TICKET_COMMENTS` for uploaded files/attachments. If any uploads exist (images, screenshots, files), ALWAYS download them via `/linear-uploads` skill for additional context before planning.
 
 ## Step 2: Create Git Worktree
 

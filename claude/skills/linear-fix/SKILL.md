@@ -20,10 +20,12 @@ Autonomous Linear ticket completion: fetch issue → create worktree → plan �
 
 Follow 6 steps in @./references/workflow.md:
 
-1. **Gather Context** - Extract ticket ID, fetch details via `linear-cli`. Use the other Linear CLI skills for additional context:
-   - `/linear-issues` - fetch issue details
-   - `/linear-search` - search issues
-   - `/linear-uploads` - download attachments (images, files)
+1. **Gather Context** - Extract ticket ID, fetch comprehensive details via `linear-cli`:
+   - **Always use `--output json`** for all Linear CLI commands
+   - Fetch issue details: `linear-cli i get <id> --output json` (title, description)
+   - Fetch issue comments: `linear-cli cm list <id> --output json`
+   - Check for uploaded files/attachments in both issue description AND comments
+   - Use `/linear-uploads` skill to download any attachments (images, screenshots, files)
 2. **Create Worktree** - Run @./scripts/create-git-worktree.sh, cd into it, install deps
 3. **Plan** - Task tool with `subagent_type=Plan`, use @./references/planner-prompt.md
 4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, use @./references/reviewer-prompt.md
