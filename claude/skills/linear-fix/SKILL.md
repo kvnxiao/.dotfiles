@@ -10,9 +10,9 @@ Automates the complete workflow for a Linear ticket ID or Linear issue URL: fetc
 
 **IMPORTANT**:
 
-- ALWAYS use `linear-cli` for Linear CLI, never Linear MCP tool. Use `linear-cli --help` to see all commands.
-- ALWAYS use `gh` GitHub CLI, never GitHub MCP tool. Use `gh --help` to see all commands.
 - ALWAYS create a git worktree BEFORE working on the task. Use the id of the linear ticket as the worktree folder name and branch name.
+- ALWAYS use `linear-cli` for Linear CLI, never Linear MCP tool. Use `linear-cli --help` to see all commands. Caveat: ONLY use the Linear MCP tool for fetching uploads and images, e.g. `https://uploads.linear.app/{uuid}/{uuid}/{uuid}`
+- ALWAYS use `gh` GitHub CLI, never GitHub MCP tool. Use `gh --help` to see all commands.
 
 # Usage
 
