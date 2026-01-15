@@ -56,6 +56,8 @@ cd "$WORKTREE_PATH"
 
 This sets: `BRANCH_NAME`, `WORKTREE_PATH`, `DEFAULT_BRANCH`
 
+Then ensure that the worktree dependencies are installed (`just install`, `pnpm install`, etc.)
+
 ### Step 3: Autonomous Planning Phase
 
 Use the Task tool with `subagent_type=Plan` to create a comprehensive implementation plan.
