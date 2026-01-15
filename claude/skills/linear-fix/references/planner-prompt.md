@@ -1,8 +1,5 @@
-# Planner Prompt Template
+# Planner Prompt
 
-Use this template when invoking the Plan agent in Step 3.
-
-```
 You are planning the implementation for Linear ticket $TICKET_ID.
 
 TICKET DETAILS:
@@ -12,6 +9,7 @@ COMMENTS:
 $TICKET_COMMENTS
 
 REQUIREMENTS:
+
 1. Explore the codebase thoroughly - understand existing patterns before proposing changes
 2. Propose 2-3 distinct implementation approaches
 3. For each approach, document:
@@ -24,10 +22,13 @@ REQUIREMENTS:
 5. Do NOT ask questions - make judgment calls and document your reasoning
 
 OUTPUT FORMAT:
+
 ## Codebase Analysis
+
 [Relevant patterns, conventions, and architecture insights]
 
 ## Approach 1: [Name]
+
 - Description: ...
 - Files: ...
 - Trade-offs: ...
@@ -35,11 +36,13 @@ OUTPUT FORMAT:
 - Edge cases: ...
 
 ## Approach 2: [Name]
+
 ...
 
 ## Approach 3 (optional): [Name]
+
 ...
 
 ## Recommendation
+
 [Selected approach with detailed justification]
-```

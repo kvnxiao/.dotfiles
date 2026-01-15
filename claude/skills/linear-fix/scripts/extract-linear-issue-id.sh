@@ -19,12 +19,14 @@
 #   1 - Invalid format (no ticket ID found)
 #
 # Examples:
-#   ./extract-linear-issue-id.sh ENG-123
+#   ./extract-linear-issue-id.sh ENG-123        # Returns: ENG-123
+#   ./extract-linear-issue-id.sh eng-123        # Returns: ENG-123 (case-insensitive)
 #   ./extract-linear-issue-id.sh https://linear.app/myteam/issue/ENG-456/fix-bug
 # =============================================================================
 
 TICKET_INPUT="$1"
-TICKET_ID=$(echo "$TICKET_INPUT" | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
+# Convert to uppercase and extract ticket ID pattern
+TICKET_ID=$(echo "$TICKET_INPUT" | tr '[:lower:]' '[:upper:]' | grep -oE '[A-Z]+-[0-9]+' | head -n 1)
 
 if [ -z "$TICKET_ID" ]; then
   echo "Error: Invalid ticket ID or URL format" >&2

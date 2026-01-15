@@ -15,6 +15,7 @@
 #
 # Optional environment variables (ticket metadata):
 #   COMMIT_TYPE    - Conventional commit type (default: "fix")
+#   TICKET_URL     - Linear ticket URL (from linear-cli JSON output)
 #   DESCRIPTION    - Ticket description
 #   STATE          - Ticket state (e.g., "In Progress")
 #   PRIORITY       - Ticket priority (e.g., "High")
@@ -42,8 +43,8 @@
 #   DEFAULT_BRANCH="main" ./create-github-pr.sh
 # =============================================================================
 
-if [ -z "$TICKET_ID" ] || [ -z "$BRANCH_NAME" ] || [ -z "$DEFAULT_BRANCH" ]; then
-  echo "Error: TICKET_ID, BRANCH_NAME, and DEFAULT_BRANCH must be set" >&2
+if [ -z "$TICKET_ID" ] || [ -z "$TITLE" ] || [ -z "$BRANCH_NAME" ] || [ -z "$DEFAULT_BRANCH" ]; then
+  echo "Error: TICKET_ID, TITLE, BRANCH_NAME, and DEFAULT_BRANCH must be set" >&2
   exit 1
 fi
 
@@ -70,7 +71,7 @@ $DESCRIPTION
 - Implemented fix for $TICKET_ID
 
 ## Linear Ticket
-- [$TICKET_ID](https://linear.app/issue/$TICKET_ID)
+- [$TICKET_ID](${TICKET_URL:-https://linear.app/issue/$TICKET_ID})
 - Status: $STATE
 - Priority: $PRIORITY
 
@@ -113,7 +114,7 @@ if gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base "$DEFAULT_BRANCH" -
   echo ""
   echo "Next steps:"
   echo "1. Review the PR: $PR_URL"
-  echo "2. Update Linear ticket: https://linear.app/issue/$TICKET_ID"
+  echo "2. Update Linear ticket: ${TICKET_URL:-$TICKET_ID}"
   echo "3. Worktree location: $WORKTREE_PATH"
 else
   echo "Error: Failed to create PR"
