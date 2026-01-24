@@ -80,3 +80,8 @@ export ENABLE_LSP_TOOL=1
 export ENABLE_EXPERIMENTAL_MCP_CLI=true
 export ANTHROPIC_MODEL="claude-opus-4-5-20251101"
 export CLAUDE_CODE_ENABLE_TASKS=true
+
+# Shift+Enter inserts newline (for WezTerm CSI u sequence)
+insert-newline() { LBUFFER+=$'\n' }
+zle -N insert-newline
+bindkey '\e[13;2u' insert-newline

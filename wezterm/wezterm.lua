@@ -85,6 +85,18 @@ else
   platform_config = get_unix_config()
 end
 
+-- Global keybindings (merged with platform-specific keys)
+local global_keys = {
+  {
+    key = "Enter",
+    mods = "SHIFT",
+    action = wezterm.action { SendString = "\x1b[13;2u" },
+  },
+}
+for _, k in ipairs(global_keys) do
+  table.insert(platform_config.keys, k)
+end
+
 return {
   default_prog = platform_config.default_prog,
   set_environment_variables = platform_config.set_environment_variables,
