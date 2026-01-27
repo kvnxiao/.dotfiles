@@ -40,10 +40,33 @@ if [[ ! -f "$INCLUDE_FILE" ]]; then
   exit 1
 fi
 
-# Enable extended globbing
-shopt -s globstar nullglob
-
 cd "$SOURCE_REPO"
+
+# Convert glob pattern to find arguments
+find_matches() {
+  local pattern="$1"
+
+  if [[ "$pattern" == *"**"* ]]; then
+    # Recursive glob: **/*.local -> -name "*.local"
+    local name_pattern="${pattern##**/}"
+    find . -name "$name_pattern" -type f 2>/dev/null | sed 's|^\./||'
+  elif [[ "$pattern" == *"*"* ]]; then
+    # Simple glob in current dir or specific path
+    local dir_part=$(dirname "$pattern")
+    local name_part=$(basename "$pattern")
+    if [[ "$dir_part" == "." ]]; then
+      find . -maxdepth 1 -name "$name_part" -type f 2>/dev/null | sed 's|^\./||'
+    else
+      find "$dir_part" -maxdepth 1 -name "$name_part" -type f 2>/dev/null | sed 's|^\./||'
+    fi
+  elif [[ -f "$pattern" ]]; then
+    # Exact file match
+    echo "$pattern"
+  elif [[ -d "$pattern" ]]; then
+    # Directory - mark with trailing slash
+    echo "$pattern/"
+  fi
+}
 
 while IFS= read -r pattern || [[ -n "$pattern" ]]; do
   # Skip empty lines and comments
@@ -52,25 +75,24 @@ while IFS= read -r pattern || [[ -n "$pattern" ]]; do
   # Trim whitespace
   pattern=$(echo "$pattern" | xargs)
 
-  # Expand glob pattern
-  for item in $pattern; do
-    if [[ -f "$item" ]]; then
-      # Get directory part of the file path
-      dir=$(dirname "$item")
+  # Find matching items
+  find_matches "$pattern" | while IFS= read -r item; do
+    [[ -z "$item" ]] && continue
 
-      # Create destination directory if needed
-      if [[ "$dir" != "." ]]; then
-        mkdir -p "$WORKTREE_PATH/$dir"
-      fi
-
-      # Copy file preserving relative path
-      cp "$item" "$WORKTREE_PATH/$item"
-      echo "  Copied: $item" >&2
-    elif [[ -d "$item" ]]; then
-      # Copy directory recursively
+    if [[ "$item" == */ ]]; then
+      # Directory (trailing slash)
+      item="${item%/}"
       mkdir -p "$WORKTREE_PATH/$item"
       cp -r "$item/." "$WORKTREE_PATH/$item/"
       echo "  Copied: $item/ (directory)" >&2
+    else
+      # File
+      dir=$(dirname "$item")
+      if [[ "$dir" != "." ]]; then
+        mkdir -p "$WORKTREE_PATH/$dir"
+      fi
+      cp "$item" "$WORKTREE_PATH/$item"
+      echo "  Copied: $item" >&2
     fi
   done
 done < "$INCLUDE_FILE"
