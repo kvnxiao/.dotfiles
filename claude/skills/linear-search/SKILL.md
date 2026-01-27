@@ -1,7 +1,7 @@
 ---
 name: linear-search
 description: Search Linear issues and projects. Use when finding issues, looking up bugs, or searching the backlog.
-allowed-tools: Bash(linear-cli:*)
+allowed-tools: Bash
 ---
 
 # Linear Search

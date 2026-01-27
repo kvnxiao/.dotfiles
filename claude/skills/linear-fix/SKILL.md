@@ -26,7 +26,7 @@ Follow 6 steps (see `./references/workflow.md` for full details):
    - Fetch issue comments: `linear-cli cm list <id> --output json`
    - Check for uploaded files/attachments in both issue description AND comments
    - Use `/linear-uploads` skill to download any attachments (images, screenshots, files)
-2. **Create Worktree** - Run `./scripts/create-git-worktree.sh`, cd into it, install deps
+2. **Create Worktree** - Use `/git-worktree` skill to create isolated worktree, cd into it, install deps
 3. **Plan** - Task tool with `subagent_type=Plan`, read `./references/planner-prompt.md` for template
 4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, read `./references/reviewer-prompt.md` for template
 5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`, read `./references/code-reviewer-prompt.md`

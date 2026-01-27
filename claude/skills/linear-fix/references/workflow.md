@@ -29,24 +29,15 @@ Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`, `TICKET_U
 
 ## Step 2: Create Git Worktree
 
-Ensure `.worktrees` is gitignored:
+Use the `/git-worktree` skill to create an isolated worktree. First generate branch name from ticket URL:
 
 ```bash
-grep -qxF '.worktrees' .gitignore || echo '.worktrees' >> .gitignore
+OS_USER=$(whoami)
+BRANCH_SUFFIX=$(echo "$TICKET_URL" | sed -n 's|.*/issue/||p' | tr '[:upper:]' '[:lower:]')
+BRANCH_NAME="${OS_USER}/${BRANCH_SUFFIX}"
 ```
 
-Run worktree script and cd into it:
-
-```bash
-eval $(TICKET_ID="$TICKET_ID" TICKET_URL="$TICKET_URL" ./scripts/create-git-worktree.sh)
-cd "$WORKTREE_PATH"
-```
-
-This sets: `BRANCH_NAME`, `WORKTREE_PATH`, `DEFAULT_BRANCH`
-
-Note: `TICKET_URL` from the Linear API response is used for branch naming (e.g., `kevin/epd-123/fix-the-bug`)
-
-Install dependencies (`just install`, `pnpm install`, etc.)
+Pass `BRANCH_NAME` to the `/git-worktree` skill. The skill outputs `WORKTREE_PATH` and `DEFAULT_BRANCH`. After creation, cd into `$WORKTREE_PATH` and install dependencies.
 
 ## Step 3: Autonomous Planning
 

@@ -1,7 +1,7 @@
 ---
 name: linear-uploads
 description: Download attachments and images from Linear issues. Use when fetching screenshots, images, or file attachments from Linear comments or descriptions.
-allowed-tools: Bash(linear-cli:*)
+allowed-tools: Bash
 ---
 
 # Linear Uploads
@@ -36,9 +36,15 @@ Upload URLs are found in:
 
 URLs follow pattern: `https://uploads.linear.app/{org}/{upload}/{filename}`
 
+## Tips
+
+- Requires valid Linear API key
+- Use `-f` / `--file` to specify output filename
+- Without `-f`, outputs raw bytes to stdout (for piping)
+
 ## When to Use Each Mode
 
-**Use `-f` (file) when Claude needs to view the image:**
+**Use `-f` (file) when you need to view the image:**
 ```bash
 # Download to /tmp, then use Read tool to view
 linear-cli up fetch "https://uploads.linear.app/..." -f /tmp/screenshot.png
@@ -50,10 +56,3 @@ linear-cli up fetch "https://uploads.linear.app/..." -f /tmp/screenshot.png
 # Pipe to base64, imagemagick, etc.
 linear-cli up fetch "https://uploads.linear.app/..." | base64
 ```
-
-## Tips
-
-- Requires valid Linear API key
-- Use `-f` to specify output filename
-- Without `-f`, outputs raw bytes to stdout
-- Claude cannot interpret raw stdout bytes—always use `-f` + Read tool to view images
