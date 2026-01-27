@@ -53,10 +53,10 @@ while IFS= read -r pattern || [[ -n "$pattern" ]]; do
   pattern=$(echo "$pattern" | xargs)
 
   # Expand glob pattern
-  for file in $pattern; do
-    if [[ -f "$file" ]]; then
+  for item in $pattern; do
+    if [[ -f "$item" ]]; then
       # Get directory part of the file path
-      dir=$(dirname "$file")
+      dir=$(dirname "$item")
 
       # Create destination directory if needed
       if [[ "$dir" != "." ]]; then
@@ -64,8 +64,13 @@ while IFS= read -r pattern || [[ -n "$pattern" ]]; do
       fi
 
       # Copy file preserving relative path
-      cp "$file" "$WORKTREE_PATH/$file"
-      echo "  Copied: $file" >&2
+      cp "$item" "$WORKTREE_PATH/$item"
+      echo "  Copied: $item" >&2
+    elif [[ -d "$item" ]]; then
+      # Copy directory recursively
+      mkdir -p "$WORKTREE_PATH/$item"
+      cp -r "$item/." "$WORKTREE_PATH/$item/"
+      echo "  Copied: $item/ (directory)" >&2
     fi
   done
 done < "$INCLUDE_FILE"
