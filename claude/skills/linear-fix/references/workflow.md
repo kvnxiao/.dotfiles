@@ -2,7 +2,7 @@
 
 ## Contents
 
-1. [Gather Context](#step-1-gather-context) - Fetch ticket details via linear-cli
+1. [Gather Context](#step-1-gather-context) - Fetch ticket details, download attachments, prepare visual baselines (if `[visual-test]` marker present)
 2. [Create Git Worktree](#step-2-create-git-worktree) - Isolated workspace for implementation
 3. [Autonomous Planning](#step-3-autonomous-planning) - Generate implementation approaches
 4. [Autonomous Plan Review](#step-4-autonomous-plan-review) - Architect approval loop, extract variables
@@ -26,6 +26,44 @@ TICKET_COMMENTS=$(linear-cli cm list "$TICKET_ID" --output json)
 Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`, `TICKET_URL` (the `url` field)
 
 **IMPORTANT**: Check BOTH `TICKET_JSON` (issue description) AND `TICKET_COMMENTS` for uploaded files/attachments. If any uploads exist (images, screenshots, files), ALWAYS download them via `/linear-uploads` skill for additional context before planning.
+
+**Visual Testing Baseline Preparation (opt-in):**
+
+Visual testing is **off by default**. Only set up baselines if explicitly requested.
+
+Enable visual testing if ANY of these are true:
+
+1. **User prompt**: User includes `--visual`, `with visual testing`, or similar in their request
+2. **Ticket label**: `visual-test` label on the ticket (check `TICKET_JSON.labels`)
+3. **Ticket description**: `[visual-test]` marker in `DESCRIPTION`
+4. **Ticket comment**: `[visual-test]` marker in any `TICKET_COMMENTS`
+
+If none found, skip this section.
+
+If visual testing enabled:
+
+1. Set `HAS_VISUAL_BASELINE=true`
+2. Create baselines directory:
+   ```bash
+   mkdir -p .visual-testing/baselines
+   ```
+3. Build `VISUAL_BASELINES` list from design assets in ticket:
+   - **Figma URLs**: store URL directly
+   - **Uploaded images**: copy to `.visual-testing/baselines/<ticket-id>-<index>.png`
+
+Example structure:
+```
+VISUAL_BASELINES:
+  - name: homepage
+    baseline: .visual-testing/baselines/ENG-123-1.png
+    url: http://localhost:3000/
+  - name: settings-mobile
+    baseline: https://figma.com/file/abc123
+    url: http://localhost:3000/settings
+    viewport: 375x812
+```
+
+Infer URL and viewport from image filename/context when possible.
 
 ## Step 2: Create Git Worktree
 
@@ -71,16 +109,53 @@ Read `./reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICK
 
 Implement approved plan. Validate (tests, lint, build) pass before review.
 
-### 5b: Code Review
+### 5b: Code Review and Visual Validation
+
+Run code review and visual validation **in parallel** when design assets exist.
+
+**Code Review** (always runs):
 
 Use Task tool with `subagent_type=feature-dev:code-reviewer`.
 
 Read `./code-reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$SELECTED_APPROACH`.
 
+**Visual Validation** (conditional):
+
+If `HAS_VISUAL_BASELINE=true` (set in Step 1), invoke visual validator agent with all baselines.
+
+Agent handles script generation, capture, and comparison for each test case:
+
+```yaml
+Use Task tool with:
+  subagent_type: squint:playwright-visual-validator
+  prompt: |
+    Capture and validate visual consistency for multiple screens:
+
+    Auth: <if-needed>
+    Context: Implementing $TICKET_ID - $TITLE
+
+    Test 1:
+      URL: <url-from-VISUAL_BASELINES>
+      Baseline: <baseline-from-VISUAL_BASELINES>
+      Viewport: <viewport-or-default-1920x1080>
+      Name: <name-from-VISUAL_BASELINES>
+
+    Test 2:
+      ...
+```
+
+**Parallel Execution:**
+
+Spawn BOTH agents in the same Task tool message:
+
+- `subagent_type=feature-dev:code-reviewer`
+- `subagent_type=squint:playwright-visual-validator` (if enabled)
+
 **Review Loop:**
 
-- `## Code Review: CHANGES REQUESTED` → fix issues (5a) and re-review (5b)
-- `## Code Review: APPROVED` → proceed to Step 6
+- Code review: `## Code Review: CHANGES REQUESTED` → fix issues (5a) and re-review
+- Visual validation: Overall verdict `FAIL` or `WARNING` → address differences, re-capture, re-validate
+- Both must pass: Code review `APPROVED` AND visual validation `PASS` (or `WARNING` with documented justification)
 - Max 2 iterations; then proceed with documented caveats
 
 **IMPORTANT**: Do NOT proceed to Step 6 until code review is APPROVED (or max iterations reached with caveats documented).

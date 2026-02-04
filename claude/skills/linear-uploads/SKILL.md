@@ -1,6 +1,6 @@
 ---
 name: linear-uploads
-description: Download attachments and images from Linear issues. Use when fetching screenshots, images, or file attachments from Linear comments or descriptions.
+description: Download attachments and images from Linear issues. Use when fetching screenshots, images, videos, or file attachments from Linear comments or descriptions. Also use when user says "get the image from the ticket", "download the video", or "download the attachment".
 allowed-tools: Bash
 ---
 

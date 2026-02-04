@@ -1,6 +1,6 @@
 ---
 name: linear-search
-description: Search Linear issues and projects. Use when finding issues, looking up bugs, or searching the backlog.
+description: Search Linear issues and projects by text. Use when finding issues, looking up bugs, searching the backlog, querying "what tickets mention X", or finding issues by keyword like "find ENG-" or "search for login bug".
 allowed-tools: Bash
 ---
 
@@ -18,7 +18,7 @@ linear-cli s issues "authentication bug"
 linear-cli s issues "login" --limit 5
 
 # Get JSON output
-linear-cli s issues "error" --output json
+linear-cli s issues "error" --output ndjson
 ```
 
 ## Search Projects
@@ -31,23 +31,12 @@ linear-cli s projects "backend"
 linear-cli s projects "api" --limit 10
 ```
 
-## Combine with Filters
+## After Searching
 
-After searching, you can get details on specific issues:
-
-```bash
-# Get issue details
-linear-cli i get LIN-123
-
-# Get as JSON for parsing
-linear-cli i get LIN-123 --output json
-
-# List comments on issue
-linear-cli cm list LIN-123 --output json
-```
+For detailed issue operations (get details, add comments, update status), use the `linear-issues` skill.
 
 ## Tips
 
 - Search is case-insensitive
 - Searches issue titles and descriptions
-- Use `--output json` for programmatic access
+- Use `--output ndjson` for programmatic access

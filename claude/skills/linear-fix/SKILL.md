@@ -14,6 +14,7 @@ Autonomous Linear ticket completion: fetch issue → create worktree → plan �
 
 ```bash
 /linear-fix <ticket-id-or-url>
+/linear-fix <ticket-id-or-url> --visual  # Enable visual testing
 ```
 
 ## Workflow
@@ -29,7 +30,7 @@ Follow 6 steps (see `./references/workflow.md` for full details):
 2. **Create Worktree** - Use `/git-worktree` skill to create isolated worktree, cd into it, install deps
 3. **Plan** - Task tool with `subagent_type=Plan`, read `./references/planner-prompt.md` for template
 4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, read `./references/reviewer-prompt.md` for template
-5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`, read `./references/code-reviewer-prompt.md`
+5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`, read `./references/code-reviewer-prompt.md`. Visual validation (opt-in): runs `subagent_type=squint:playwright-visual-validator` in parallel if enabled via `--visual` flag, `visual-test` label, or `[visual-test]` marker in ticket
 6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. Read `./references/workflow.md` Step 6 for PR body format
 
 ## Autonomous Loops
