@@ -50,7 +50,9 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory
 # Claude Code
 $env:ENABLE_LSP_TOOL=1
 $env:ENABLE_EXPERIMENTAL_MCP_CLI="true"
-$env:ANTHROPIC_MODEL="claude-opus-4-5-20251101"
+$env:ANTHROPIC_MODEL="claude-opus-4-6"
+$env:CLAUDE_CODE_ENABLE_TASKS="true"
+$env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS="1"
 
 Invoke-Expression (&starship init powershell)
 Invoke-Expression (& { (atuin init powershell --disable-up-arrow | Out-String) })
