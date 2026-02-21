@@ -11,8 +11,6 @@
 [wezterm.files]
 "wezterm/wezterm.lua" = "~/.config/wezterm/wezterm.lua"
 
-[scoop.files]
-"scoop/config.json" = { target = "~/.config/scoop/config.json", type = "template" }
 
 [zsh.files]
 "zsh/.zshrc" = "~/.zshrc"
@@ -22,6 +20,7 @@
 "zsh-config/linux.zsh" = "~/.zsh/linux.zsh"
 "zsh-config/windows.zsh" = "~/.zsh/windows.zsh"
 "zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
+"zsh-config/user-abbreviations.zsh" = "~/.config/zsh-abbr/user-abbreviations"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }

@@ -8,9 +8,14 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
-# Use modern completion system
+# Use modern completion system (regenerate dump once per day, otherwise use cache)
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
+[[ ~/.zcompdump.zwc -nt ~/.zcompdump ]] || zcompile ~/.zcompdump
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
@@ -59,6 +64,7 @@ if ! zgenom saved; then
   zgenom save
   # Compile zsh files
   zgenom compile "$HOME/.zshrc"
+  zgenom compile "$HOME/.zgenom/sources/init.zsh"
 fi
 
 # fzf fuzzy finder (shell completions and keybindings)
@@ -84,10 +90,25 @@ elif [[ $OSTYPE == darwin* ]]; then
   source "$HOME/.zsh/macos.zsh"
 fi
 
-eval "$(fnm env --use-on-cd)"
+# Cache shell init output from slow commands.
+# Run `zsh-rebuild-cache` after upgrading fnm/zoxide/atuin/starship.
+_cached_eval() {
+  local name="$1" gen_cmd="$2"
+  local cache="${HOME}/.zsh/cache/${name}.zsh"
+  if [[ ! -f "$cache" ]]; then
+    mkdir -p "${HOME}/.zsh/cache"
+    ${(z)gen_cmd} > "$cache"
+    zcompile "$cache" 2>/dev/null
+  fi
+  source "$cache"
+}
+
+zsh-rebuild-cache() { rm -rf "${HOME}/.zsh/cache" && echo "Cache cleared. Restart zsh to regenerate." }
+
+_cached_eval fnm "fnm env --use-on-cd"
 if [[ "$CLAUDECODE" != "1" ]]; then
-  eval "$(zoxide init zsh)"
-  eval "$(atuin init zsh --disable-up-arrow)"
-  eval "$(starship init zsh)"
+  _cached_eval zoxide "zoxide init zsh"
+  _cached_eval atuin "atuin init zsh --disable-up-arrow"
+  _cached_eval starship "starship init zsh"
   alias cd="z"
 fi

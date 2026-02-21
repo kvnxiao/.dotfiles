@@ -35,25 +35,10 @@ alias vi="nvim"
 alias vim="nvim"
 alias vcpkg="$HOME/github/vcpkg/vcpkg"
 
-# Abbreviations
-abbr --quiet -S gaa="git add ."
-abbr --quiet -S gst="git status"
-abbr --quiet -S gsm="git switch main"
-abbr --quiet -S gpu="git push"
-abbr --quiet -S gpuo="git push -u origin \"\$(git branch --show-current)\""
-abbr --quiet -S gpuf="git push -f"
-ABBR_SET_EXPANSION_CURSOR=1 && abbr --quiet -S gcm="git commit -m \"%\""
-abbr --quiet -S gcam="git commit --amend"
-abbr --quiet -S gcan="git commit --amend --no-edit"
-ABBR_SET_EXPANSION_CURSOR=1 && abbr --quiet -S gcmn="git commit --no-verify -m \"%\""
-abbr --quiet -S gsmp="git switch main && git fetch --all && git pull"
-abbr --quiet -S gpl="git pull"
-abbr --quiet -S gsn="git switch -c"
-abbr --quiet -S gsw="git switch"
-abbr --quiet -S gpr="gh pr view --web || gh pr create --web"
-abbr --quiet -S gr="gh repo view --web"
-abbr --quiet -S gl="git l"
-abbr --quiet -S gla="git la"
+# Abbreviations are managed as persistent abbrs (not session).
+# To add/remove: `abbr add <name>=<expansion>` / `abbr erase <name>`
+# Stored in ~/.config/zsh-abbr/user-abbreviations
+ABBR_SET_EXPANSION_CURSOR=1
 
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
