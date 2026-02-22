@@ -87,3 +87,7 @@ if [[ "$CLAUDECODE" != "1" ]]; then
   _cached_eval starship "starship init zsh"
   alias cd="z"
 fi
+
+# peon-ping quick controls
+alias peon="bash /c/Users/kvnxiao/.claude/hooks/peon-ping/peon.sh"
+[ -f /c/Users/kvnxiao/.claude/hooks/peon-ping/completions.bash ] && source /c/Users/kvnxiao/.claude/hooks/peon-ping/completions.bash

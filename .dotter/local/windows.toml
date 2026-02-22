@@ -3,10 +3,8 @@ includes = [".dotter/windows.toml"]
 packages = [
   "git",
   "pwsh",
-
   "wezterm",
   "zsh",
-  "zsh-config",
   "mpv",
   "komorebi",
   "windows-terminal",

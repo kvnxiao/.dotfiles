@@ -15,13 +15,11 @@
 [zsh.files]
 "zsh/.zshrc" = "~/.zshrc"
 "zsh/.zimrc" = "~/.zimrc"
-
-[zsh-config.files]
-"zsh-config/macos.zsh" = "~/.zsh/macos.zsh"
-"zsh-config/linux.zsh" = "~/.zsh/linux.zsh"
-"zsh-config/windows.zsh" = "~/.zsh/windows.zsh"
-"zsh-config/shared.zsh" = "~/.zsh/shared.zsh"
-"zsh-config/user-abbreviations.zsh" = "~/.config/zsh-abbr/user-abbreviations"
+"zsh/config/macos.zsh" = "~/.zsh/macos.zsh"
+"zsh/config/linux.zsh" = "~/.zsh/linux.zsh"
+"zsh/config/windows.zsh" = "~/.zsh/windows.zsh"
+"zsh/config/shared.zsh" = "~/.zsh/shared.zsh"
+"zsh/config/user-abbreviations.zsh" = "~/.config/zsh-abbr/user-abbreviations"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }

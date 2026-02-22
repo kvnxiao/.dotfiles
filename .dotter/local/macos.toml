@@ -5,7 +5,6 @@ packages = [
   "git",
   "wezterm",
   "zsh",
-  "zsh-config",
   "mpv",
   "act",
   "karabiner",
