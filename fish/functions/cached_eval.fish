@@ -1,0 +1,19 @@
+function cached_eval --description "Cache command output and source it"
+  if test "$argv[1]" = --rebuild
+    rm -rf "$HOME/.local/share/fish/eval-cache"
+    echo "Cache cleared. Restart fish to regenerate."
+    return
+  end
+
+  set -l name $argv[1]
+  set -l cmd $argv[2]
+  set -l cache_dir "$HOME/.local/share/fish/eval-cache"
+  set -l cache_file "$cache_dir/$name.fish"
+
+  if not test -f "$cache_file"
+    mkdir -p "$cache_dir"
+    eval $cmd > "$cache_file"
+  end
+
+  source "$cache_file"
+end

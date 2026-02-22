@@ -22,6 +22,7 @@
 
 [fish.files]
 "fish/config.fish" = "~/.config/fish/config.fish"
+"fish/functions" = { target = "~/.config/fish/functions", type = "symbolic", recurse = true }
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }
