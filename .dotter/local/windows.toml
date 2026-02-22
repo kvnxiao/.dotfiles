@@ -5,6 +5,7 @@ packages = [
   "pwsh",
   "wezterm",
   "zsh",
+  "fish",
   "mpv",
   "komorebi",
   "windows-terminal",
