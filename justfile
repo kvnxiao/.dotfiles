@@ -10,6 +10,7 @@ default: deploy
 deploy: _ensure-installed
     dotter deploy
 
+# Deploy dotfiles (runs install on first use, then dotter deploy)
 [windows]
 deploy: _ensure-installed
     dotter deploy
@@ -29,6 +30,7 @@ _ensure-installed:
 setup-zshenv:
     zsh setup/setup-zshenv.zsh
 
+# Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL
 [windows]
 setup-zshenv:
     C:\msys64\usr\bin\zsh.exe setup/setup-zshenv.zsh
@@ -42,6 +44,7 @@ defender:
 [windows]
 setup: deploy defender setup-zshenv
 
+# Full setup: deploy + platform-specific setup
 [unix]
 setup: deploy setup-zshenv
 
@@ -50,6 +53,7 @@ setup: deploy setup-zshenv
 rebuild-cache:
     rm -rf ~/.zsh/cache && echo "Cache cleared. Restart zsh to regenerate."
 
+# Rebuild zsh eval cache (fnm, zoxide, atuin, starship)
 [windows]
 rebuild-cache:
     C:\msys64\usr\bin\zsh.exe -c 'rm -rf ~/.zsh/cache && echo "Cache cleared. Restart zsh to regenerate."'
