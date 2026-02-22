@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Windows Defender exclusions for MSYS2, zsh dotfiles, and related processes / tools
-# required by the zsh configs.
+# Windows Defender exclusions for MSYS2, WezTerm, zsh dotfiles, and related
+# processes / tools required by the zsh configs.
 # Prevents real-time scanning of MSYS2 binaries and config files,
 # which significantly speeds up shell startup and general MSYS2 operations.
 #
@@ -13,6 +13,9 @@ $ErrorActionPreference = "Stop"
 # MSYS2 installation
 $msys2Path = "C:\msys64"
 
+# WezTerm installation
+$weztermPath = "C:\Program Files\WezTerm"
+
 # Dotfiles and zsh config
 $dotfilesPath = "$env:USERPROFILE\.dotfiles"
 $zshConfigPath = "$env:USERPROFILE\.zsh"
@@ -23,6 +26,7 @@ $zgenomPath = "$env:USERPROFILE\.zgenom"
 
 $pathExclusions = @(
     $msys2Path
+    $weztermPath
     $dotfilesPath
     $zshConfigPath
     $zgenomPath
@@ -49,6 +53,11 @@ $processExclusions = @(
     "$msys2Path\usr\bin\tzset.exe"
     "$msys2Path\usr\bin\git.exe"
     "$msys2Path\mingw64\bin\git.exe"
+
+    # WezTerm
+    "$weztermPath\wezterm.exe"
+    "$weztermPath\wezterm-gui.exe"
+    "$weztermPath\wezterm-mux-server.exe"
 
     # Tools forked during zsh startup (cached_eval, etc.)
     "$cargoPath\fnm.exe"
