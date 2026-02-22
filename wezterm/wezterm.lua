@@ -21,7 +21,7 @@ local function get_windows_config()
     default_prog = {
       -- "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
       "C:\\msys64\\usr\\bin\\zsh.exe",
-      "-i", "--login",
+      "-i", "--no-globalrcs",
     },
     font = wezterm.font_with_fallback({
       { family = "FiraCode Nerd Font Mono", weight = "Regular", stretch = "Normal", style = "Normal" },

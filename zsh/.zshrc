@@ -8,15 +8,19 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
-# Use modern completion system (regenerate dump once per day, otherwise use cache)
-autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
+# --- zimfw ---
+ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+zstyle ':zim:zmodule' use 'degit'
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+    https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
-[[ ~/.zcompdump.zwc -nt ~/.zcompdump ]] || zcompile ~/.zcompdump
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+source ${ZIM_HOME}/init.zsh
 
+# Completion styles
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
@@ -41,40 +45,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
 # switch group using `,` and `.`
 zstyle ':fzf-tab:*' switch-group '<' '>'
-
-# Load zgenom
-if [[ ! -f "$HOME/.zgenom/zgenom.zsh" ]]; then
-  git clone https://github.com/jandamm/zgenom.git "${HOME}/.zgenom"
-fi
-source "$HOME/.zgenom/zgenom.zsh"
-
-# Check for plugin and zgenom updates every 7 days
-# This does not increase the startup time.
-zgenom autoupdate
-
-if ! zgenom saved; then
-  echo "Creating a zgenom save"
-  zgenom load zsh-users/zsh-autosuggestions
-  zgenom load zsh-users/zsh-history-substring-search
-  zgenom load zsh-users/zsh-completions
-  zgenom load Aloxaf/fzf-tab
-  zgenom load olets/zsh-abbr
-  zgenom load zdharma-continuum/fast-syntax-highlighting
-  # save all to init script
-  zgenom save
-  # Compile zsh files
-  zgenom compile "$HOME/.zshrc"
-  zgenom compile "$HOME/.zgenom/sources/init.zsh"
-fi
-
-# fzf fuzzy finder (shell completions and keybindings)
-if [[ ! -d "$HOME/.fzf" ]]; then
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  # Only install fzf if the command is not available
-  if [[ ! -x "$(command -v fzf)" ]]; then
-    ~/.fzf/install
-  fi
-fi
 
 # Shared configs
 source "$HOME/.zsh/shared.zsh"
