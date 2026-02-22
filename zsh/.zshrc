@@ -73,7 +73,12 @@ _cached_eval() {
   source "$cache"
 }
 
-zsh-rebuild-cache() { rm -rf "${HOME}/.zsh/cache" && echo "Cache cleared. Restart zsh to regenerate." }
+zsh-rebuild-cache() {
+  rm -rf "${HOME}/.zsh/cache"
+  rm -f "${HOME}/.zsh"/*.zwc
+  local f; for f in "$HOME/.zsh"/*.zsh; do zcompile "$f" 2>/dev/null; done
+  echo "Cache cleared, configs compiled. Restart zsh to regenerate."
+}
 
 _cached_eval fnm "fnm env --use-on-cd"
 if [[ "$CLAUDECODE" != "1" ]]; then

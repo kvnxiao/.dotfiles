@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
-# Computes and appends HOSTNAME, LANG, and TZ to ~/.zshenv.
+# Computes and appends HOSTNAME, LANG, TZ, and MSYS2 PATH to ~/.zshenv.
 # These values are normally resolved via subprocess spawns in /etc/profile
 # and /etc/profile.d/{lang,tzset}.sh. Pre-setting them skips those spawns.
+# The PATH ensures coreutils are available when using --no-globalrcs.
 #
 # Run this once on each machine (or after changing timezone/locale):
 #   zsh ~/.dotfiles/setup-zshenv.zsh
@@ -36,6 +37,8 @@ export HOSTNAME="$_hostname"
 export LANG="$_lang"
 export TZ="$_tz"
 export SHELL="$_shell"
+# Ensure MSYS2 coreutils are in PATH (needed with --no-globalrcs)
+export PATH="/usr/local/bin:/usr/bin:/bin:\${PATH}"
 # --- end setup-zshenv ---
 EOF
 
