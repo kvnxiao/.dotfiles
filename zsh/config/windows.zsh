@@ -21,7 +21,7 @@ alias scoop="noglob scoop"
 
 # Replace MSYS-style unix path with Windows path using forward slashes
 function pwd {
-  cygpath -w "$PWD" | sed 's/\\/\//g'
+  cygpath -m "$PWD"
 }
 
 function unzipjis {

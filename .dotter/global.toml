@@ -21,13 +21,18 @@
 "zsh/config/user-abbreviations.zsh" = "~/.config/zsh-abbr/user-abbreviations"
 
 [fish.files]
+"fish/conf.d/_fish_function_path.fish" = "~/.config/fish/conf.d/_fish_function_path.fish"
+"fish/conf.d/abbr-git.fish" = "~/.config/fish/conf.d/abbr-git.fish"
 "fish/config.fish" = "~/.config/fish/config.fish"
+"fish/fish_variables" = "~/.config/fish/fish_variables"
+"fish/functions/hooks/_atuin_ensure_session.fish" = "~/.config/fish/functions/hooks/_atuin_ensure_session.fish"
+"fish/functions/hooks/_cached_eval_post_atuin.fish" = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
 "fish/functions/cached-completions.fish" = "~/.config/fish/functions/cached-completions.fish"
 "fish/functions/cached-eval.fish" = "~/.config/fish/functions/cached-eval.fish"
+"fish/functions/clear.fish" = "~/.config/fish/functions/clear.fish"
 "fish/functions/fish_greeting.fish" = "~/.config/fish/functions/fish_greeting.fish"
-"fish/functions/_cached_eval_post_atuin.fish" = "~/.config/fish/functions/_cached_eval_post_atuin.fish"
-"fish/conf.d/abbr-git.fish" = "~/.config/fish/conf.d/abbr-git.fish"
-"fish/fish_variables" = "~/.config/fish/fish_variables"
+"fish/functions/unzip.fish" = "~/.config/fish/functions/unzip.fish"
+"fish/functions/gh-raw.fish" = "~/.config/fish/functions/gh-raw.fish"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }

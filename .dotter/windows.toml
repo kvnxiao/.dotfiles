@@ -1,5 +1,8 @@
 [fish.files]
 "fish/conf.d/os-detect.windows.fish" = "~/.config/fish/conf.d/os-detect.fish"
+"fish/functions/windows/pwd.fish" = "~/.config/fish/functions/windows/pwd.fish"
+"fish/functions/windows/open.fish" = "~/.config/fish/functions/windows/open.fish"
+"fish/functions/windows/mpv.fish" = "~/.config/fish/functions/windows/mpv.fish"
 
 [git.variables]
 "ssh_public_key" = 'C:\\Users\\kvnxiao\\.ssh\\id_ed25519.pub'

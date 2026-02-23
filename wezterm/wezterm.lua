@@ -16,12 +16,12 @@ local function get_windows_config()
       CHERE_INVOKING = "1",
       MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "inherit",
-      SHELL = "/usr/bin/zsh",
+      SHELL = "/usr/bin/fish",
+      PATH = "/usr/local/bin;/usr/bin;" .. os.getenv("PATH"),
     },
     default_prog = {
-      -- "C:\\Program Files\\PowerShell\\7\\pwsh.exe", "-nologo"
-      "C:\\msys64\\usr\\bin\\zsh.exe",
-      "-i", "--no-globalrcs",
+      "C:\\msys64\\usr\\bin\\fish.exe",
+      "-i"
     },
     font = wezterm.font_with_fallback({
       { family = "FiraCode Nerd Font Mono", weight = "Regular", stretch = "Normal", style = "Normal" },
