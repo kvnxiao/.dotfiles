@@ -1,3 +1,6 @@
+[fish.files]
+"fish/conf.d/os-detect.macos.fish" = "~/.config/fish/conf.d/os-detect.fish"
+
 [yabai.files]
 "yabai/.yabairc" = "~/.yabairc"
 

@@ -17,6 +17,11 @@ function cached-eval --description "Cache command output and source it"
     else
       eval $cmd > "$cache_file"
     end
+    # Run post-processing hook if defined: _cached_eval_post_<name>
+    set -l hook "_cached_eval_post_$name"
+    if functions -q $hook
+      $hook "$cache_file"
+    end
   end
 
   source "$cache_file"

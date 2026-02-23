@@ -22,7 +22,12 @@
 
 [fish.files]
 "fish/config.fish" = "~/.config/fish/config.fish"
-"fish/functions" = { target = "~/.config/fish/functions", type = "symbolic", recurse = true }
+"fish/functions/cached-completions.fish" = "~/.config/fish/functions/cached-completions.fish"
+"fish/functions/cached-eval.fish" = "~/.config/fish/functions/cached-eval.fish"
+"fish/functions/fish_greeting.fish" = "~/.config/fish/functions/fish_greeting.fish"
+"fish/functions/_cached_eval_post_atuin.fish" = "~/.config/fish/functions/_cached_eval_post_atuin.fish"
+"fish/conf.d/abbr-git.fish" = "~/.config/fish/conf.d/abbr-git.fish"
+"fish/fish_variables" = "~/.config/fish/fish_variables"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }

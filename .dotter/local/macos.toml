@@ -1,14 +1,14 @@
 includes = [".dotter/macos.toml"]
 
 packages = [
-  "aerospace",
-  "git",
-  "wezterm",
-  "zsh",
-  "fish",
-  "mpv",
   "act",
-  "karabiner",
+  "aerospace",
   "atuin",
   "claude",
+  "fish",
+  "git",
+  "karabiner",
+  "mpv",
+  "wezterm",
+  "zsh",
 ]

@@ -1,7 +1,7 @@
 #Requires -RunAsAdministrator
 
-# Windows Defender exclusions for MSYS2, WezTerm, zsh dotfiles, and related
-# processes / tools required by the zsh configs.
+# Windows Defender exclusions for MSYS2, WezTerm, shell dotfiles, and related
+# processes / tools required by the shell configs.
 # Prevents real-time scanning of MSYS2 binaries and config files,
 # which significantly speeds up shell startup and general MSYS2 operations.
 #
@@ -16,27 +16,35 @@ $msys2Path = "C:\msys64"
 # WezTerm installation
 $weztermPath = "C:\Program Files\WezTerm"
 
-# Dotfiles and zsh config
+# Dotfiles and shell config
 $dotfilesPath = "$env:USERPROFILE\.dotfiles"
+$configPath = "$env:USERPROFILE\.config"
 $zshConfigPath = "$env:USERPROFILE\.zsh"
 $zshrcPath = "$env:USERPROFILE\.zshrc"
 $zshenvPath = "$env:USERPROFILE\.zshenv"
 $zcompdumpPath = "$env:USERPROFILE\.zcompdump"
 $zgenomPath = "$env:USERPROFILE\.zgenom"
+$fishConfigPath = "$env:USERPROFILE\.config\fish\config.fish"
+$fishVariablesPath = "$env:USERPROFILE\.config\fish\fish_variables"
+$fishLocalSharePath = "$env:USERPROFILE\.local\share\fish"
 
 $pathExclusions = @(
     $msys2Path
     $weztermPath
     $dotfilesPath
+    $configPath
     $zshConfigPath
     $zgenomPath
     "$env:USERPROFILE\.cargo\bin"
+    $fishLocalSharePath
 )
 
 $fileExclusions = @(
     $zshrcPath
     $zshenvPath
     $zcompdumpPath
+    $fishConfigPath
+    $fishVariablesPath
 )
 
 # Process exclusions (avoid scanning on every fork/exec during shell startup)
@@ -59,7 +67,10 @@ $processExclusions = @(
     "$weztermPath\wezterm-gui.exe"
     "$weztermPath\wezterm-mux-server.exe"
 
-    # Tools forked during zsh startup (cached_eval, etc.)
+    # Fish
+    "$msys2Path\usr\bin\fish.exe"
+
+    # Tools forked during shell startup (cached-eval, etc.)
     "$cargoPath\fnm.exe"
     "$cargoPath\zoxide.exe"
     "$cargoPath\atuin.exe"

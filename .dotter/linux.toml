@@ -1,0 +1,2 @@
+[fish.files]
+"fish/conf.d/os-detect.linux.fish" = "~/.config/fish/conf.d/os-detect.fish"

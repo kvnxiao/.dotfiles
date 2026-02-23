@@ -1,1 +1,12 @@
-packages = ["git", "wezterm", "zsh", "mpv", "fish", "act", "atuin", "claude"]
+includes = [".dotter/linux.toml"]
+
+packages = [
+  "act",
+  "atuin",
+  "claude",
+  "fish",
+  "git",
+  "mpv",
+  "wezterm",
+  "zsh",
+]
