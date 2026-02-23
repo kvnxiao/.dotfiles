@@ -12,7 +12,11 @@ function cached_eval --description "Cache command output and source it"
 
   if not test -f "$cache_file"
     mkdir -p "$cache_dir"
-    eval $cmd > "$cache_file"
+    if test (count $argv) -ge 4
+      eval $cmd | string replace -a "$argv[3]" "$argv[4]" > "$cache_file"
+    else
+      eval $cmd > "$cache_file"
+    end
   end
 
   source "$cache_file"
