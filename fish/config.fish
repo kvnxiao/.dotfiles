@@ -1,4 +1,4 @@
-fish_add_path -g ~/.cargo/bin
+fish_add_path -g ~/.local/bin ~/.cargo/bin
 
 if status is-interactive
   cached-completions fnm "fnm completions --shell fish"
