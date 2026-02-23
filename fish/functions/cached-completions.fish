@@ -1,4 +1,4 @@
-function cached_completions --description "Cache tool-generated fish completions"
+function cached-completions --description "Cache tool-generated fish completions"
     set -l manifest "$HOME/.local/share/fish/completions-cache.manifest"
 
     if test "$argv[1]" = --rebuild
@@ -8,7 +8,7 @@ function cached_completions --description "Cache tool-generated fish completions
             end <"$manifest"
             rm -f "$manifest"
         end
-        echo "Cached completions removed. Run your cached_completions calls to regenerate."
+        echo "Cached completions removed. Run your cached-completions calls to regenerate."
         return
     end
 
