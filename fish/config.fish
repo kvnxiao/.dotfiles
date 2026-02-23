@@ -1,3 +1,5 @@
+fish_add_path -g ~/.cargo/bin
+
 if status is-interactive
   cached-completions fnm "fnm completions --shell fish"
   cached-completions atuin "atuin gen-completions --shell fish"
