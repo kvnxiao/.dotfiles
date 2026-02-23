@@ -1,12 +1,21 @@
 if status is-interactive
   cached-completions fnm "fnm completions --shell fish"
   cached-completions atuin "atuin gen-completions --shell fish"
-  cached-completions fzf "gh-raw junegunn/fzf v(fzf --version | string split -f1 ' ') shell/completion.fish"
+
+  cached-eval fisher "gh-raw jorgebucaran/fisher main functions/fisher.fish"
+  # Bootstrap fisher plugins
+  # Touching a marker file to track when plugins were last updated
+  set -l _fisher_marker ~/.local/share/fish/fisher-bootstrapped
+  if not test -f $_fisher_marker; or test $__fish_config_dir/fish_plugins -nt $_fisher_marker
+    fisher update
+    mkdir -p (dirname $_fisher_marker)
+    touch $_fisher_marker
+  end
 
   cached-eval fnm "fnm env --use-on-cd"
-  cached-eval fzf-keybindings "gh-raw junegunn/fzf v(fzf --version | string split -f1 ' ') shell/key-bindings.fish"
   cached-eval zoxide "zoxide init fish"
   cached-eval atuin "atuin init fish --disable-up-arrow"
+  cached-eval br "broot --print-shell-function fish"
 
   # Wrap atuin functions with lazy session init to defer atuin uuid from startup to first use
   functions -c _atuin_preexec _atuin_preexec_inner

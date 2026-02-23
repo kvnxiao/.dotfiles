@@ -25,6 +25,7 @@
 "fish/conf.d/abbr-git.fish" = "~/.config/fish/conf.d/abbr-git.fish"
 "fish/config.fish" = "~/.config/fish/config.fish"
 "fish/fish_variables" = "~/.config/fish/fish_variables"
+"fish/fish_plugins" = "~/.config/fish/fish_plugins"
 "fish/functions/hooks/_atuin_ensure_session.fish" = "~/.config/fish/functions/hooks/_atuin_ensure_session.fish"
 "fish/functions/hooks/_cached_eval_post_atuin.fish" = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
 "fish/functions/cached-completions.fish" = "~/.config/fish/functions/cached-completions.fish"
