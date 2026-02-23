@@ -63,7 +63,22 @@ local function get_windows_config()
   }
 end
 
-local function get_unix_config()
+local function get_macos_config()
+  return {
+    default_prog = { "/opt/homebrew/bin/fish", "-l" },
+    set_environment_variables = {},
+    font = wezterm.font_with_fallback({
+      "FiraCode Nerd Font",
+      "JetBrains Mono",
+    }),
+    max_fps = 120,
+    font_size = 16,
+    window_decorations = "RESIZE",
+    keys = {}
+  }
+end
+
+local function get_linux_config()
   return {
     default_prog = { "/bin/zsh", "-l" },
     set_environment_variables = {},
@@ -81,8 +96,10 @@ end
 local platform_config
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   platform_config = get_windows_config()
+elseif wezterm.target_triple == "aarch64-apple-darwin" or wezterm.target_triple == "x86_64-apple-darwin" then
+  platform_config = get_macos_config()
 else
-  platform_config = get_unix_config()
+  platform_config = get_linux_config()
 end
 
 -- Global keybindings (merged with platform-specific keys)
