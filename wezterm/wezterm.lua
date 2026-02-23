@@ -58,6 +58,11 @@ local function get_windows_config()
         key = "w",
         mods = "CTRL",
         action = wezterm.action.CloseCurrentTab { confirm = false },
+      },
+      {
+        key = "Backspace",
+        mods = "CTRL",
+        action = wezterm.action { SendString = "\x17" },
       }
     }
   }
@@ -93,14 +98,19 @@ local function get_linux_config()
   }
 end
 
+local is_macos = wezterm.target_triple == "aarch64-apple-darwin"
+  or wezterm.target_triple == "x86_64-apple-darwin"
+
 local platform_config
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   platform_config = get_windows_config()
-elseif wezterm.target_triple == "aarch64-apple-darwin" or wezterm.target_triple == "x86_64-apple-darwin" then
+elseif is_macos then
   platform_config = get_macos_config()
 else
   platform_config = get_linux_config()
 end
+
+local link_mod = is_macos and "SUPER" or "CTRL"
 
 -- Global keybindings (merged with platform-specific keys)
 local global_keys = {
@@ -153,16 +163,16 @@ return {
       mods = "NONE",
       action = "Nop",
     },
-    -- Ctrl-click will open the link under the mouse cursor
+    -- Ctrl-click (Windows/Linux) or Cmd-click (macOS) to open links
     {
       event = { Up = { streak = 1, button = "Left" } },
-      mods = "CTRL",
+      mods = link_mod,
       action = "OpenLinkAtMouseCursor",
     },
-    -- Disable the 'Down' event of CTRL-Click to avoid weird program behaviors
+    -- Disable the 'Down' event to avoid weird program behaviors
     {
       event = { Down = { streak = 1, button = "Left" } },
-      mods = "CTRL",
+      mods = link_mod,
       action = "Nop",
     },
   },
