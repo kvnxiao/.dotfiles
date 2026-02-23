@@ -80,9 +80,12 @@ local function get_macos_config()
     font_size = 16,
     window_decorations = "RESIZE",
     keys = {
-      -- Cmd+Shift+Arrow → same sequences as Ctrl+Shift+Arrow (word selection)
-      { key = "LeftArrow", mods = "SUPER|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
-      { key = "RightArrow", mods = "SUPER|SHIFT", action = wezterm.action { SendString = "\x1b[1;6C" } },
+      -- Ctrl+Shift+Arrow → word selection (override WezTerm default ActivatePaneDirection)
+      { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
+      { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action { SendString = "\x1b[1;6C" } },
+      -- Opt+Shift+Arrow → word selection (Karabiner remaps Cmd+Shift+Arrow to this)
+      { key = "LeftArrow", mods = "ALT|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
+      { key = "RightArrow", mods = "ALT|SHIFT", action = wezterm.action { SendString = "\x1b[1;6C" } },
       -- Cmd+Backspace → word delete
       { key = "Backspace", mods = "SUPER", action = wezterm.action { SendString = "\x17" } },
     }
