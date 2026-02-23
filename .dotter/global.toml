@@ -34,6 +34,9 @@
 "fish/functions/fish_greeting.fish" = "~/.config/fish/functions/fish_greeting.fish"
 "fish/functions/unzip.fish" = "~/.config/fish/functions/unzip.fish"
 "fish/functions/gh-raw.fish" = "~/.config/fish/functions/gh-raw.fish"
+"fish/functions/__editor_backspace.fish" = "~/.config/fish/functions/__editor_backspace.fish"
+"fish/functions/__editor_delete.fish" = "~/.config/fish/functions/__editor_delete.fish"
+"fish/conf.d/key-bindings.fish" = "~/.config/fish/conf.d/key-bindings.fish"
 
 [mpv.files]
 "mpv/config" = { target = "~/.config/mpv", type = "symbolic", recurse = true }
