@@ -1,11 +1,12 @@
+# Set up PATH
 fish_add_path -g ~/.local/bin ~/.cargo/bin
+if string match -q 'darwin*' "$OSTYPE"
+  fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin
+end
 
 if status is-interactive
-  cached-completions fnm "fnm completions --shell fish"
-  cached-completions atuin "atuin gen-completions --shell fish"
-
+  # Bootstrap fisher and fish plugins
   cached-eval fisher "gh-raw jorgebucaran/fisher main functions/fisher.fish"
-  # Bootstrap fisher plugins
   # Touching a marker file to track when plugins were last updated
   set -l _fisher_marker ~/.local/share/fish/fisher-bootstrapped
   if not test -f $_fisher_marker; or test $__fish_config_dir/fish_plugins -nt $_fisher_marker
@@ -14,6 +15,11 @@ if status is-interactive
     touch $_fisher_marker
   end
 
+  # Set up completions
+  cached-completions fnm "fnm completions --shell fish"
+  cached-completions atuin "atuin gen-completions --shell fish"
+
+  # Set up init scripts from various tools required at prompt render time
   cached-eval fnm "fnm env --use-on-cd"
   cached-eval zoxide "zoxide init fish"
   cached-eval atuin "atuin init fish --disable-up-arrow"
