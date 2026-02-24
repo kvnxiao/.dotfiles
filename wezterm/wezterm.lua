@@ -17,7 +17,6 @@ local function get_windows_config()
       MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "inherit",
       SHELL = "/usr/bin/fish",
-      PATH = "/usr/local/bin;/usr/bin;" .. os.getenv("PATH"),
     },
     default_prog = {
       "C:\\msys64\\usr\\bin\\fish.exe",

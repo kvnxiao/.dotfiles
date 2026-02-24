@@ -4,7 +4,7 @@
   "actions": [],
   "copyFormatting": "none",
   "copyOnSelect": false,
-  "defaultProfile": "{3f86f657-1a02-417c-8fdf-6aea30b07db3}",
+  "defaultProfile": "{18c31cb0-86f5-499d-8848-dd056a5d7244}",
   "keybindings": [
     {
       "id": "Terminal.CopyToClipboard",
@@ -40,7 +40,21 @@
     },
     "list": [
       {
-        "commandline": "C:\\msys64\\usr\\bin\\zsh.exe -i --login",
+        "commandline": "C:\\msys64\\usr\\bin\\fish.exe -i",
+        "guid": "{18c31cb0-86f5-499d-8848-dd056a5d7244}",
+        "hidden": false,
+        "name": "fish (msys64)",
+        "environment": {
+          "MSYS": "enable_pcon winsymlinks:nativestrict",
+          "CHERE_INVOKING": "1",
+          "MSYSTEM": "MSYS",
+          "MSYS2_PATH_TYPE": "inherit",
+          "SHELL": "/usr/bin/fish"
+        },
+        "startingDirectory": "%USERPROFILE%"
+      },
+      {
+        "commandline": "C:\\msys64\\usr\\bin\\zsh.exe -i",
         "guid": "{3f86f657-1a02-417c-8fdf-6aea30b07db3}",
         "hidden": false,
         "name": "zsh (msys64)",
