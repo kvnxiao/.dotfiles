@@ -15,7 +15,7 @@ local function get_windows_config()
       MSYS = "enable_pcon winsymlinks:nativestrict",
       CHERE_INVOKING = "1",
       MSYSTEM = "MSYS",
-      MSYS2_PATH_TYPE = "inherit",
+      MSYS2_PATH_TYPE = "minimal",
       SHELL = "/usr/bin/fish",
     },
     default_prog = {
