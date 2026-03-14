@@ -50,7 +50,7 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory
 # Claude Code
 $env:ENABLE_LSP_TOOL=1
 $env:ENABLE_EXPERIMENTAL_MCP_CLI="true"
-$env:ANTHROPIC_MODEL="claude-opus-4-6"
+$env:ANTHROPIC_MODEL="opus[1m]"
 $env:CLAUDE_CODE_ENABLE_TASKS="true"
 $env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS="1"
 

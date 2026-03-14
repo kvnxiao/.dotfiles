@@ -48,7 +48,7 @@ export FZF_DEFAULT_OPTS=" \
 # Claude experimental env vars
 export ENABLE_LSP_TOOL=1
 export ENABLE_EXPERIMENTAL_MCP_CLI=true
-export ANTHROPIC_MODEL="claude-opus-4-6"
+export ANTHROPIC_MODEL="opus[1m]"
 export CLAUDE_CODE_ENABLE_TASKS=true
 export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 

@@ -43,3 +43,4 @@ SETUVAR fits_fzf_opts:\x1d
 SETUVAR fits_height:40\x25
 SETUVAR fits_keybinding:\x09
 SETUVAR fits_lsd_opts:\x1d
+SETUVAR fits_preview_window:right\x2c50\x25\x2cborder\x2dleft\x2c\x3c80\x28up\x2c40\x25\x2cborder\x2dbottom\x29

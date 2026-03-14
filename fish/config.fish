@@ -48,7 +48,7 @@ if status is-interactive
   set -gx XDG_CONFIG_HOME "$HOME/.config"
   set -gx ENABLE_LSP_TOOL 1
   set -gx ENABLE_EXPERIMENTAL_MCP_CLI true
-  set -gx ANTHROPIC_MODEL claude-opus-4-6
+  set -gx ANTHROPIC_MODEL "opus[1m]"
   set -gx CLAUDE_CODE_ENABLE_TASKS true
   set -gx CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS 1
 end
