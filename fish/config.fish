@@ -20,6 +20,7 @@ if status is-interactive
   # Set up completions
   cached-completions fnm "fnm completions --shell fish"
   cached-completions atuin "atuin gen-completions --shell fish"
+  cached-completions sk "sk --shell fish"
 
   # Set up init scripts from various tools required at prompt render time
   cached-eval fnm "fnm env --use-on-cd"
