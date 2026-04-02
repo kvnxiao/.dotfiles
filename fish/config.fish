@@ -8,11 +8,13 @@ if status is-interactive
   # Bootstrap fisher and fish plugins
   cached-eval fisher "gh-raw jorgebucaran/fisher main functions/fisher.fish"
   # Touching a marker file to track when plugins were last updated
-  set -l _fisher_marker ~/.local/share/fish/fisher-bootstrapped
-  if not test -f $_fisher_marker; or test $__fish_config_dir/fish_plugins -nt $_fisher_marker
+  set -l _fisher_snapshot ~/.local/share/fish/fisher-plugins-snapshot
+  set -l _plugins_current (cat $__fish_config_dir/fish_plugins 2>/dev/null | string collect)
+  set -l _plugins_snapshot (cat $_fisher_snapshot 2>/dev/null | string collect)
+  if test "$_plugins_current" != "$_plugins_snapshot"
     fisher update
-    mkdir -p (dirname $_fisher_marker)
-    touch $_fisher_marker
+    mkdir -p (dirname $_fisher_snapshot)
+    printf '%s' "$_plugins_current" >$_fisher_snapshot
   end
 
   # Set up completions
