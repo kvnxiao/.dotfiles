@@ -64,5 +64,6 @@
   },
   "outputStyle": "Terse Engineering",
   "effortLevel": "high",
-  "autoUpdatesChannel": "latest"
+  "autoUpdatesChannel": "latest",
+  "voiceEnabled": true
 }
