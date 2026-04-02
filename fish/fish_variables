@@ -4,8 +4,7 @@ SETUVAR --export FZF_DEFAULT_OPTS:\x2d\x2dcolor\x3dbg\x2b\x3a\x23313244\x2cbg\x3
 SETUVAR __fish_initialized:4300
 SETUVAR _fisher_jorgebucaran_2F_fisher_files:\x7e/\x2econfig/fish/functions/fisher\x2efish\x1e\x7e/\x2econfig/fish/completions/fisher\x2efish
 SETUVAR _fisher_kvnxiao_2F_fish_2D_in_2D_the_2D_shell_files:\x7e/\x2econfig/fish/functions/_fits\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_completion_group\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_expand_tilde\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_file_type\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_path_to_complete\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_cmd\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_debounce\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_dir\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_file\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_fn\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_opt\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_preview_process\x2efish\x1e\x7e/\x2econfig/fish/functions/_fits_source_paths\x2efish\x1e\x7e/\x2econfig/fish/conf\x2ed/fits\x2efish
-SETUVAR _fisher_patrickf1_2F_fzf_2E_fish_files:\x7e/\x2econfig/fish/functions/_fzf_configure_bindings_help\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_extract_var_info\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_preview_changed_file\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_preview_file\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_report_diff_type\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_report_file_type\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_directory\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_git_log\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_git_status\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_history\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_processes\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_search_variables\x2efish\x1e\x7e/\x2econfig/fish/functions/_fzf_wrapper\x2efish\x1e\x7e/\x2econfig/fish/functions/fzf_configure_bindings\x2efish\x1e\x7e/\x2econfig/fish/conf\x2ed/fzf\x2efish\x1e\x7e/\x2econfig/fish/completions/fzf_configure_bindings\x2efish
-SETUVAR _fisher_plugins:jorgebucaran/fisher\x1epatrickf1/fzf\x2efish\x1ekvnxiao/fish\x2din\x2dthe\x2dshell
+SETUVAR _fisher_plugins:jorgebucaran/fisher\x1ekvnxiao/fish\x2din\x2dthe\x2dshell
 SETUVAR _fisher_upgraded_to_4_4:\x1d
 SETUVAR fifc_keybinding:\x09
 SETUVAR fifc_open_keybinding:ctrl\x2do
@@ -36,6 +35,7 @@ SETUVAR fish_pager_color_description:6c7086
 SETUVAR fish_pager_color_prefix:f5c2e7
 SETUVAR fish_pager_color_progress:6c7086
 SETUVAR fits_bat_opts:\x1d
+SETUVAR fits_builtin_search:false
 SETUVAR fits_eza_opts:\x1d
 SETUVAR fits_fd_opts:\x1d
 SETUVAR fits_fuzzy_cmd:sk
