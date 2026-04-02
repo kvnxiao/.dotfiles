@@ -33,6 +33,7 @@
 "fish/functions/cached-eval.fish" = "~/.config/fish/functions/cached-eval.fish"
 "fish/functions/cargo-update-bins.fish" = "~/.config/fish/functions/cargo-update-bins.fish"
 "fish/functions/clear.fish" = "~/.config/fish/functions/clear.fish"
+"fish/functions/fish_config.fish" = "~/.config/fish/functions/fish_config.fish"
 "fish/functions/fish_greeting.fish" = "~/.config/fish/functions/fish_greeting.fish"
 "fish/functions/gh-raw.fish" = "~/.config/fish/functions/gh-raw.fish"
 "fish/functions/hooks/_atuin_ensure_session.fish" = "~/.config/fish/functions/hooks/_atuin_ensure_session.fish"

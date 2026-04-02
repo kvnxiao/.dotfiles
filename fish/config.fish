@@ -9,8 +9,9 @@ if status is-interactive
   cached-eval fisher "gh-raw jorgebucaran/fisher main functions/fisher.fish"
   # Touching a marker file to track when plugins were last updated
   set -l _fisher_snapshot ~/.local/share/fish/fisher-plugins-snapshot
-  set -l _plugins_current (cat $__fish_config_dir/fish_plugins 2>/dev/null | string collect)
-  set -l _plugins_snapshot (cat $_fisher_snapshot 2>/dev/null | string collect)
+  set -l _dotfiles_dir (path resolve (status filename) | path dirname)
+  set -l _plugins_current (string collect < $_dotfiles_dir/fish_plugins 2>/dev/null)
+  set -l _plugins_snapshot (string collect < $_fisher_snapshot 2>/dev/null)
   if test "$_plugins_current" != "$_plugins_snapshot"
     fisher update
     mkdir -p (dirname $_fisher_snapshot)
@@ -20,7 +21,6 @@ if status is-interactive
   # Set up completions
   cached-completions fnm "fnm completions --shell fish"
   cached-completions atuin "atuin gen-completions --shell fish"
-  cached-completions sk "sk --shell fish"
 
   # Set up init scripts from various tools required at prompt render time
   cached-eval fnm "fnm env --use-on-cd"
