@@ -25,6 +25,7 @@ if status is-interactive
   # Set up init scripts from various tools required at prompt render time
   cached-eval fnm "fnm env --use-on-cd"
   cached-eval zoxide "zoxide init fish"
+  command -q zoxide; and alias cd="z"
   cached-eval atuin "atuin init fish --disable-up-arrow"
   cached-eval br "broot --print-shell-function fish"
 
@@ -46,6 +47,9 @@ if status is-interactive
   alias ls="lsd -a"
   alias vi="nvim"
   alias vim="nvim"
+  if test "$FISH_OS" = windows; and command -q powersession
+    alias asciinema="powersession"
+  end
 
   # Claude Code environment variables
   set -gx XDG_CONFIG_HOME "$HOME/.config"
