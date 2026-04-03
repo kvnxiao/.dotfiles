@@ -63,7 +63,7 @@
     "squint@claude-configs": true
   },
   "outputStyle": "Terse Engineering",
-  "effortLevel": "high",
+  "effortLevel": "max",
   "autoUpdatesChannel": "latest",
   "voiceEnabled": true
 }

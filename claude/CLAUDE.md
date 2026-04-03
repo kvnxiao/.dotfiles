@@ -13,3 +13,4 @@
 - Always use `linear-cli` to interact with Linear, never the Linear MCP tool
 - Use react-aria MCP to get latest documentation on React Aria Components
 - Use Context7 MCP to validate current documentation about software libraries
+- When working on TypeScript / JavaScript projects, always prefer `pnpm` and `pnpm exec` or `pnpm dlx` over `npm` and `npx`
