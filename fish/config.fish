@@ -58,4 +58,5 @@ if status is-interactive
   set -gx ANTHROPIC_MODEL "opus[1m]"
   set -gx CLAUDE_CODE_ENABLE_TASKS true
   set -gx CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS 1
+  set -gx CLAUDE_CODE_EFFORT_LEVEL "max"
 end
