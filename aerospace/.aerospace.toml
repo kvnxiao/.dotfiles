@@ -97,6 +97,11 @@ if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 3']
 
 [[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode' # Visual Studio Code
+if.during-aerospace-startup = true
+run = ['layout tiling', 'move-node-to-workspace 3']
+
+[[on-window-detected]]
 if.app-id = 'com.hnc.Discord' # Discord
 if.during-aerospace-startup = true
 run = ['layout tiling', 'move-node-to-workspace 8']
