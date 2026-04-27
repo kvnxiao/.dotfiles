@@ -24,6 +24,7 @@
 "fish/conf.d/_fish_function_path.fish" = "~/.config/fish/conf.d/_fish_function_path.fish"
 "fish/conf.d/abbr-git.fish" = "~/.config/fish/conf.d/abbr-git.fish"
 "fish/conf.d/key-bindings.fish" = "~/.config/fish/conf.d/key-bindings.fish"
+"fish/completions/pip.fish" = "~/.config/fish/completions/pip.fish"
 "fish/config.fish" = "~/.config/fish/config.fish"
 "fish/fish_plugins" = "~/.config/fish/fish_plugins"
 "fish/fish_variables" = "~/.config/fish/fish_variables"
