@@ -31,7 +31,8 @@
       "mcp__github__get_file_contents",
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "haiku",
   "hooks": {},
@@ -64,6 +65,7 @@
   },
   "outputStyle": "Terse Engineering",
   "autoUpdatesChannel": "latest",
+  "autoCompactEnabled": false,
   "voiceEnabled": true,
-  "autoCompactEnabled": false
+  "skipAutoPermissionPrompt": true
 }
