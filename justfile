@@ -42,7 +42,7 @@ setup-fishenv:
 
 # Apply Windows Defender exclusions (requires admin)
 [windows]
-defender:
+defender-exclusions:
     Start-Process pwsh -Verb RunAs -Wait -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "$env:USERPROFILE\.dotfiles\setup\windows-defender-exclusions.ps1"
 
 # Wire repo-tracked git hooks into local .git/config (idempotent)
@@ -51,18 +51,8 @@ setup-hooks:
 
 # Full setup: deploy + platform-specific setup
 [windows]
-setup: deploy defender setup-zshenv setup-fishenv setup-hooks
+setup: deploy defender-exclusions setup-zshenv setup-fishenv setup-hooks
 
 # Full setup: deploy + platform-specific setup
 [unix]
 setup: deploy setup-zshenv setup-hooks
-
-# Rebuild zsh eval cache (fnm, zoxide, atuin, starship)
-[unix]
-rebuild-cache:
-    rm -rf ~/.zsh/cache && echo "Cache cleared. Restart zsh to regenerate."
-
-# Rebuild zsh eval cache (fnm, zoxide, atuin, starship)
-[windows]
-rebuild-cache:
-    C:\msys64\usr\bin\zsh.exe -c 'rm -rf ~/.zsh/cache && echo "Cache cleared. Restart zsh to regenerate."'
