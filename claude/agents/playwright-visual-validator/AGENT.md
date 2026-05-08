@@ -112,11 +112,13 @@ main().catch(console.error);
 **Auth blocks by type:**
 
 `none` (default):
+
 ```typescript
 // No authentication
 ```
 
 `login-form`:
+
 ```typescript
 await page.goto('$LOGIN_URL', { waitUntil: 'networkidle' });
 await page.fill('input[type="email"], input[name="email"], #email', process.env.TEST_EMAIL || '');
@@ -128,6 +130,7 @@ await Promise.all([
 ```
 
 `header`:
+
 ```typescript
 await context.setExtraHTTPHeaders({
   'Authorization': `Bearer ${process.env.API_TOKEN || ''}`,
@@ -215,11 +218,13 @@ For each test, provide individual results. Then provide overall verdict.
 ## Visual Validation Results
 
 ### Test: <name>
+
 **Verdict**: PASS | WARNING | FAIL
 **Summary**: <1 sentence>
 **Differences**: <bulleted list or "None">
 
 ### Test: <name>
+
 **Verdict**: PASS | WARNING | FAIL
 **Summary**: <1 sentence>
 **Differences**: <bulleted list or "None">
@@ -229,12 +234,15 @@ For each test, provide individual results. Then provide overall verdict.
 ## Overall Verdict: PASS | WARNING | FAIL
 
 ### Summary
+
 <1-2 sentence overview across all tests>
 
 ### Severity Assessment
+
 <Critical (breaks UX, spacing/alignment wrong) | Minor (polish, platform variance) | Acceptable (anti-aliasing)>
 
 ### Recommendation
+
 <action items if WARNING/FAIL, or "Ready to ship" if PASS>
 ```
 
@@ -242,11 +250,11 @@ Overall verdict is the worst of individual verdicts (any FAIL → overall FAIL, 
 
 ## Verdict Criteria
 
-| Verdict | When to use |
-|---------|-------------|
-| **PASS** | No meaningful differences. Minor anti-aliasing or platform rendering variance acceptable. |
-| **WARNING** | Noticeable differences requiring human judgment. Minor font rendering differences, subtle color shifts. |
-| **FAIL** | Clear deviations: wrong colors, missing components, broken layout, incorrect content, **misaligned elements, incorrect spacing/padding/margins**. |
+| Verdict     | When to use                                                                                                                                       |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PASS**    | No meaningful differences. Minor anti-aliasing or platform rendering variance acceptable.                                                         |
+| **WARNING** | Noticeable differences requiring human judgment. Minor font rendering differences, subtle color shifts.                                           |
+| **FAIL**    | Clear deviations: wrong colors, missing components, broken layout, incorrect content, **misaligned elements, incorrect spacing/padding/margins**. |
 
 **Note:** Spacing and alignment issues are typically FAIL, not WARNING. Pixel-perfect spacing is achievable and expected.
 

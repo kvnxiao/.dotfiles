@@ -6,124 +6,124 @@ Patterns for analyzing repositories to detect languages, frameworks, architectur
 
 ### JavaScript/TypeScript Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `package.json` | Node.js project |
-| `tsconfig.json` | TypeScript |
-| `next.config.js`, `next.config.mjs` | Next.js |
-| `nuxt.config.ts`, `nuxt.config.js` | Nuxt.js |
-| `vite.config.ts`, `vite.config.js` | Vite |
-| `astro.config.mjs` | Astro |
-| `remix.config.js` | Remix |
-| `svelte.config.js` | SvelteKit |
-| `angular.json` | Angular |
-| `vue.config.js` | Vue CLI |
-| `gatsby-config.js` | Gatsby |
-| `electron-builder.json` | Electron |
-| `tauri.conf.json` | Tauri |
-| `.babelrc`, `babel.config.js` | Babel |
-| `webpack.config.js` | Webpack |
-| `rollup.config.js` | Rollup |
-| `esbuild.config.js` | esbuild |
-| `jest.config.js` | Jest |
-| `vitest.config.ts` | Vitest |
-| `playwright.config.ts` | Playwright |
-| `cypress.config.ts` | Cypress |
+| File                                | Indicates       |
+| ----------------------------------- | --------------- |
+| `package.json`                      | Node.js project |
+| `tsconfig.json`                     | TypeScript      |
+| `next.config.js`, `next.config.mjs` | Next.js         |
+| `nuxt.config.ts`, `nuxt.config.js`  | Nuxt.js         |
+| `vite.config.ts`, `vite.config.js`  | Vite            |
+| `astro.config.mjs`                  | Astro           |
+| `remix.config.js`                   | Remix           |
+| `svelte.config.js`                  | SvelteKit       |
+| `angular.json`                      | Angular         |
+| `vue.config.js`                     | Vue CLI         |
+| `gatsby-config.js`                  | Gatsby          |
+| `electron-builder.json`             | Electron        |
+| `tauri.conf.json`                   | Tauri           |
+| `.babelrc`, `babel.config.js`       | Babel           |
+| `webpack.config.js`                 | Webpack         |
+| `rollup.config.js`                  | Rollup          |
+| `esbuild.config.js`                 | esbuild         |
+| `jest.config.js`                    | Jest            |
+| `vitest.config.ts`                  | Vitest          |
+| `playwright.config.ts`              | Playwright      |
+| `cypress.config.ts`                 | Cypress         |
 
 ### Package Manager Detection
 
-| File | Package Manager |
-|------|-----------------|
-| `pnpm-lock.yaml` | pnpm |
-| `yarn.lock` | Yarn |
-| `package-lock.json` | npm |
-| `bun.lockb` | Bun |
+| File                | Package Manager |
+| ------------------- | --------------- |
+| `pnpm-lock.yaml`    | pnpm            |
+| `yarn.lock`         | Yarn            |
+| `package-lock.json` | npm             |
+| `bun.lockb`         | Bun             |
 
 Also check `package.json` → `packageManager` field.
 
 ### Python Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `pyproject.toml` | Modern Python (check for tool) |
-| `setup.py`, `setup.cfg` | Traditional Python package |
-| `requirements.txt` | pip dependencies |
-| `Pipfile` | pipenv |
-| `poetry.lock` | Poetry |
-| `pdm.lock` | PDM |
-| `uv.lock` | uv |
-| `manage.py` | Django |
-| `app.py` + Flask imports | Flask |
-| `main.py` + FastAPI imports | FastAPI |
-| `pytest.ini`, `conftest.py` | pytest |
+| File                        | Indicates                      |
+| --------------------------- | ------------------------------ |
+| `pyproject.toml`            | Modern Python (check for tool) |
+| `setup.py`, `setup.cfg`     | Traditional Python package     |
+| `requirements.txt`          | pip dependencies               |
+| `Pipfile`                   | pipenv                         |
+| `poetry.lock`               | Poetry                         |
+| `pdm.lock`                  | PDM                            |
+| `uv.lock`                   | uv                             |
+| `manage.py`                 | Django                         |
+| `app.py` + Flask imports    | Flask                          |
+| `main.py` + FastAPI imports | FastAPI                        |
+| `pytest.ini`, `conftest.py` | pytest                         |
 
 ### Rust Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `Cargo.toml` | Rust/Cargo |
-| `Cargo.lock` | Committed dependencies |
-| `rust-toolchain.toml` | Specific Rust version |
+| File                  | Indicates              |
+| --------------------- | ---------------------- |
+| `Cargo.toml`          | Rust/Cargo             |
+| `Cargo.lock`          | Committed dependencies |
+| `rust-toolchain.toml` | Specific Rust version  |
 
 ### Go Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `go.mod` | Go modules |
-| `go.sum` | Dependency checksums |
-| `main.go` in root | CLI/executable |
-| `cmd/` directory | Multi-binary project |
+| File              | Indicates            |
+| ----------------- | -------------------- |
+| `go.mod`          | Go modules           |
+| `go.sum`          | Dependency checksums |
+| `main.go` in root | CLI/executable       |
+| `cmd/` directory  | Multi-binary project |
 
 ### Java/JVM Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `pom.xml` | Maven |
-| `build.gradle`, `build.gradle.kts` | Gradle |
-| `settings.gradle` | Multi-module Gradle |
-| `.mvn/` | Maven wrapper |
-| `gradlew` | Gradle wrapper |
+| File                               | Indicates           |
+| ---------------------------------- | ------------------- |
+| `pom.xml`                          | Maven               |
+| `build.gradle`, `build.gradle.kts` | Gradle              |
+| `settings.gradle`                  | Multi-module Gradle |
+| `.mvn/`                            | Maven wrapper       |
+| `gradlew`                          | Gradle wrapper      |
 
 ### Ruby Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `Gemfile` | Bundler |
-| `Gemfile.lock` | Locked dependencies |
-| `Rakefile` | Rake tasks |
-| `config/application.rb` | Rails |
+| File                    | Indicates           |
+| ----------------------- | ------------------- |
+| `Gemfile`               | Bundler             |
+| `Gemfile.lock`          | Locked dependencies |
+| `Rakefile`              | Rake tasks          |
+| `config/application.rb` | Rails               |
 
 ### PHP Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `composer.json` | Composer |
-| `artisan` | Laravel |
-| `symfony.lock` | Symfony |
+| File            | Indicates |
+| --------------- | --------- |
+| `composer.json` | Composer  |
+| `artisan`       | Laravel   |
+| `symfony.lock`  | Symfony   |
 
 ### .NET Ecosystem
 
-| File | Indicates |
-|------|-----------|
-| `*.csproj` | C# project |
-| `*.fsproj` | F# project |
-| `*.sln` | Visual Studio solution |
-| `global.json` | .NET SDK version |
+| File          | Indicates              |
+| ------------- | ---------------------- |
+| `*.csproj`    | C# project             |
+| `*.fsproj`    | F# project             |
+| `*.sln`       | Visual Studio solution |
+| `global.json` | .NET SDK version       |
 
 ### Other
 
-| File | Indicates |
-|------|-----------|
-| `Dockerfile` | Docker |
-| `docker-compose.yml` | Docker Compose |
-| `kubernetes/`, `k8s/` | Kubernetes |
-| `terraform/`, `*.tf` | Terraform |
-| `pulumi/`, `Pulumi.yaml` | Pulumi |
-| `serverless.yml` | Serverless Framework |
-| `.github/workflows/` | GitHub Actions |
-| `.gitlab-ci.yml` | GitLab CI |
-| `Jenkinsfile` | Jenkins |
-| `.circleci/config.yml` | CircleCI |
+| File                     | Indicates            |
+| ------------------------ | -------------------- |
+| `Dockerfile`             | Docker               |
+| `docker-compose.yml`     | Docker Compose       |
+| `kubernetes/`, `k8s/`    | Kubernetes           |
+| `terraform/`, `*.tf`     | Terraform            |
+| `pulumi/`, `Pulumi.yaml` | Pulumi               |
+| `serverless.yml`         | Serverless Framework |
+| `.github/workflows/`     | GitHub Actions       |
+| `.gitlab-ci.yml`         | GitLab CI            |
+| `Jenkinsfile`            | Jenkins              |
+| `.circleci/config.yml`   | CircleCI             |
 
 ---
 
@@ -140,6 +140,7 @@ workspaces/
 ```
 
 Also check:
+
 - `package.json` → `workspaces`
 - `pnpm-workspace.yaml`
 - `lerna.json`
@@ -187,6 +188,7 @@ services/
 ```
 
 Or separate repos with:
+
 - API gateway config
 - Service discovery config
 - Message queue config
@@ -357,37 +359,37 @@ cat go.mod | grep -E "^\t" | awk '{print $1}'
 
 ### Framework Detection from Dependencies
 
-| Dependency | Framework |
-|------------|-----------|
-| `react`, `react-dom` | React |
-| `vue` | Vue |
-| `svelte` | Svelte |
-| `@angular/core` | Angular |
-| `next` | Next.js |
-| `nuxt` | Nuxt |
-| `express` | Express |
-| `fastify` | Fastify |
-| `nestjs` | NestJS |
-| `django` | Django |
-| `flask` | Flask |
-| `fastapi` | FastAPI |
+| Dependency                    | Framework           |
+| ----------------------------- | ------------------- |
+| `react`, `react-dom`          | React               |
+| `vue`                         | Vue                 |
+| `svelte`                      | Svelte              |
+| `@angular/core`               | Angular             |
+| `next`                        | Next.js             |
+| `nuxt`                        | Nuxt                |
+| `express`                     | Express             |
+| `fastify`                     | Fastify             |
+| `nestjs`                      | NestJS              |
+| `django`                      | Django              |
+| `flask`                       | Flask               |
+| `fastapi`                     | FastAPI             |
 | `actix-web`, `axum`, `rocket` | Rust web frameworks |
-| `gin`, `echo`, `fiber` | Go web frameworks |
+| `gin`, `echo`, `fiber`        | Go web frameworks   |
 
 ---
 
 ## Linting/Formatting Config Detection
 
-| File | Tool |
-|------|------|
-| `.eslintrc*`, `eslint.config.*` | ESLint |
-| `.prettierrc*`, `prettier.config.*` | Prettier |
-| `biome.json` | Biome |
-| `deno.json` | Deno |
-| `.editorconfig` | EditorConfig |
-| `rustfmt.toml` | rustfmt |
-| `clippy.toml` | Clippy |
-| `pyproject.toml` → `[tool.ruff]` | Ruff |
-| `pyproject.toml` → `[tool.black]` | Black |
-| `.golangci.yml` | golangci-lint |
-| `rubocop.yml` | RuboCop |
+| File                                | Tool          |
+| ----------------------------------- | ------------- |
+| `.eslintrc*`, `eslint.config.*`     | ESLint        |
+| `.prettierrc*`, `prettier.config.*` | Prettier      |
+| `biome.json`                        | Biome         |
+| `deno.json`                         | Deno          |
+| `.editorconfig`                     | EditorConfig  |
+| `rustfmt.toml`                      | rustfmt       |
+| `clippy.toml`                       | Clippy        |
+| `pyproject.toml` → `[tool.ruff]`    | Ruff          |
+| `pyproject.toml` → `[tool.black]`   | Black         |
+| `.golangci.yml`                     | golangci-lint |
+| `rubocop.yml`                       | RuboCop       |

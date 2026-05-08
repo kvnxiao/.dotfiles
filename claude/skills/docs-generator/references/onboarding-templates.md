@@ -13,7 +13,7 @@ Templates for generating `docs/onboarding/` files. These are **full tutorials** 
 
 ## 01-setup.md
 
-```markdown
+````markdown
 # Environment Setup
 
 Get your local development environment running.
@@ -33,6 +33,7 @@ Get your local development environment running.
 ```bash
 {macOS installation commands}
 ```
+````
 
 </details>
 
@@ -77,9 +78,9 @@ cp .env.example .env
 
 Required variables:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `{VAR_NAME}` | {Purpose} | `{example value}` |
+| Variable     | Description | Example           |
+| ------------ | ----------- | ----------------- |
+| `{VAR_NAME}` | {Purpose}   | `{example value}` |
 
 ### Local Services
 
@@ -99,6 +100,7 @@ Run the test suite to verify everything is working:
 ```
 
 Expected output:
+
 ```
 {what success looks like}
 ```
@@ -131,6 +133,7 @@ Access the application at `http://localhost:{port}`.
 **Symptom**: {What you see}
 
 **Solution**:
+
 ```bash
 {fix command}
 ```
@@ -146,8 +149,8 @@ Access the application at `http://localhost:{port}`.
 - Read the [Architecture Overview](../architecture/01-overview.md) to understand the system design
 - Review [Coding Standards](../standards/) before making changes
 - Continue to [Making Your First Contribution](./02-first-contribution.md)
-```
 
+````
 ---
 
 ## 02-first-contribution.md
@@ -177,7 +180,7 @@ git pull origin main
 
 # Create feature branch
 git checkout -b {branch-naming-convention}
-```
+````
 
 Branch naming convention: `{pattern}` (e.g., `feature/add-user-auth`, `fix/login-validation`)
 
@@ -188,15 +191,16 @@ Branch naming convention: `{pattern}` (e.g., `feature/add-user-auth`, `fix/login
 #### Finding Your Way Around
 
 | To work on... | Look in... |
-|---------------|------------|
-| {Area 1} | `{path}` |
-| {Area 2} | `{path}` |
+| ------------- | ---------- |
+| {Area 1}      | `{path}`   |
+| {Area 2}      | `{path}`   |
 
 See [Directory Structure](../architecture/02-directory-structure.md) for full layout.
 
 #### Code Style
 
 Follow the patterns in:
+
 - [Naming Conventions](../standards/naming-conventions.md)
 - [Error Handling](../standards/error-handling.md)
 - {Other relevant standards}
@@ -229,6 +233,7 @@ git commit -m "{commit message format}"
 Commit message format: `{pattern}`
 
 Examples:
+
 - `feat: add user authentication`
 - `fix: resolve login validation error`
 - `docs: update API documentation`
@@ -241,6 +246,7 @@ git push -u origin {branch-name}
 ```
 
 Create a pull request:
+
 1. Go to {repo URL}
 2. Click "New Pull Request"
 3. Select your branch
@@ -300,8 +306,8 @@ See [Testing Standards](../standards/testing.md) for conventions.
 - {How to ask questions — Slack channel, GitHub discussions, etc.}
 - {Who to contact for different areas}
 - {Links to additional resources}
-```
 
+````
 ---
 
 ## Additional Onboarding Docs (as needed)
@@ -324,7 +330,7 @@ Detailed workflow for common development tasks.
 ## Hotfixes
 
 {Emergency fix process}
-```
+````
 
 ### 04-debugging.md (optional)
 
@@ -369,11 +375,14 @@ When referencing other docs:
 
 ```markdown
 <!-- Good: Clear link with context -->
+
 See [Architecture Overview](../architecture/01-overview.md) to understand the system design.
 
 <!-- Good: Inline reference -->
+
 Follow the patterns in [Naming Conventions](../standards/naming-conventions.md).
 
 <!-- Bad: Repeating content from other docs -->
+
 The system uses a layered architecture where... [500 words duplicating architecture doc]
 ```

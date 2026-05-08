@@ -31,6 +31,7 @@ linear-cli up fetch "https://uploads.linear.app/..." > file.png
 ## Finding Upload URLs
 
 Upload URLs are found in:
+
 - Issue descriptions
 - Comments (use `linear-cli cm list ISSUE_ID --output json`)
 
@@ -45,6 +46,7 @@ URLs follow pattern: `https://uploads.linear.app/{org}/{upload}/{filename}`
 ## When to Use Each Mode
 
 **Use `-f` (file) when you need to view the image:**
+
 ```bash
 # Download to /tmp, then use Read tool to view
 linear-cli up fetch "https://uploads.linear.app/..." -f /tmp/screenshot.png
@@ -52,6 +54,7 @@ linear-cli up fetch "https://uploads.linear.app/..." -f /tmp/screenshot.png
 ```
 
 **Use stdout when piping to other CLI tools:**
+
 ```bash
 # Pipe to base64, imagemagick, etc.
 linear-cli up fetch "https://uploads.linear.app/..." | base64

@@ -10,6 +10,7 @@ Review and improve repository documentation for both human-readable docs and AI 
 ## Target Files
 
 ### Human Documentation
+
 - `docs/README.md` — Docs overview + navigation (only file at docs root)
 - `docs/onboarding/` — First-time setup guides (experience-agnostic)
 - `docs/architecture/` — System design, diagrams, rationale, ADRs
@@ -17,6 +18,7 @@ Review and improve repository documentation for both human-readable docs and AI 
 - `README.md` — Project introduction (repo root)
 
 ### Agent Context Files
+
 - `CLAUDE.md` — Claude Code project context
 - `.claude/rules/*.md` — Modular Claude rules
 - `CODEX.md` — OpenAI Codex CLI project context
@@ -30,11 +32,13 @@ Review and improve repository documentation for both human-readable docs and AI 
 ## When to Use This Skill
 
 **Good fit:**
+
 - Repos with scattered or duplicated documentation
 - Monolithic CLAUDE.md files (>200 lines)
 - Projects needing clear human vs. agent content separation
 
 **May not apply:**
+
 - Small projects with minimal docs (single README is fine)
 - Monorepos with per-package documentation conventions
 - Projects with intentionally different structures (adapt to their conventions first)
@@ -82,33 +86,39 @@ repo/
 
 ### Content Boundaries
 
-| Location | Purpose | Audience | Content Type |
-|----------|---------|----------|--------------|
-| `docs/README.md` | Overview + navigation | Both | Project summary, links to subfolders |
-| `docs/standards/` | Actionable patterns | Both | Do's/don'ts, code examples |
-| `docs/onboarding/` | First-time setup | Humans | Step-by-step guides, experience-agnostic |
-| `docs/architecture/` | System design | Humans | Diagrams, rationale, ADRs |
-| `.claude/rules/` | Agent behavior | Agents | Workflow, constraints, pointers |
+| Location             | Purpose               | Audience | Content Type                             |
+| -------------------- | --------------------- | -------- | ---------------------------------------- |
+| `docs/README.md`     | Overview + navigation | Both     | Project summary, links to subfolders     |
+| `docs/standards/`    | Actionable patterns   | Both     | Do's/don'ts, code examples               |
+| `docs/onboarding/`   | First-time setup      | Humans   | Step-by-step guides, experience-agnostic |
+| `docs/architecture/` | System design         | Humans   | Diagrams, rationale, ADRs                |
+| `.claude/rules/`     | Agent behavior        | Agents   | Workflow, constraints, pointers          |
 
 ### Naming Conventions
 
 **Docs root:** Only `README.md` at docs folder root
+
 - `docs/README.md` — Project overview + navigation to subfolders
 
 **Human doc folders:** No numbered prefix, lowercase names
+
 - `docs/onboarding/`, `docs/architecture/`
 
 **Human doc files:** Numbered prefix for reading order (except in `standards/`)
+
 - `docs/onboarding/01-getting-started.md`, `docs/architecture/02-data-flow.md`
 
 **Standards:** No numbered prefix, organized by domain
+
 - `docs/standards/` — Shared patterns for humans + agents
 - `docs/standards/[domain].md` (e.g., `api.md`, `testing.md`)
 
 **Agent context:** Root-level CLAUDE.md for project overview
+
 - `CLAUDE.md` at repository root provides project context
 
 **General rules:**
+
 - Folders: lowercase, single word when possible (`[domain]/`)
 - Files: kebab-case, descriptive (`[domain]-patterns.md` not `[abbrev].md`)
 - Avoid overly generic names: `[service]-authentication.md` not `auth.md`
@@ -116,6 +126,7 @@ repo/
 ### How Each Layer References Standards
 
 **In `docs/architecture/01-overview.md` (human doc):**
+
 ```markdown
 # Architecture Overview
 
@@ -126,6 +137,7 @@ For decision rationale, see `docs/architecture/decisions/`.
 ```
 
 **In `CLAUDE.md` (project context at repo root):**
+
 ```markdown
 # Project Context
 
@@ -138,6 +150,7 @@ Brief project summary.
 ## Standards
 
 Follow all patterns in `docs/standards/`:
+
 - `docs/standards/frontend/` — [list relevant standards]
 - `docs/standards/backend/` — [list relevant standards]
 - `docs/standards/git.md` — Commit and branching
@@ -153,13 +166,16 @@ Do not use `@` imports to pull docs into rules:
 
 ```markdown
 <!-- Avoid: Auto-imports entire doc, bloats context -->
+
 See @docs/standards/api.md for details.
 
 <!-- Prefer: Explicit reference, agent reads if needed -->
+
 For API patterns, consult `docs/standards/api.md`.
 ```
 
 **Why:**
+
 - Hidden dependencies are hard to audit
 - Full doc imported even when only a section is relevant
 - Doc changes may unintentionally affect agent behavior
@@ -193,18 +209,18 @@ ls -la .claude/rules/ .codex/ .cursor/rules/ 2>/dev/null
 
 For each file, evaluate against these criteria:
 
-| Criterion | Check |
-|-----------|-------|
-| **Clarity** | Instructions are unambiguous and actionable |
-| **Scope** | Each file/section has a single, clear purpose |
-| **Audience** | Content matches intended audience (human vs agent vs shared) |
-| **Duplication** | No repeated content across files |
-| **Three-layer separation** | Standards, human docs, and agent rules clearly separated |
-| **Modularity** | Related content grouped; unrelated content separated |
-| **Naming** | Doc files numbered (`01-overview.md`); standards unnumbered; only README.md at docs root |
-| **Discoverability** | File/section names reflect content |
-| **Maintainability** | Easy to update without side effects |
-| **No auto-imports** | Rules reference docs explicitly, not via `@` |
+| Criterion                  | Check                                                                                    |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| **Clarity**                | Instructions are unambiguous and actionable                                              |
+| **Scope**                  | Each file/section has a single, clear purpose                                            |
+| **Audience**               | Content matches intended audience (human vs agent vs shared)                             |
+| **Duplication**            | No repeated content across files                                                         |
+| **Three-layer separation** | Standards, human docs, and agent rules clearly separated                                 |
+| **Modularity**             | Related content grouped; unrelated content separated                                     |
+| **Naming**                 | Doc files numbered (`01-overview.md`); standards unnumbered; only README.md at docs root |
+| **Discoverability**        | File/section names reflect content                                                       |
+| **Maintainability**        | Easy to update without side effects                                                      |
+| **No auto-imports**        | Rules reference docs explicitly, not via `@`                                             |
 
 ### 3. Report Format
 
@@ -214,20 +230,25 @@ Generate findings using this structure:
 ## Documentation Review Report
 
 ### Files Analyzed
+
 - [list of files with line counts]
 
 ### Issues Found
 
 #### Critical (Blocks Agent Effectiveness)
+
 - Issue description → Recommended fix
 
 #### Moderate (Reduces Clarity)
+
 - Issue description → Recommended fix
 
 #### Minor (Optimization Opportunity)
+
 - Issue description → Recommended fix
 
 ### Recommendations
+
 1. Prioritized action items
 ```
 
@@ -236,6 +257,7 @@ Generate findings using this structure:
 ### Duplication
 
 **Problem:** Same instruction appears in multiple files.
+
 ```
 # In CLAUDE.md
 Run tests before committing.
@@ -249,6 +271,7 @@ Always run the test suite before commits.
 ### Monolithic Files
 
 **Problem:** Single file covers unrelated domains.
+
 ```
 # CLAUDE.md (500+ lines)
 ## Code Style
@@ -260,6 +283,7 @@ Always run the test suite before commits.
 ```
 
 **Solution:** Extract to `.claude/rules/`:
+
 ```
 .claude/rules/
 ├── code-style.md
@@ -272,6 +296,7 @@ Always run the test suite before commits.
 ### Vague Instructions
 
 **Problem:** Non-actionable guidance.
+
 ```
 Write good code.
 Follow best practices.
@@ -279,6 +304,7 @@ Keep things clean.
 ```
 
 **Solution:** Specific, verifiable instructions.
+
 ```
 Limit functions to 50 lines. Extract helpers for complex logic.
 Name boolean variables with is/has/should prefix.
@@ -287,6 +313,7 @@ Name boolean variables with is/has/should prefix.
 ### Contradictions
 
 **Problem:** Conflicting rules across files.
+
 ```
 # In code-style.md
 Use 2-space indentation.
@@ -300,6 +327,7 @@ Use 4-space indentation for test files.
 ### Stale Context
 
 **Problem:** Outdated instructions that no longer apply.
+
 ```
 Use [old-library] for [task].  # Project migrated to [new-library]
 ```
@@ -325,6 +353,7 @@ For smaller projects, avoid over-engineering. A flat structure works well:
 ```
 
 **Signs you don't need the full three-layer structure:**
+
 - Fewer than 10 rule files total
 - Single developer or small team
 - Limited documentation beyond README
@@ -333,8 +362,10 @@ For smaller projects, avoid over-engineering. A flat structure works well:
 ### Cross-References
 
 When rules in one file depend on another:
+
 ```markdown
 <!-- In testing.md -->
+
 Follow naming conventions from `code-style.md` for test files.
 ```
 
@@ -348,10 +379,12 @@ Follow naming conventions from `code-style.md` for test files.
 [1-2 sentence context if needed]
 
 **Do:**
+
 - Specific actionable instruction
 - Another instruction with example
 
 **Don't:**
+
 - Anti-pattern to avoid
 
 **Example:**
@@ -370,23 +403,28 @@ Follow naming conventions from `code-style.md` for test files.
 When improving existing documentation:
 
 ### 1. Discovery
+
 - [ ] Locate all docs (`docs/README.md`, `docs/onboarding/`, `docs/architecture/`, `docs/standards/`) and agent context files (`CLAUDE.md`, `.claude/rules/`, etc.)
 - [ ] Identify actionable patterns that belong in `docs/standards/`
 
 ### 2. Audit
+
 - [ ] Map content overlap and flag contradictions
 - [ ] Flag stale instructions and `@` imports
 
 ### 3. Restructure
+
 - [ ] Modularize monolithic files (>200 lines or 3+ domains)
 - [ ] Apply naming conventions (numbered doc files, unnumbered folders, domain-organized standards, only README.md at docs root)
 - [ ] Ensure three-layer separation (standards / human docs / agent rules)
 
 ### 4. Validate
+
 - [ ] Check for orphaned references and broken links
 - [ ] Verify CLAUDE.md includes pre-session requirements and post-session checks
 
 ### 5. Final Audit Pass
+
 - [ ] Re-run analysis criteria (Review Workflow > Analysis) against all changed files
 - [ ] Confirm no new duplication, contradictions, or anti-patterns introduced
 - [ ] Verify changes maintain clarity, scope, and discoverability

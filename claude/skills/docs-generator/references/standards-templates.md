@@ -6,7 +6,7 @@ Templates for generating `docs/standards/` files. Document both **detected** pat
 
 ## General Template Structure
 
-```markdown
+````markdown
 # {Standard Category}
 
 ## Overview
@@ -22,9 +22,11 @@ Templates for generating `docs/standards/` files. Document both **detected** pat
 **Pattern**: {Brief description}
 
 **Example**:
+
 ```{language}
 {illustrative code showing the pattern}
 ```
+````
 
 ## Recommended Practices
 
@@ -35,11 +37,13 @@ Templates for generating `docs/standards/` files. Document both **detected** pat
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 {good example}
 ```
 
 **Don't**:
+
 ```{language}
 {bad example}
 ```
@@ -49,8 +53,8 @@ Templates for generating `docs/standards/` files. Document both **detected** pat
 ## Exceptions
 
 {When the standard doesn't apply.}
-```
 
+````
 ---
 
 ## naming-conventions.md
@@ -67,13 +71,13 @@ Consistent naming improves readability and reduces cognitive load.
 ### File Naming
 
 **Pattern**: {kebab-case / camelCase / PascalCase / snake_case}
+````
 
-```
 user-service.ts
 auth-handler.ts
 api-routes.ts
-```
 
+````
 ### Variable Naming
 
 **Pattern**: {camelCase / snake_case}
@@ -81,13 +85,14 @@ api-routes.ts
 ```{language}
 const userAuthToken = getToken();
 const isAuthenticated = checkAuth();
-```
+````
 
 ### Function/Method Naming
 
 **Pattern**: {camelCase / snake_case}
 
 **Conventions**:
+
 - Verbs for actions: `get`, `set`, `create`, `update`, `delete`
 - Boolean prefixes: `is`, `has`, `should`, `can`
 
@@ -107,12 +112,14 @@ interface AuthProvider { }
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 const userAuthenticationToken = getToken();
 function calculateTotalOrderPrice(items) {}
 ```
 
 **Don't**:
+
 ```{language}
 const uat = getToken();
 function calc(i) {}
@@ -124,18 +131,18 @@ function calc(i) {}
 
 **Status**: {Already followed / Suggested improvement}
 
-| Prefix | Use For | Example |
-|--------|---------|---------|
-| `is` | Boolean state | `isLoading`, `isValid` |
-| `has` | Ownership/presence | `hasPermission`, `hasItems` |
-| `on` | Event handler props | `onClick`, `onSubmit` |
-| `handle` | Internal handlers | `handleClick`, `handleSubmit` |
+| Prefix   | Use For             | Example                       |
+| -------- | ------------------- | ----------------------------- |
+| `is`     | Boolean state       | `isLoading`, `isValid`        |
+| `has`    | Ownership/presence  | `hasPermission`, `hasItems`   |
+| `on`     | Event handler props | `onClick`, `onSubmit`         |
+| `handle` | Internal handlers   | `handleClick`, `handleSubmit` |
 
 ## Domain-Specific Conventions
 
 {Project-specific naming patterns.}
-```
 
+````
 ---
 
 ## error-handling.md
@@ -155,7 +162,7 @@ Consistent error handling ensures predictable behavior and good debugging experi
 
 ```{language}
 {illustrative error handling pattern}
-```
+````
 
 ### Custom Error Types
 
@@ -172,9 +179,9 @@ class ValidationError extends Error {
 
 ### Error Boundaries
 
-| Layer | Catches | Transforms To |
-|-------|---------|---------------|
-| {API layer} | All errors | HTTP response |
+| Layer           | Catches       | Transforms To |
+| --------------- | ------------- | ------------- |
+| {API layer}     | All errors    | HTTP response |
 | {Service layer} | Domain errors | Custom errors |
 
 ## Recommended Practices
@@ -184,6 +191,7 @@ class ValidationError extends Error {
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 function processUser(input) {
   if (!input.id) {
@@ -194,6 +202,7 @@ function processUser(input) {
 ```
 
 **Don't**:
+
 ```{language}
 function processUser(input) {
   // silently use default
@@ -208,11 +217,13 @@ function processUser(input) {
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 throw new Error(`Failed to fetch user ${userId}: ${error.message}`);
 ```
 
 **Don't**:
+
 ```{language}
 throw new Error('Failed');
 ```
@@ -224,6 +235,7 @@ throw new Error('Failed');
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```json
 {
   "error": {
@@ -257,8 +269,8 @@ try {
   return null;
 }
 ```
-```
 
+````
 ---
 
 ## testing.md
@@ -285,7 +297,7 @@ describe('UserService', () => {
   it('creates user with valid input', () => {});
   it('throws on invalid email', () => {});
 });
-```
+````
 
 ### Test Organization
 
@@ -302,6 +314,7 @@ describe('UserService', () => {
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 // Descriptive names
 test('createUser returns user with valid input')
@@ -315,6 +328,7 @@ describe('createUser', () => {
 ```
 
 **Don't**:
+
 ```{language}
 test('test1')
 test('works')
@@ -325,6 +339,7 @@ test('works')
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 test('example', () => {
   // Arrange
@@ -350,13 +365,13 @@ test('example', () => {
 
 ## Test Categories
 
-| Category | Purpose | Runs When |
-|----------|---------|-----------|
-| Unit | Single function/component | Every commit |
-| Integration | Multiple components | PR/CI |
-| E2E | Full user flows | Pre-release |
-```
+| Category    | Purpose                   | Runs When    |
+| ----------- | ------------------------- | ------------ |
+| Unit        | Single function/component | Every commit |
+| Integration | Multiple components       | PR/CI        |
+| E2E         | Full user flows           | Pre-release  |
 
+````
 ---
 
 ## logging.md
@@ -380,16 +395,16 @@ Consistent logging enables effective debugging and monitoring.
 
 ```{language}
 logger.info('User created', { userId: user.id, action: 'create' });
-```
+````
 
 ### Log Levels
 
-| Level | Used For |
-|-------|----------|
+| Level   | Used For                     |
+| ------- | ---------------------------- |
 | `error` | Failures requiring attention |
-| `warn` | Recoverable issues |
-| `info` | Significant events |
-| `debug` | Detailed debugging |
+| `warn`  | Recoverable issues           |
+| `info`  | Significant events           |
+| `debug` | Detailed debugging           |
 
 ## Recommended Practices
 
@@ -398,11 +413,13 @@ logger.info('User created', { userId: user.id, action: 'create' });
 **Status**: {Already followed / Suggested improvement}
 
 **Do**:
+
 ```{language}
 logger.info('User created', { userId: user.id, email: user.email });
 ```
 
 **Don't**:
+
 ```{language}
 logger.info(`User created: ${user.id}, ${user.email}`);
 ```
@@ -411,11 +428,11 @@ logger.info(`User created: ${user.id}, ${user.email}`);
 
 ### Log Level Guidelines
 
-| Level | When to Use |
-|-------|-------------|
-| `error` | Unexpected failures — DB down, unhandled exception |
-| `warn` | Recoverable issues — rate limit approaching, retry |
-| `info` | Business events — user signed up, order placed |
+| Level   | When to Use                                         |
+| ------- | --------------------------------------------------- |
+| `error` | Unexpected failures — DB down, unhandled exception  |
+| `warn`  | Recoverable issues — rate limit approaching, retry  |
+| `info`  | Business events — user signed up, order placed      |
 | `debug` | Development only — function entry/exit, state dumps |
 
 ### Never Log Sensitive Data
@@ -423,21 +440,24 @@ logger.info(`User created: ${user.id}, ${user.email}`);
 **Status**: {Already followed / Needs attention}
 
 Never log:
+
 - Passwords or tokens
 - Full credit card numbers
 - PII (emails, addresses in debug logs)
 
 **Do**:
+
 ```{language}
 logger.info('Payment processed', { cardLast4: '1234' });
 ```
 
 **Don't**:
+
 ```{language}
 logger.info('Payment', { card: fullCardNumber, user: userObject });
 ```
-```
 
+````
 ---
 
 ## Subfolder Templates
@@ -458,14 +478,14 @@ Standards for designing APIs in backend services.
 **Style**: {REST / GraphQL / gRPC / tRPC}
 
 ### Endpoint Naming
+````
 
-```
-GET  /users/{id}      # Fetch user
-POST /users           # Create user
-PUT  /users/{id}      # Update user
-DELETE /users/{id}    # Delete user
-```
+GET /users/{id} # Fetch user
+POST /users # Create user
+PUT /users/{id} # Update user
+DELETE /users/{id} # Delete user
 
+````
 ### Response Format
 
 **Success**:
@@ -474,9 +494,10 @@ DELETE /users/{id}    # Delete user
   "data": {},
   "meta": {}
 }
-```
+````
 
 **Error**:
+
 ```json
 {
   "error": {
@@ -492,15 +513,15 @@ DELETE /users/{id}    # Delete user
 
 **Status**: {Already followed / Suggested improvement}
 
-| Action | Method | Path | Success | Error |
-|--------|--------|------|---------|-------|
-| List | GET | `/resources` | 200 | - |
-| Get | GET | `/resources/{id}` | 200 | 404 |
-| Create | POST | `/resources` | 201 | 400 |
-| Update | PUT/PATCH | `/resources/{id}` | 200 | 404 |
-| Delete | DELETE | `/resources/{id}` | 204 | 404 |
-```
+| Action | Method    | Path              | Success | Error |
+| ------ | --------- | ----------------- | ------- | ----- |
+| List   | GET       | `/resources`      | 200     | -     |
+| Get    | GET       | `/resources/{id}` | 200     | 404   |
+| Create | POST      | `/resources`      | 201     | 400   |
+| Update | PUT/PATCH | `/resources/{id}` | 200     | 404   |
+| Delete | DELETE    | `/resources/{id}` | 204     | 404   |
 
+````
 ### frontend/react.md
 
 ```markdown
@@ -551,7 +572,7 @@ export function ComponentName({ title }: Props) {
   // 6. Render
   return <div>{title}</div>;
 }
-```
+````
 
 ### Props Conventions
 
@@ -560,8 +581,8 @@ export function ComponentName({ title }: Props) {
 - Destructure props in function signature
 - Use TypeScript interfaces for prop types
 - Prefix: `on` for handler props, `handle` for internal handlers
-```
 
+```
 ---
 
 ## Writing Guidelines
@@ -584,3 +605,4 @@ export function ComponentName({ title }: Props) {
 - Show, don't tell
 - Real patterns, simplified for clarity
 - Avoid verbatim sensitive code
+```

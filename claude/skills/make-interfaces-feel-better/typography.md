@@ -56,11 +56,11 @@ p, li, figcaption, blockquote {
 
 ### When to Use Which
 
-| Scenario | Use |
-| --- | --- |
-| Headings, titles where even distribution matters | `text-wrap: balance` |
-| Short-to-medium text — paragraphs, descriptions, captions, UI text | `text-wrap: pretty` |
-| Long text (10+ lines), code blocks, pre-formatted text | Neither — leave default |
+| Scenario                                                           | Use                     |
+| ------------------------------------------------------------------ | ----------------------- |
+| Headings, titles where even distribution matters                   | `text-wrap: balance`    |
+| Short-to-medium text — paragraphs, descriptions, captions, UI text | `text-wrap: pretty`     |
+| Long text (10+ lines), code blocks, pre-formatted text             | Neither — leave default |
 
 ## Font Smoothing (macOS)
 
@@ -116,13 +116,13 @@ When numbers update dynamically (counters, prices, timers, table columns), use t
 
 ### When to Use
 
-| Use tabular-nums | Don't use tabular-nums |
-| --- | --- |
-| Counters and timers | Static display numbers |
-| Prices that update | Decorative large numbers |
-| Table columns with numbers | Phone numbers, zip codes |
+| Use tabular-nums            | Don't use tabular-nums   |
+| --------------------------- | ------------------------ |
+| Counters and timers         | Static display numbers   |
+| Prices that update          | Decorative large numbers |
+| Table columns with numbers  | Phone numbers, zip codes |
 | Animated number transitions | Version numbers (v2.1.0) |
-| Scoreboards, dashboards | |
+| Scoreboards, dashboards     |                          |
 
 ### Caveat
 

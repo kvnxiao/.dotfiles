@@ -40,13 +40,17 @@ setup-zshenv:
 defender:
     Start-Process pwsh -Verb RunAs -Wait -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "$env:USERPROFILE\.dotfiles\setup\windows-defender-exclusions.ps1"
 
+# Wire repo-tracked git hooks into local .git/config (idempotent)
+setup-hooks:
+    git config --local --replace-all include.path ../.githooks/config '^\.\./\.githooks/config$'
+
 # Full setup: deploy + platform-specific setup
 [windows]
-setup: deploy defender setup-zshenv
+setup: deploy defender setup-zshenv setup-hooks
 
 # Full setup: deploy + platform-specific setup
 [unix]
-setup: deploy setup-zshenv
+setup: deploy setup-zshenv setup-hooks
 
 # Rebuild zsh eval cache (fnm, zoxide, atuin, starship)
 [unix]

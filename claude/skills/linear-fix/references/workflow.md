@@ -52,6 +52,7 @@ If visual testing enabled:
    - **Uploaded images**: copy to `.visual-testing/baselines/<ticket-id>-<index>.png`
 
 Example structure:
+
 ```
 VISUAL_BASELINES:
   - name: homepage
@@ -182,18 +183,23 @@ Check for PR template and fill it out:
 <summary>🤖 Autonomous Planning Reasoning</summary>
 
 ### Selected Approach
+
 $SELECTED_APPROACH
 
 ### Why This Approach
+
 $REVIEW_REASONING
 
 ### Trade-offs Accepted
+
 $TRADEOFFS_ACCEPTED
 
 ### Edge Cases Handled
+
 $EDGE_CASES
 
 ### Planning Iterations
+
 $ITERATION_COUNT iteration(s) before approval
 
 </details>

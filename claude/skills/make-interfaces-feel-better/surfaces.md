@@ -167,13 +167,13 @@ Apply the variable and add `transition-[box-shadow]` for a smooth hover:
 
 ### When to Use Shadows vs. Borders
 
-| Use shadows | Use borders |
-| --- | --- |
-| Cards, containers with depth | Dividers between list items |
-| Buttons with bordered styles | Table cell boundaries |
+| Use shadows                           | Use borders                             |
+| ------------------------------------- | --------------------------------------- |
+| Cards, containers with depth          | Dividers between list items             |
+| Buttons with bordered styles          | Table cell boundaries                   |
 | Elevated elements (dropdowns, modals) | Form input outlines (for accessibility) |
-| Elements on varied backgrounds | Hairline separators in dense UI |
-| Hover/focus states for lift effect | |
+| Elements on varied backgrounds        | Hairline separators in dense UI         |
+| Hover/focus states for lift effect    |                                         |
 
 ## Image Outlines
 

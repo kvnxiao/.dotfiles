@@ -8,7 +8,7 @@ allowed-tools: Read, Bash, Grep, Glob, Task, Write, Edit
 
 Autonomous documentation generation: audit existing docs → deeply analyze code → detect patterns → generate structured docs.
 
-**Core principle**: Documentation must reflect what the code *actually does*, not theoretical patterns. Every claim should have evidence from the codebase.
+**Core principle**: Documentation must reflect what the code _actually does_, not theoretical patterns. Every claim should have evidence from the codebase.
 
 ## Usage
 
@@ -83,6 +83,7 @@ MISSING (create new):
 Launch `feature-dev:code-explorer` agent to analyze repository deeply.
 
 **Agent prompt:**
+
 ```
 Analyze this repository to understand how the code actually works. Don't just scan config files—read source code implementations.
 
@@ -112,6 +113,7 @@ Output a structured report with:
 Launch `feature-dev:code-architect` agent to design architecture documentation grounded in actual code.
 
 **Agent prompt:**
+
 ```
 Based on the deep code analysis, design architecture documentation that reflects what the code ACTUALLY does.
 
@@ -156,6 +158,7 @@ Analyze codebase for actual conventions. Consult `./references/detection-pattern
 4. **Inconsistencies**: Note variations that should be standardized
 
 **For each detected pattern:**
+
 - Describe the pattern clearly
 - Create illustrative do/don't examples
 - Note whether it's consistently followed
@@ -165,16 +168,19 @@ Analyze codebase for actual conventions. Consult `./references/detection-pattern
 Before generating, reconcile detected patterns with existing documentation.
 
 **Compare:**
+
 1. Patterns detected in Phase 3 vs what existing docs say
 2. Architecture observed in Phases 1-2 vs existing architecture docs
 3. Commands/setup in config files vs existing onboarding docs
 
 **Decide for each doc:**
+
 - **Preserve**: Existing doc is accurate and well-written
 - **Merge**: Existing doc has good content, add missing info
 - **Replace**: Existing doc is significantly wrong or outdated
 
 **Output reconciliation plan:**
+
 ```
 Documentation Reconciliation:
 
@@ -197,16 +203,17 @@ Generate documentation using templates from `./references/`, incorporating evide
 
 Generate `docs/architecture/` (numbered, knowledge base style):
 
-| File | Content |
-|------|---------|
-| `01-overview.md` | High-level system overview with mermaid diagram |
-| `02-directory-structure.md` | Repo layout with rationale for organization |
-| `03-core-components.md` | Main modules/services and responsibilities |
-| `04-data-flow.md` | How data moves through system and why |
+| File                        | Content                                         |
+| --------------------------- | ----------------------------------------------- |
+| `01-overview.md`            | High-level system overview with mermaid diagram |
+| `02-directory-structure.md` | Repo layout with rationale for organization     |
+| `03-core-components.md`     | Main modules/services and responsibilities      |
+| `04-data-flow.md`           | How data moves through system and why           |
 
 Use `./references/architecture-templates.md` for structure.
 
 **Key principles**:
+
 - Explain "why" (decisions, rationale, constraints), NOT "how to" (tutorials)
 - Reference directories/modules (stable), not line numbers (unstable)
 - Use simplified examples that illustrate patterns without exposing sensitive code
@@ -228,6 +235,7 @@ Generate `docs/standards/`:
 Use `./references/standards-templates.md` for structure.
 
 **Format**: Clearly distinguish:
+
 - **Detected** (what the code actually does) — with file references
 - **Recommended** (best practices, whether followed or suggested)
 
@@ -235,10 +243,10 @@ Use `./references/standards-templates.md` for structure.
 
 Generate `docs/onboarding/` (numbered, tutorial style):
 
-| File | Content |
-|------|---------|
-| `01-setup.md` | Environment setup, prerequisites, installation |
-| `02-first-contribution.md` | Making your first change, PR workflow |
+| File                       | Content                                        |
+| -------------------------- | ---------------------------------------------- |
+| `01-setup.md`              | Environment setup, prerequisites, installation |
+| `02-first-contribution.md` | Making your first change, PR workflow          |
 
 Use `./references/onboarding-templates.md` for structure.
 
@@ -256,6 +264,7 @@ Generate `CLAUDE.md` at repository root using `./references/claude-md-template.m
 4. **Table of contents**: Links to all docs
 
 **Command discovery priority:**
+
 1. `justfile` → use `just <command>`
 2. `package.json` with `packageManager` field → use that package manager
 3. `Makefile` → use `make <target>`
@@ -270,19 +279,20 @@ Generate `CLAUDE.md` at repository root using `./references/claude-md-template.m
 
 ## Reference Files
 
-| File | Purpose |
-|------|---------|
-| `./references/claude-md-template.md` | Template for root CLAUDE.md |
-| `./references/architecture-templates.md` | Templates for architecture docs |
-| `./references/standards-templates.md` | Templates for standards docs |
-| `./references/onboarding-templates.md` | Templates for onboarding guides |
-| `./references/detection-patterns.md` | Config → framework mapping, grep patterns |
+| File                                     | Purpose                                   |
+| ---------------------------------------- | ----------------------------------------- |
+| `./references/claude-md-template.md`     | Template for root CLAUDE.md               |
+| `./references/architecture-templates.md` | Templates for architecture docs           |
+| `./references/standards-templates.md`    | Templates for standards docs              |
+| `./references/onboarding-templates.md`   | Templates for onboarding guides           |
+| `./references/detection-patterns.md`     | Config → framework mapping, grep patterns |
 
 ## Verification Checklist
 
 After generation, verify:
 
 **Structure:**
+
 - [ ] Structure matches expected layout
 - [ ] All filenames use kebab-case
 - [ ] Architecture files have numbered prefixes and explain "why"
@@ -291,17 +301,20 @@ After generation, verify:
 - [ ] Subfolders only exist where domain-specific content detected
 
 **Content quality:**
+
 - [ ] CLAUDE.md has CRITICAL section at top
 - [ ] Quick-start commands use correct package manager
 - [ ] Mermaid diagrams are valid
 
 **Quality:**
+
 - [ ] Examples are illustrative (not verbatim sensitive code)
 - [ ] Standards docs are skimmable with clear do/don't examples
 - [ ] Standards docs distinguish "detected" vs "recommended"
 - [ ] Architecture docs explain structure and rationale
 
 **Preservation:**
+
 - [ ] Existing good documentation preserved (per Phase 0 audit)
 - [ ] Outdated documentation identified and replaced
 - [ ] Onboarding docs link to (not duplicate) other docs

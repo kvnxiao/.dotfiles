@@ -6,7 +6,7 @@ Templates for generating `docs/architecture/` files. Focus on **why** (decisions
 
 ## 01-overview.md
 
-```markdown
+````markdown
 # System Overview
 
 {1-2 paragraph high-level description of the system, its purpose, and key design goals.}
@@ -38,7 +38,9 @@ flowchart TB
     Data --> Cache
     Core --> ExtAPI
 ```
+````
 
+```
 ## Architecture Style
 
 **Pattern**: {Monorepo / Layered / Modular / Microservices / Monolith}
@@ -63,9 +65,9 @@ flowchart TB
 
 ## System Boundaries
 
-| Boundary | Responsibility | Communication |
-|----------|----------------|---------------|
-| {Name} | {What it owns} | {How it talks to others} |
+| Boundary | Responsibility | Communication            |
+| -------- | -------------- | ------------------------ |
+| {Name}   | {What it owns} | {How it talks to others} |
 
 ## Constraints
 
@@ -79,17 +81,17 @@ flowchart TB
 # Directory Structure
 
 ## Layout
-
 ```
+
 project-root/
-├── src/                    # {Purpose}
-│   ├── {folder}/           # {Purpose}
-│   └── {folder}/           # {Purpose}
-├── tests/                  # {Purpose}
-├── docs/                   # Documentation
-└── {config files}          # {Purpose}
-```
+├── src/ # {Purpose}
+│ ├── {folder}/ # {Purpose}
+│ └── {folder}/ # {Purpose}
+├── tests/ # {Purpose}
+├── docs/ # Documentation
+└── {config files} # {Purpose}
 
+```
 ## Design Rationale
 
 ### Why This Organization
@@ -118,7 +120,7 @@ project-root/
 
 ## 03-core-components.md
 
-```markdown
+````markdown
 # Core Components
 
 ## Component Overview
@@ -134,6 +136,7 @@ classDiagram
     }
     ComponentA --> ComponentB : uses
 ```
+````
 
 ## Components
 
@@ -144,9 +147,11 @@ classDiagram
 **Location**: `src/{path}/`
 
 **Key interfaces**:
+
 - `{InterfaceName}` — {Purpose}
 
 **Dependencies**:
+
 - `{Dependency}` — {Why it depends on this}
 
 **Design rationale**: {Why this component exists as a separate unit. What would break if merged elsewhere.}
@@ -157,15 +162,15 @@ classDiagram
 
 ## Component Interactions
 
-| From | To | Purpose | Pattern |
-|------|----|---------|---------|
-| {A} | {B} | {Why A calls B} | {sync/async/event} |
+| From | To  | Purpose         | Pattern            |
+| ---- | --- | --------------- | ------------------ |
+| {A}  | {B} | {Why A calls B} | {sync/async/event} |
 
 ## Ownership Boundaries
 
 {Explain what each component owns exclusively. Clarify shared vs owned resources.}
-```
 
+````
 ## 04-data-flow.md
 
 ```markdown
@@ -193,23 +198,23 @@ sequenceDiagram
     Data-->>Core: Domain object
     Core-->>Entry: Response data
     Entry-->>User: Response
-```
+````
 
 ## Data Transformations
 
-| Stage | Input | Output | Transformation |
-|-------|-------|--------|----------------|
-| Entry | Raw request | Validated DTO | Validation, parsing |
-| Core | DTO | Domain model | Business rules |
-| Data | Domain model | Persistence model | Serialization |
+| Stage | Input        | Output            | Transformation      |
+| ----- | ------------ | ----------------- | ------------------- |
+| Entry | Raw request  | Validated DTO     | Validation, parsing |
+| Core  | DTO          | Domain model      | Business rules      |
+| Data  | Domain model | Persistence model | Serialization       |
 
 ## State Management
 
 ### Where State Lives
 
-| State Type | Location | Rationale |
-|------------|----------|-----------|
-| {Type} | {Where} | {Why here} |
+| State Type | Location | Rationale  |
+| ---------- | -------- | ---------- |
+| {Type}     | {Where}  | {Why here} |
 
 ### State Flow Rules
 
@@ -229,8 +234,8 @@ flowchart LR
 ## Caching Strategy
 
 {If applicable: what is cached, where, why, and invalidation strategy.}
-```
 
+````
 ## Mermaid Diagram Patterns
 
 ### Flowchart (System Overview)
@@ -242,7 +247,7 @@ flowchart TB
         B[Component]
     end
     A --> B
-```
+````
 
 ### Sequence (Data Flow)
 

@@ -2,7 +2,7 @@ You are an expert in prompt engineering, specializing in optimizing AI code assi
 Follow these steps carefully:
 
 1. Analysis Phase:
-Review the chat history in your context window.
+   Review the chat history in your context window.
 
 Then, examine the current Claude instructions, commands and config
 <claude_instructions>
@@ -14,6 +14,7 @@ Then, examine the current Claude instructions, commands and config
 </claude_instructions>
 
 Analyze the chat history, instructions, commands and config to identify areas that could be improved. Look for:
+
 - Inconsistencies in Claude's responses
 - Misunderstandings of user requests
 - Areas where Claude could provide more detailed or accurate information
@@ -22,21 +23,21 @@ Analyze the chat history, instructions, commands and config to identify areas th
 - Permissions and MCPs we've approved locally that we should add to the config, especially if we've added new tools or require them for the command to work
 
 2. Interaction Phase:
-Present your findings and improvement ideas to the human. For each suggestion:
-a) Explain the current issue you've identified
-b) Propose a specific change or addition to the instructions
-c) Describe how this change would improve Claude's performance
+   Present your findings and improvement ideas to the human. For each suggestion:
+   a) Explain the current issue you've identified
+   b) Propose a specific change or addition to the instructions
+   c) Describe how this change would improve Claude's performance
 
 Wait for feedback from the human on each suggestion before proceeding. If the human approves a change, move it to the implementation phase. If not, refine your suggestion or move on to the next idea.
 
 3. Implementation Phase:
-For each approved change:
-a) Clearly state the section of the instructions you're modifying
-b) Present the new or modified text for that section
-c) Explain how this change addresses the issue identified in the analysis phase
+   For each approved change:
+   a) Clearly state the section of the instructions you're modifying
+   b) Present the new or modified text for that section
+   c) Explain how this change addresses the issue identified in the analysis phase
 
 4. Output Format:
-Present your final output in the following structure:
+   Present your final output in the following structure:
 
 <analysis>
 [List the issues identified and potential improvements]

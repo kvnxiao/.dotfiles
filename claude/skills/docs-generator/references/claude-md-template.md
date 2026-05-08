@@ -5,6 +5,7 @@ Template for generating the root `CLAUDE.md` file.
 ## Preservation Note
 
 **Before generating**: Check if a CLAUDE.md already exists. If it does:
+
 - Preserve any project-specific sections that are accurate and valuable
 - Update outdated commands or descriptions
 - Merge new content rather than replacing wholesale
@@ -14,7 +15,7 @@ Only replace entirely if the existing file is significantly wrong or poorly orga
 
 ## Structure
 
-```markdown
+````markdown
 # {Project Name}
 
 ## CRITICAL: Before You Start
@@ -22,6 +23,7 @@ Only replace entirely if the existing file is significantly wrong or poorly orga
 **ALWAYS consult the `docs/` folder before making changes or answering questions about this project.**
 
 Documentation is the source of truth for:
+
 - Architectural decisions → `docs/architecture/`
 - Coding standards → `docs/standards/`
 - Getting started → `docs/onboarding/`
@@ -42,6 +44,7 @@ Use **progressive disclosure**: read high-level overviews first, then drill into
 {install command}
 {dev server command}
 ```
+````
 
 ### Testing
 
@@ -59,18 +62,21 @@ Use **progressive disclosure**: read high-level overviews first, then drill into
 ## Documentation
 
 ### Architecture
+
 - [`docs/architecture/01-overview.md`](docs/architecture/01-overview.md) — System overview and high-level design
 - [`docs/architecture/02-directory-structure.md`](docs/architecture/02-directory-structure.md) — Repository layout
 - [`docs/architecture/03-core-components.md`](docs/architecture/03-core-components.md) — Main modules and responsibilities
 - [`docs/architecture/04-data-flow.md`](docs/architecture/04-data-flow.md) — Data flow and integration points
 
 ### Standards
+
 - [`docs/standards/naming-conventions.md`](docs/standards/naming-conventions.md) — Naming patterns
 - [`docs/standards/error-handling.md`](docs/standards/error-handling.md) — Error handling patterns
 - [`docs/standards/testing.md`](docs/standards/testing.md) — Testing conventions
-{Additional standards as detected}
+  {Additional standards as detected}
 
 ### Onboarding
+
 - [`docs/onboarding/01-setup.md`](docs/onboarding/01-setup.md) — Environment setup
 - [`docs/onboarding/02-first-contribution.md`](docs/onboarding/02-first-contribution.md) — Making your first change
 
@@ -79,8 +85,8 @@ Use **progressive disclosure**: read high-level overviews first, then drill into
 - Run tests: `{test command}`
 - Run linter: `{lint command}`
 - Ensure all checks pass before committing
-```
 
+````
 ## Command Discovery Patterns
 
 ### Priority Order
@@ -92,14 +98,14 @@ Use **progressive disclosure**: read high-level overviews first, then drill into
      # Use just commands
      just --list  # Discover available commands
    fi
-   ```
+````
 
 2. **package.json with packageManager**
    ```json
    {
-     "packageManager": "pnpm@8.0.0"  // Use pnpm
-     "packageManager": "yarn@4.0.0"  // Use yarn
-     "packageManager": "bun@1.0.0"   // Use bun
+     "packageManager": "pnpm@8.0.0", // Use pnpm
+     "packageManager": "yarn@4.0.0", // Use yarn
+     "packageManager": "bun@1.0.0" // Use bun
    }
    ```
 
@@ -119,61 +125,67 @@ Use **progressive disclosure**: read high-level overviews first, then drill into
 
 ### Common Commands to Discover
 
-| Purpose | Check For |
-|---------|-----------|
-| Install | `install`, `setup`, `bootstrap` |
-| Dev | `dev`, `start`, `serve`, `watch` |
-| Build | `build`, `compile`, `dist` |
-| Test | `test`, `spec`, `check` |
-| Lint | `lint`, `format`, `check` |
+| Purpose | Check For                        |
+| ------- | -------------------------------- |
+| Install | `install`, `setup`, `bootstrap`  |
+| Dev     | `dev`, `start`, `serve`, `watch` |
+| Build   | `build`, `compile`, `dist`       |
+| Test    | `test`, `spec`, `check`          |
+| Lint    | `lint`, `format`, `check`        |
 
 ### Example Discoveries
 
 **Node.js with pnpm:**
-```markdown
+
+````markdown
 ### Development
+
 ```bash
 pnpm install
 pnpm dev
 ```
+````
 
 ### Testing
+
 ```bash
 pnpm test
 pnpm lint
 ```
-```
 
+````
 **Rust with cargo:**
 ```markdown
 ### Development
 ```bash
 cargo build
 cargo run
-```
+````
 
 ### Testing
+
 ```bash
 cargo test
 cargo clippy
 ```
-```
 
+````
 **Python with poetry:**
 ```markdown
 ### Development
 ```bash
 poetry install
 poetry run python main.py
-```
+````
 
 ### Testing
+
 ```bash
 poetry run pytest
 poetry run ruff check .
 ```
-```
 
+````
 ## CRITICAL Section Guidelines
 
 The CRITICAL section must:
@@ -188,20 +200,23 @@ The CRITICAL section must:
 ```markdown
 # CRITICAL
 Read the docs.
-```
+````
 
 ```markdown
 ## Important
+
 Check docs/standards for conventions.
 ```
 
 **Good example:**
+
 ```markdown
 ## CRITICAL: Before You Start
 
 **ALWAYS consult the `docs/` folder before making changes or answering questions about this project.**
 
 Documentation is the source of truth for:
+
 - Architectural decisions → `docs/architecture/`
 - Coding standards → `docs/standards/`
 - Getting started → `docs/onboarding/`

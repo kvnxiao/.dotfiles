@@ -32,29 +32,31 @@ Each endpoint doc includes:
 
 ## Field Type Conventions
 
-| Code Type | Doc Type |
-|-----------|----------|
-| `string` (UUID format) | UUID |
-| `string` | string |
-| `number`, `int` | integer |
-| `number` (decimal) | float |
-| `boolean` | boolean |
-| `Date`, `DateSchema` | ISO 8601 |
-| `string[]` | string[] |
-| `SomeType[]` | array |
-| Nested object | object (reference sub-object table) |
+| Code Type              | Doc Type                            |
+| ---------------------- | ----------------------------------- |
+| `string` (UUID format) | UUID                                |
+| `string`               | string                              |
+| `number`, `int`        | integer                             |
+| `number` (decimal)     | float                               |
+| `boolean`              | boolean                             |
+| `Date`, `DateSchema`   | ISO 8601                            |
+| `string[]`             | string[]                            |
+| `SomeType[]`           | array                               |
+| Nested object          | object (reference sub-object table) |
 
 ## Authentication Patterns
 
 ### Integrations API (`/v1/integrations/...`)
 
 For API key authentication, document as:
+
 - "Requires a valid API key with `{permission}` permission"
 - Format: `Authorization: Bearer <prefix>:<secret>`
 
 ### Authenticated API (`/v1/workspaces/...`)
 
 For Firebase JWT authentication, document as:
+
 - "Requires a valid workspace scoped Bearer token with {permission} permission"
 - Format: `Authorization: Bearer <token>`
 
@@ -81,6 +83,7 @@ docs/api-docs/api/v1/
 ## HTML Templates
 
 See [references/html-templates.md](references/html-templates.md) for:
+
 - Base HTML document structure
 - Table formats (Headers, Parameters, Response Fields, Errors)
 - Sub-object documentation patterns
@@ -89,6 +92,7 @@ See [references/html-templates.md](references/html-templates.md) for:
 ## Viewing Documentation
 
 To preview HTML docs locally in VS Code/Cursor:
+
 1. Install the [Live Preview](https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server) extension
 2. Open any `.html` file
 3. Click "Show Preview" or right-click → "Live Preview: Show Preview"

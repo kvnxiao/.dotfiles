@@ -23,6 +23,7 @@ BRANCH_NAME="feature/my-feature" BASE_BRANCH="develop" ./scripts/create-worktree
 ```
 
 **Outputs** (to stdout):
+
 - `BRANCH_NAME=<branch>` - The created branch name
 - `WORKTREE_PATH=<path>` - Absolute path to worktree
 - `DEFAULT_BRANCH=<branch>` - Repository's default branch
