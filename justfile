@@ -35,6 +35,11 @@ setup-zshenv:
 setup-zshenv:
     C:\msys64\usr\bin\zsh.exe setup/setup-zshenv.zsh
 
+# Set up ~/.config/fish/conf.d/_local-env.fish with computed HOSTNAME, LANG, TZ, SHELL
+[windows]
+setup-fishenv:
+    C:\msys64\usr\bin\fish.exe setup/setup-fishenv.fish
+
 # Apply Windows Defender exclusions (requires admin)
 [windows]
 defender:
@@ -46,7 +51,7 @@ setup-hooks:
 
 # Full setup: deploy + platform-specific setup
 [windows]
-setup: deploy defender setup-zshenv setup-hooks
+setup: deploy defender setup-zshenv setup-fishenv setup-hooks
 
 # Full setup: deploy + platform-specific setup
 [unix]
