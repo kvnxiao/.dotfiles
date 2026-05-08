@@ -1,12 +1,6 @@
 [fish.files]
 "fish/conf.d/os-detect.macos.fish" = "~/.config/fish/conf.d/os-detect.fish"
 
-[yabai.files]
-"yabai/.yabairc" = "~/.yabairc"
-
-[skhd.files]
-"skhd/.skhdrc" = "~/.skhdrc"
-
 [aerospace.files]
 "aerospace/.aerospace.toml" = "~/.config/aerospace/aerospace.toml"
 "aerospace/move-zebar.sh" = "~/.config/aerospace/move-zebar.sh"
