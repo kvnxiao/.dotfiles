@@ -51,5 +51,12 @@
 "atuin/config.toml" = "~/.config/atuin/config.toml"
 
 [claude.files]
-# Symbolic link on all files in the claude directory
-"claude" = { target = "~/.claude", type = "symbolic", recurse = true }
+# Symbolic link on all shared folders in the `agent-configs/shared` directory
+"agent-configs/shared/agents" = { target = "~/.claude/agents", type = "symbolic", recurse = true }
+"agent-configs/shared/commands" = { target = "~/.claude/commands", type = "symbolic", recurse = true }
+"agent-configs/shared/output-styles" = { target = "~/.claude/output-styles", type = "symbolic", recurse = true }
+"agent-configs/shared/skills" = { target = "~/.claude/skills", type = "symbolic", recurse = true }
+# AGENTS.md -> CLAUDE.md
+"agent-configs/shared/AGENTS.md" = { target = "~/.claude/CLAUDE.md", type = "symbolic", recurse = false }
+# Claude Code specific settings.json
+"agent-configs/claude-code/settings.json" = { target = "~/.claude/settings.json", type = "symbolic", recurse = false }

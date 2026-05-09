@@ -34,7 +34,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "haiku",
+  "model": "opus",
   "hooks": {},
   "statusLine": {
     "type": "command",
