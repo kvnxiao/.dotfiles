@@ -35,6 +35,9 @@
     "defaultMode": "auto"
   },
   "model": "opus",
+  "env": {
+    "MSYS2_PATH_TYPE": "inherit"
+  },
   "hooks": {},
   "statusLine": {
     "type": "command",
