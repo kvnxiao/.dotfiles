@@ -1,4 +1,7 @@
 {
+  "env": {
+    "MSYS2_PATH_TYPE": "inherit"
+  },
   "permissions": {
     "allow": [
       "AskUserQuestion",
@@ -35,9 +38,6 @@
     "defaultMode": "auto"
   },
   "model": "opus",
-  "env": {
-    "MSYS2_PATH_TYPE": "inherit"
-  },
   "hooks": {},
   "statusLine": {
     "type": "command",
@@ -69,6 +69,6 @@
   "outputStyle": "Terse Engineering",
   "autoUpdatesChannel": "latest",
   "autoCompactEnabled": false,
-  "voiceEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
 }
