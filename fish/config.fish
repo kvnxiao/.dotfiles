@@ -1,6 +1,6 @@
 # Set up PATH
-set -g PNPM_HOME "$HOME/.pnpm"
-fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin ~/.pnpm
+set -gx PNPM_HOME "$HOME/.pnpm"
+fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin $PNPM_HOME/bin
 if string match -q 'darwin*' "$OSTYPE"
   fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin
 end
