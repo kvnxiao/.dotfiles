@@ -1,8 +1,12 @@
 # Set up PATH
 set -gx PNPM_HOME "$HOME/.pnpm"
-fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin $PNPM_HOME/bin
-if string match -q 'darwin*' "$OSTYPE"
-  fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin
+fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
+if string match -q 'macos' "$FISH_OS"
+  fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME
+else if string match -q 'linux' "$FISH_OS"
+  fish_add_path -g $PNPM_HOME
+else if string match -q 'windows' "$FISH_OS"
+  fish_add_path -g $PNPM_HOME/bin
 end
 
 if status is-interactive
