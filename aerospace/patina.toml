@@ -1,0 +1,14 @@
+[[file]]
+source = ".aerospace.toml"
+target = "~/.config/aerospace/aerospace.toml"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "move-zebar.sh"
+target = "~/.config/aerospace/move-zebar.sh"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "aerospace-follow-workspace.sh"
+target = "~/.config/aerospace/aerospace-follow-workspace.sh"
+when = "patina.os == 'macos'"

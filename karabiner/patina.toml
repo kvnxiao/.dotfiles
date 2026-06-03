@@ -1,0 +1,4 @@
+[[file]]
+source = "karabiner.json"
+target = "~/.config/karabiner/karabiner.json"
+when = "patina.os == 'macos'"

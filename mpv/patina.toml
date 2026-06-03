@@ -1,0 +1,12 @@
+# Recursive per-leaf symlinks (dotter `recurse = true`), OS-selected target.
+[[directory]]
+source = "config"
+target = "~/.config/mpv"
+mode = "symlink-tree"
+when = "patina.os != 'windows'"
+
+[[directory]]
+source = "config"
+target = "~/AppData/Roaming/mpv"
+mode = "symlink-tree"
+when = "patina.os == 'windows'"

@@ -1,0 +1,27 @@
+[[file]]
+source = ".zshrc"
+target = "~/.zshrc"
+
+[[file]]
+source = ".zimrc"
+target = "~/.zimrc"
+
+[[file]]
+source = "config/macos.zsh"
+target = "~/.zsh/macos.zsh"
+
+[[file]]
+source = "config/linux.zsh"
+target = "~/.zsh/linux.zsh"
+
+[[file]]
+source = "config/windows.zsh"
+target = "~/.zsh/windows.zsh"
+
+[[file]]
+source = "config/shared.zsh"
+target = "~/.zsh/shared.zsh"
+
+[[file]]
+source = "config/user-abbreviations.zsh"
+target = "~/.config/zsh-abbr/user-abbreviations"

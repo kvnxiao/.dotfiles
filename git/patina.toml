@@ -1,0 +1,6 @@
+# Source ends in `.tmpl`, so patina renders it via MiniJinja (no `mode`).
+# Replaces dotter's `ssh_public_key` per-OS variable with the cross-platform
+# `patina.home` builtin (see `.gitconfig.tmpl`).
+[[file]]
+source = ".gitconfig.tmpl"
+target = "~/.gitconfig"

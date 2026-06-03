@@ -1,0 +1,108 @@
+# Shared fish config (all OSes).
+[[file]]
+source = "conf.d/_fish_function_path.fish"
+target = "~/.config/fish/conf.d/_fish_function_path.fish"
+
+[[file]]
+source = "conf.d/abbr-git.fish"
+target = "~/.config/fish/conf.d/abbr-git.fish"
+
+[[file]]
+source = "conf.d/key-bindings.fish"
+target = "~/.config/fish/conf.d/key-bindings.fish"
+
+[[file]]
+source = "completions/pip.fish"
+target = "~/.config/fish/completions/pip.fish"
+
+[[file]]
+source = "config.fish"
+target = "~/.config/fish/config.fish"
+
+[[file]]
+source = "fish_plugins"
+target = "~/.config/fish/fish_plugins"
+
+[[file]]
+source = "fish_variables"
+target = "~/.config/fish/fish_variables"
+
+[[file]]
+source = "functions/__editor_backspace.fish"
+target = "~/.config/fish/functions/__editor_backspace.fish"
+
+[[file]]
+source = "functions/__editor_delete.fish"
+target = "~/.config/fish/functions/__editor_delete.fish"
+
+[[file]]
+source = "functions/cached-completions.fish"
+target = "~/.config/fish/functions/cached-completions.fish"
+
+[[file]]
+source = "functions/cached-eval.fish"
+target = "~/.config/fish/functions/cached-eval.fish"
+
+[[file]]
+source = "functions/cargo-update-bins.fish"
+target = "~/.config/fish/functions/cargo-update-bins.fish"
+
+[[file]]
+source = "functions/clear.fish"
+target = "~/.config/fish/functions/clear.fish"
+
+[[file]]
+source = "functions/fish_config.fish"
+target = "~/.config/fish/functions/fish_config.fish"
+
+[[file]]
+source = "functions/fish_greeting.fish"
+target = "~/.config/fish/functions/fish_greeting.fish"
+
+[[file]]
+source = "functions/gh-raw.fish"
+target = "~/.config/fish/functions/gh-raw.fish"
+
+[[file]]
+source = "functions/hooks/_atuin_ensure_session.fish"
+target = "~/.config/fish/functions/hooks/_atuin_ensure_session.fish"
+
+[[file]]
+source = "functions/hooks/_cached_eval_post_atuin.fish"
+target = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
+
+[[file]]
+source = "functions/unzip.fish"
+target = "~/.config/fish/functions/unzip.fish"
+
+# Per-OS os-detect: same target, OS-selected source (dotter's per-OS includes).
+[[file]]
+source = "conf.d/os-detect.windows.fish"
+target = "~/.config/fish/conf.d/os-detect.fish"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "conf.d/os-detect.macos.fish"
+target = "~/.config/fish/conf.d/os-detect.fish"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "conf.d/os-detect.linux.fish"
+target = "~/.config/fish/conf.d/os-detect.fish"
+when = "patina.os == 'linux'"
+
+# Windows-only helper functions.
+[[file]]
+source = "functions/windows/pwd.fish"
+target = "~/.config/fish/functions/windows/pwd.fish"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "functions/windows/open.fish"
+target = "~/.config/fish/functions/windows/open.fish"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "functions/windows/mpv.fish"
+target = "~/.config/fish/functions/windows/mpv.fish"
+when = "patina.os == 'windows'"

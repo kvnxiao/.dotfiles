@@ -1,0 +1,28 @@
+# dotter package `claude` -> module `agent-configs` (module name = dir name).
+[[directory]]
+source = "shared/agents"
+target = "~/.claude/agents"
+mode = "symlink-tree"
+
+[[directory]]
+source = "shared/commands"
+target = "~/.claude/commands"
+mode = "symlink-tree"
+
+[[directory]]
+source = "shared/output-styles"
+target = "~/.claude/output-styles"
+mode = "symlink-tree"
+
+[[directory]]
+source = "shared/skills"
+target = "~/.claude/skills"
+mode = "symlink-tree"
+
+[[file]]
+source = "shared/AGENTS.md"
+target = "~/.claude/CLAUDE.md"
+
+[[file]]
+source = "claude-code/settings.json"
+target = "~/.claude/settings.json"

@@ -1,0 +1,14 @@
+[[file]]
+source = "komorebi.json"
+target = "~/komorebi.json"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "komorebi.bar.json"
+target = "~/komorebi.bar.json"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "whkdrc"
+target = "~/.config/whkdrc"
+when = "patina.os == 'windows'"
