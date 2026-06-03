@@ -26,10 +26,10 @@ Install the following before running any setup commands:
 - [scoop](https://scoop.sh/) — package manager
 
 Patina creates symbolic links, which on Windows require either Developer Mode or
-an elevated session. You no longer need to enable Developer Mode by hand: when
-`patina apply` needs the privilege it offers a one-time UAC prompt that toggles
-Developer Mode on via the bundled `patina-elevate` helper. You can also run
-`patina doctor --fix` to remediate it ahead of time.
+an elevated session. When `patina apply` needs the privilege, it offers a
+one-time UAC prompt that toggles Developer Mode on via the bundled
+`patina-elevate` helper; future runs then need no elevation. You can also run
+`patina doctor --fix` to enable it ahead of time.
 
 ## Setup
 
