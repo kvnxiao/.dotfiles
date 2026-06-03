@@ -75,7 +75,6 @@ target = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
 source = "functions/unzip.fish"
 target = "~/.config/fish/functions/unzip.fish"
 
-# Per-OS os-detect: same target, OS-selected source (dotter's per-OS includes).
 [[file]]
 source = "conf.d/os-detect.windows.fish"
 target = "~/.config/fish/conf.d/os-detect.fish"

@@ -1,4 +1,3 @@
-# dotter package `claude` -> module `agent-configs` (module name = dir name).
 [[directory]]
 source = "shared/agents"
 target = "~/.claude/agents"

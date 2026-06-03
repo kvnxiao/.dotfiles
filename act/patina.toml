@@ -1,4 +1,3 @@
-# dotter deployed `act` on macOS/Linux only, never Windows.
 [[file]]
 source = ".actrc"
 target = "~/.actrc"

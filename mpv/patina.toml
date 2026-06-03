@@ -1,4 +1,3 @@
-# Recursive per-leaf symlinks (dotter `recurse = true`), OS-selected target.
 [[directory]]
 source = "config"
 target = "~/.config/mpv"

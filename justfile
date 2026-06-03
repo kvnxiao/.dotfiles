@@ -5,25 +5,21 @@ set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 # Default: deploy dotfiles
 default: deploy
 
-# Deploy dotfiles (runs install on first use, then dotter deploy)
+# Deploy dotfiles via patina
 [unix]
-deploy: _ensure-installed
-    dotter deploy
+deploy:
+    patina apply
 
-# Deploy dotfiles (runs install on first use, then dotter deploy)
+# Deploy dotfiles via patina (also patches scoop config)
 [windows]
 deploy: _ensure-installed
-    dotter deploy
+    patina apply
     & pwsh -NoProfile -ExecutionPolicy Bypass -File setup\scoop-config.ps1
 
-# First-time install: symlink .dotter and local.toml
+# Windows pre-deploy environment check (MSYS2 nsswitch.conf)
 [windows]
 _ensure-installed:
     & pwsh -NoProfile -ExecutionPolicy Bypass -File setup\ensure-installed.ps1
-
-[unix]
-_ensure-installed:
-    zsh setup/ensure-installed.zsh
 
 # Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL
 [unix]
