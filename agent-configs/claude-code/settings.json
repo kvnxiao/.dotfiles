@@ -70,5 +70,6 @@
   "autoUpdatesChannel": "latest",
   "autoCompactEnabled": false,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "showClearContextOnPlanAccept": true
 }
