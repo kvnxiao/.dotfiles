@@ -45,7 +45,20 @@
         "hooks": [
           {
             "type": "command",
-            "command": "clamor --notify --body \"Question pending, needs your input\" --audio native"
+            "command": "clamor",
+            "args": [
+              "--notify",
+              "--body",
+              "Question pending, needs your input",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_i_read_you.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_orders_captain.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_reporting_for_duty.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_yes_sir.wav"
+            ]
           }
         ]
       }
@@ -56,16 +69,100 @@
         "hooks": [
           {
             "type": "command",
-            "command": "clamor --notify --audio native"
+            "command": "clamor",
+            "args": [
+              "--notify",
+              "--body",
+              "Permission required",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_i_read_you.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_orders_captain.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_reporting_for_duty.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_yes_sir.wav"
+            ]
           }
         ]
-      },
+      }
+    ],
+    "UserPromptSubmit": [
       {
-        "matcher": "idle_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "clamor --notify --audio native"
+            "command": "clamor",
+            "args": [
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/yes_affirmative.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/yes_orders_received.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/yes_right_away_sir.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/yes_roger_that.wav"
+            ]
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "clamor",
+            "args": [
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav"
+            ]
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "clamor",
+            "args": [
+              "--notify",
+              "--body",
+              "Turn complete",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/stop_jobs_finished.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav"
+            ]
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "clamor",
+            "args": [
+              "--notify",
+              "--body",
+              "Turn failed",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_additional_supply_depots_required.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_insufficient_vespene_gas.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_landing_sequence_interrupted.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_not_enough_energy.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_not_enough_minerals.wav",
+              "--audio",
+              "~/.dotfiles/agent-configs/claude-code/snd/error_unacceptable_landing_zone.wav"
+            ]
           }
         ]
       }
