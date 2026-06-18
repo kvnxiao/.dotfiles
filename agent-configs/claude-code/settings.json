@@ -130,7 +130,7 @@
             "args": [
               "--notify",
               "--body",
-              "Turn complete",
+              "Ready for your input",
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/stop_jobs_finished.wav",
               "--audio",
@@ -149,7 +149,7 @@
             "args": [
               "--notify",
               "--body",
-              "Turn failed",
+              "Something went wrong",
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/error_additional_supply_depots_required.wav",
               "--audio",
