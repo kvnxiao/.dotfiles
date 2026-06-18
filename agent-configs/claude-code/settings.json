@@ -39,30 +39,6 @@
   },
   "model": "opus",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "AskUserQuestion",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "clamor",
-            "args": [
-              "--notify",
-              "--body",
-              "Question pending, needs your input",
-              "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/wait_i_read_you.wav",
-              "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/wait_orders_captain.wav",
-              "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/wait_reporting_for_duty.wav",
-              "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/wait_yes_sir.wav"
-            ]
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "matcher": "permission_prompt",
@@ -73,7 +49,7 @@
             "args": [
               "--notify",
               "--body",
-              "Permission required",
+              "Needs your input to continue",
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/wait_i_read_you.wav",
               "--audio",
@@ -81,7 +57,9 @@
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/wait_reporting_for_duty.wav",
               "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/wait_yes_sir.wav"
+              "~/.dotfiles/agent-configs/claude-code/snd/wait_yes_sir.wav",
+              "--volume",
+              "0.3"
             ]
           }
         ]
@@ -101,7 +79,9 @@
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/yes_right_away_sir.wav",
               "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/yes_roger_that.wav"
+              "~/.dotfiles/agent-configs/claude-code/snd/yes_roger_that.wav",
+              "--volume",
+              "0.3"
             ]
           }
         ]
@@ -115,7 +95,9 @@
             "command": "clamor",
             "args": [
               "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav"
+              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav",
+              "--volume",
+              "0.3"
             ]
           }
         ]
@@ -134,7 +116,9 @@
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/stop_jobs_finished.wav",
               "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav"
+              "~/.dotfiles/agent-configs/claude-code/snd/ready_scv_good_to_go_sir.wav",
+              "--volume",
+              "0.3"
             ]
           }
         ]
@@ -161,7 +145,9 @@
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/error_not_enough_minerals.wav",
               "--audio",
-              "~/.dotfiles/agent-configs/claude-code/snd/error_unacceptable_landing_zone.wav"
+              "~/.dotfiles/agent-configs/claude-code/snd/error_unacceptable_landing_zone.wav",
+              "--volume",
+              "0.3"
             ]
           }
         ]
