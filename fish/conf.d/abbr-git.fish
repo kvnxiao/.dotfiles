@@ -4,7 +4,7 @@ if status is-interactive
   abbr -a gsm 'git switch main'
   abbr -a gpu 'git push'
   abbr -a gpuo 'git push -u origin (git branch --show-current)'
-  abbr -a gpuf 'git push -f'
+  abbr -a gpuf 'git push --force-with-lease --force-if-includes'
   abbr -a gcm --set-cursor 'git commit -m "%"'
   abbr -a gcam 'git commit --amend'
   abbr -a gcan 'git commit --amend --no-edit'
