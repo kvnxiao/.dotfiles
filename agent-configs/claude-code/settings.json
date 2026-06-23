@@ -110,6 +110,8 @@
             "type": "command",
             "command": "clamor",
             "args": [
+              "--when",
+              ".background_tasks | length == 0",
               "--notify",
               "--body",
               "Ready for your input",
