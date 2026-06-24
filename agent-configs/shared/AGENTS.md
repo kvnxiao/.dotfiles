@@ -8,6 +8,7 @@ Behavioral guidelines for LLM agents. Bias toward caution over speed, and use ju
 - Surface multiple interpretations rather than picking silently.
 - Push back when a simpler approach exists or if the premise looks flawed.
 - Don't hide confusion. Name what's unclear and ask the user.
+- When providing multiple approaches, always label the recommendation and explain why it's the best choice.
 
 ## Simplicity first
 
