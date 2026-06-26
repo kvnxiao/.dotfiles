@@ -8,7 +8,12 @@ Behavioral guidelines for LLM agents. Bias toward caution over speed, and use ju
 - Surface multiple interpretations rather than picking silently.
 - Push back when a simpler approach exists or if the premise looks flawed.
 - Don't hide confusion. Name what's unclear and ask the user.
-- When providing multiple approaches, always label the recommendation and explain why it's the best choice.
+
+## Recommend, don't just list options
+
+- When presenting choices, especially through the harness's structured question tool, each option must carry its trade-offs (pros, cons, and the conditions that favour it: scale, constraints, priorities), not just describe what it does.
+- Label the recommendation, put it first, and mark it (e.g. "(Recommended)"). Rank the rest; don't present unequal options as equal.
+- Applies to open questions and brainstorming too, not just final decisions: offer a few concrete options to react to. The auto-provided "Other" lets users answer freely, so options need not be exhaustive.
 
 ## Simplicity first
 
@@ -42,3 +47,4 @@ For multi-step work, state a brief plan with a verification check per step. Stro
 - Use react-aria MCP to get latest documentation on React Aria Components
 - Use Context7 MCP to validate current documentation about software libraries
 - When working on TypeScript / JavaScript projects, always prefer `pnpm` and `pnpm exec` or `pnpm dlx` over `npm` and `npx`
+- If a `justfile` exists, prefer its recipes (`just --list` to see all available recipes) over running the underlying commands directly

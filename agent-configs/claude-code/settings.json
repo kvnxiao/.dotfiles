@@ -184,9 +184,10 @@
     "squint@claude-configs": true
   },
   "outputStyle": "Terse Engineering",
+  "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
+  "tui": "default",
   "autoCompactEnabled": false,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "showClearContextOnPlanAccept": true
+  "voiceEnabled": true
 }
