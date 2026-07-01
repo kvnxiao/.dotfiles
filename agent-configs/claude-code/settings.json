@@ -183,7 +183,7 @@
     "document-skills@anthropic-agent-skills": true,
     "squint@claude-configs": true
   },
-  "outputStyle": "Terse Engineering",
+  "outputStyle": "Brief",
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
   "tui": "default",
