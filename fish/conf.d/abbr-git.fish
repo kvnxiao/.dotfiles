@@ -14,7 +14,7 @@ if status is-interactive
   abbr -a gsn 'git switch -c'
   abbr -a gsw 'git switch'
   abbr -a gpr 'gh pr view --web || gh pr create --web'
-  abbr -a gr 'gh repo view --web'
+  abbr -a gvw 'gh repo view --web'
   abbr -a gl 'git l'
   abbr -a gla 'git la'
 end
