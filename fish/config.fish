@@ -9,6 +9,15 @@ else if string match -q 'windows' "$FISH_OS"
   fish_add_path -g $PNPM_HOME/bin
 end
 
+# Vite+ (https://viteplus.dev): source a cached copy of env.fish — sourcing
+# the vendor file directly spawns vp at every startup (~70ms under MSYS2).
+# Must run after PATH setup above: cache regeneration needs cat/mkdir/fish,
+# which are not on PATH during conf.d under MSYS2.
+# After a Vite+ update, refresh with: cached-eval --rebuild
+if test -f "$HOME/.vite-plus/env.fish"
+  cached-eval vite-plus "cat $HOME/.vite-plus/env.fish"
+end
+
 if status is-interactive
   # Bootstrap fisher and fish plugins
   cached-eval fisher "gh-raw jorgebucaran/fisher main functions/fisher.fish"
@@ -52,8 +61,15 @@ if status is-interactive
   alias ls="lsd -a"
   alias vi="nvim"
   alias vim="nvim"
-  if test "$FISH_OS" = windows; and command -q powersession
-    alias asciinema="powersession"
+  if test "$FISH_OS" = windows
+    # Defer the powersession PATH scan (~7ms under MSYS2) to first call
+    function asciinema --wraps powersession
+      if command -q powersession
+        powersession $argv
+      else
+        command asciinema $argv
+      end
+    end
   end
 
   # Claude Code environment variables
