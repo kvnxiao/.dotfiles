@@ -40,20 +40,9 @@ if status is-interactive
   cached-eval fnm "fnm env --use-on-cd"
   cached-eval zoxide "zoxide init fish"
   command -q zoxide; and alias cd="z"
+  # Lazy atuin session wrappers are baked into the cache by _cached_eval_post_atuin
   cached-eval atuin "atuin init fish --disable-up-arrow"
   cached-eval br "broot --print-shell-function fish"
-
-  # Wrap atuin functions with lazy session init to defer atuin uuid from startup to first use
-  functions -c _atuin_preexec _atuin_preexec_inner
-  functions -c _atuin_search _atuin_search_inner
-  function _atuin_preexec --on-event fish_preexec
-    _atuin_ensure_session
-    _atuin_preexec_inner $argv
-  end
-  function _atuin_search
-    _atuin_ensure_session
-    _atuin_search_inner $argv
-  end
 
   cached-eval starship "starship init fish --print-full-init"
 
