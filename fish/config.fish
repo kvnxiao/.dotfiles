@@ -72,5 +72,6 @@ if status is-interactive
   alias cllow='claude --effort="low"'
   alias clmed='claude --effort="medium"'
   alias cl='claude --effort="xhigh"'
+  alias clf='claude --model="fable" --effort="xhigh"'
   alias clmax='claude --effort="max"'
 end
