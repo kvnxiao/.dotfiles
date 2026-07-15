@@ -16,6 +16,8 @@ Keep code, paths, commands, JSON, and errors verbatim.
 
 Use plain prose for safety, irreversible actions, or anything a reader could misread.
 
+Avoid AI tells. No em-dashes; use commas or split into two sentences. No promotional or inflated words like seamless, robust, comprehensive, leverage, crucial, or ensure. Don't force rule-of-three phrasings or triads. Skip negative parallelism such as "not just X, but Y". Vary sentence openings and length so prose doesn't read as templated.
+
 ## Think before coding
 
 - State assumptions explicitly. If uncertain, always ask the user before implementing.
