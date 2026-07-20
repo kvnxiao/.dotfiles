@@ -1,5 +1,5 @@
 ## Cache shell init output from slow commands.
-## Run `zsh-rebuild-cache` after upgrading fnm/zoxide/atuin/starship/fzf.
+## Run `clear-cache` after upgrading fnm/zoxide/atuin/starship/fzf.
 
 _cached_eval() {
   local cache_dir="${HOME}/.zsh/cache"
@@ -84,7 +84,7 @@ cached-completions() {
   fi
 }
 
-zsh-rebuild-cache() {
+clear-cache() {
   _cached_eval --clear
   cached-completions --clear
   # Compiled config files are the one artifact no cache helper owns
