@@ -45,19 +45,6 @@ export FZF_DEFAULT_OPTS=" \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
-# Claude experimental env vars
-export ENABLE_LSP_TOOL=1
-export ENABLE_EXPERIMENTAL_MCP_CLI=true
-export ANTHROPIC_MODEL="opus[1m]"
-export CLAUDE_CODE_ENABLE_TASKS=true
-export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
-# Don't set global CLAUDE_CODE_EFFORT_LEVEL, instead provide aliases for different effort levels
-alias cllow='claude --effort="low"'
-alias clmed='claude --effort="medium"'
-alias cl='claude --effort="xhigh"'
-alias clf='claude --model="fable" --effort="xhigh"'
-alias clmax='claude --effort="max"'
-
 # Shift+Enter inserts newline (for WezTerm CSI u sequence)
 insert-newline() { LBUFFER+=$'\n' }
 zle -N insert-newline

@@ -8,6 +8,10 @@ source = "conf.d/abbr-git.fish"
 target = "~/.config/fish/conf.d/abbr-git.fish"
 
 [[file]]
+source = "conf.d/abbr-claude-code.fish"
+target = "~/.config/fish/conf.d/abbr-claude-code.fish"
+
+[[file]]
 source = "conf.d/key-bindings.fish"
 target = "~/.config/fish/conf.d/key-bindings.fish"
 

@@ -1,5 +1,6 @@
 # Set up PATH
 set -gx PNPM_HOME "$HOME/.pnpm"
+set -gx XDG_CONFIG_HOME "$HOME/.config"
 fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
 if string match -q 'macos' "$FISH_OS"
   fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME
@@ -50,6 +51,7 @@ if status is-interactive
   alias ls="lsd -a"
   alias vi="nvim"
   alias vim="nvim"
+  alias cd="z"
   if test "$FISH_OS" = windows
     # Defer the powersession PATH scan (~7ms under MSYS2) to first call
     function asciinema --wraps powersession
@@ -61,17 +63,4 @@ if status is-interactive
     end
   end
 
-  # Claude Code environment variables
-  set -gx XDG_CONFIG_HOME "$HOME/.config"
-  set -gx ENABLE_LSP_TOOL 1
-  set -gx ENABLE_EXPERIMENTAL_MCP_CLI true
-  set -gx ANTHROPIC_MODEL "opus[1m]"
-  set -gx CLAUDE_CODE_ENABLE_TASKS true
-  set -gx CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS 1
-  # Don't set global CLAUDE_CODE_EFFORT_LEVEL, instead provide aliases for different effort levels
-  alias cllow='claude --effort="low"'
-  alias clmed='claude --effort="medium"'
-  alias cl='claude --effort="xhigh"'
-  alias clf='claude --model="fable" --effort="xhigh"'
-  alias clmax='claude --effort="max"'
 end

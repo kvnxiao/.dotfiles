@@ -16,3 +16,10 @@ abbr gpr="gh pr view --web || gh pr create --web"
 abbr gvw="gh repo view --web"
 abbr gl="git l"
 abbr gla="git la"
+
+# Claude Code abbreviations
+abbr cllow='claude --effort="low"'
+abbr clmed='claude --effort="medium"'
+abbr cl='claude --effort="xhigh"'
+abbr clf='claude --model="fable" --effort="xhigh"'
+abbr clmax='claude --effort="max"'
