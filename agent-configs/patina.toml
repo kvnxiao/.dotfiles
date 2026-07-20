@@ -4,11 +4,6 @@ target = "~/.claude/agents"
 mode = "symlink-tree"
 
 [[directory]]
-source = "shared/commands"
-target = "~/.claude/commands"
-mode = "symlink-tree"
-
-[[directory]]
 source = "shared/output-styles"
 target = "~/.claude/output-styles"
 mode = "symlink-tree"
