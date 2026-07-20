@@ -1,8 +1,12 @@
 function cached-eval --description "Cache command output and source it"
-  if test "$argv[1]" = --rebuild
+  if test "$argv[1]" = --clear
     rm -rf "$HOME/.local/share/fish/eval-cache"
     echo "Cache cleared. Restart fish to regenerate."
     return
+  end
+  if string match -q -- '--*' "$argv[1]"
+    echo "cached-eval: unknown flag '$argv[1]' (did you mean --clear?)" >&2
+    return 1
   end
 
   set -l name $argv[1]

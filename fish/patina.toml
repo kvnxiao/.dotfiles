@@ -52,6 +52,10 @@ source = "functions/clear.fish"
 target = "~/.config/fish/functions/clear.fish"
 
 [[file]]
+source = "functions/fish-rebuild-cache.fish"
+target = "~/.config/fish/functions/fish-rebuild-cache.fish"
+
+[[file]]
 source = "functions/fish_config.fish"
 target = "~/.config/fish/functions/fish_config.fish"
 

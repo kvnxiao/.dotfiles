@@ -1,13 +1,24 @@
 ## MacOS config
 
-# Install fzf via homebrew and run the install command for completions & keybindings
-source <(fzf --zsh)
+# fzf completions & keybindings, cached (`source <(fzf --zsh)` forks fzf at every startup)
+_cached_eval fzf "fzf --zsh"
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"; fi
+# Google Cloud SDK PATH. Homebrew prefix is hardcoded: two `brew --prefix`
+# forks cost ~30ms per startup.
+if [[ -f /opt/homebrew/share/google-cloud-sdk/path.zsh.inc ]]; then
+  source /opt/homebrew/share/google-cloud-sdk/path.zsh.inc
+fi
 
-# The next line enables shell command completion for gcloud.
-if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"; fi
+# gcloud completions, lazy-loaded on first tab-complete of gcloud/gsutil/bq
+if [[ -f /opt/homebrew/share/google-cloud-sdk/completion.zsh.inc ]]; then
+  _gcloud_lazy_completions() {
+    unfunction _gcloud_lazy_completions
+    source /opt/homebrew/share/google-cloud-sdk/completion.zsh.inc
+    local real=${_comps[${words[1]}]}
+    [[ -n $real && $real != _gcloud_lazy_completions ]] && $real "$@"
+  }
+  compdef _gcloud_lazy_completions gcloud gsutil bq
+fi
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall

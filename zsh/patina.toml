@@ -7,20 +7,28 @@ source = ".zimrc"
 target = "~/.zimrc"
 
 [[file]]
-source = "config/macos.zsh"
-target = "~/.zsh/macos.zsh"
-
-[[file]]
-source = "config/linux.zsh"
-target = "~/.zsh/linux.zsh"
-
-[[file]]
-source = "config/windows.zsh"
-target = "~/.zsh/windows.zsh"
+source = "config/cache.zsh"
+target = "~/.zsh/cache.zsh"
 
 [[file]]
 source = "config/shared.zsh"
 target = "~/.zsh/shared.zsh"
+
+# Platform-specific config, selected at deploy time
+[[file]]
+source = "config/macos.zsh"
+target = "~/.zsh/os.zsh"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "config/linux.zsh"
+target = "~/.zsh/os.zsh"
+when = "patina.os == 'linux'"
+
+[[file]]
+source = "config/windows.zsh"
+target = "~/.zsh/os.zsh"
+when = "patina.os == 'windows'"
 
 [[file]]
 source = "config/user-abbreviations.zsh"

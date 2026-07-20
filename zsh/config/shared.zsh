@@ -1,4 +1,4 @@
-## Shared config is loaded after platform specific configs
+## Shared config is loaded before platform specific configs
 
 # pnpm
 export PNPM_HOME="${HOME}/.pnpm"
@@ -51,6 +51,12 @@ export ENABLE_EXPERIMENTAL_MCP_CLI=true
 export ANTHROPIC_MODEL="opus[1m]"
 export CLAUDE_CODE_ENABLE_TASKS=true
 export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+# Don't set global CLAUDE_CODE_EFFORT_LEVEL, instead provide aliases for different effort levels
+alias cllow='claude --effort="low"'
+alias clmed='claude --effort="medium"'
+alias cl='claude --effort="xhigh"'
+alias clf='claude --model="fable" --effort="xhigh"'
+alias clmax='claude --effort="max"'
 
 # Shift+Enter inserts newline (for WezTerm CSI u sequence)
 insert-newline() { LBUFFER+=$'\n' }

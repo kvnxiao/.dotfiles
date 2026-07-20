@@ -1,7 +1,7 @@
 function cached-completions --description "Cache tool-generated fish completions"
   set -l manifest "$HOME/.local/share/fish/completions-cache.manifest"
 
-  if test "$argv[1]" = --rebuild
+  if test "$argv[1]" = --clear
     if test -f "$manifest"
       while read -l path
         rm -f "$path"
@@ -10,6 +10,10 @@ function cached-completions --description "Cache tool-generated fish completions
     end
     echo "Cached completions removed. Run your cached-completions calls to regenerate."
     return
+  end
+  if string match -q -- '--*' "$argv[1]"
+    echo "cached-completions: unknown flag '$argv[1]' (did you mean --clear?)" >&2
+    return 1
   end
 
   set -l name $argv[1]

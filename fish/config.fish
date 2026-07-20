@@ -13,7 +13,7 @@ end
 # the vendor file directly spawns vp at every startup (~70ms under MSYS2).
 # Must run after PATH setup above: cache regeneration needs cat/mkdir/fish,
 # which are not on PATH during conf.d under MSYS2.
-# After a Vite+ update, refresh with: cached-eval --rebuild
+# After a Vite+ update, refresh with: cached-eval --clear
 if test -f "$HOME/.vite-plus/env.fish"
   cached-eval vite-plus "cat $HOME/.vite-plus/env.fish"
 end

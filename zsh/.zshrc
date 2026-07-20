@@ -8,6 +8,10 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
+# Cached tool-generated completions dir; must be on fpath before compinit
+# runs inside the zim completion module (see cached-completions)
+fpath=("$HOME/.zsh/completions" $fpath)
+
 # --- zimfw ---
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 zstyle ':zim:zmodule' use 'degit'
@@ -46,39 +50,18 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
 # switch group using `,` and `.`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
+# Cache helpers (must load before configs that call _cached_eval)
+source "$HOME/.zsh/cache.zsh"
+
 # Shared configs
 source "$HOME/.zsh/shared.zsh"
 
-if [[ $OSTYPE == msys ]] || [[ $OSTYPE == cygwin ]]; then
-  # Windows specific configs
-  source "$HOME/.zsh/windows.zsh"
-elif [[ $OSTYPE == linux-gnu ]]; then
-  # Linux specific configs
-  source "$HOME/.zsh/linux.zsh"
-elif [[ $OSTYPE == darwin* ]]; then
-  # macOS specific configs
-  source "$HOME/.zsh/macos.zsh"
-fi
+# Platform-specific config, selected at deploy time by patina
+source "$HOME/.zsh/os.zsh"
 
-# Cache shell init output from slow commands.
-# Run `zsh-rebuild-cache` after upgrading fnm/zoxide/atuin/starship.
-_cached_eval() {
-  local name="$1" gen_cmd="$2"
-  local cache="${HOME}/.zsh/cache/${name}.zsh"
-  if [[ ! -f "$cache" ]]; then
-    mkdir -p "${HOME}/.zsh/cache"
-    ${(z)gen_cmd} > "$cache"
-    zcompile "$cache" 2>/dev/null
-  fi
-  source "$cache"
-}
-
-zsh-rebuild-cache() {
-  rm -rf "${HOME}/.zsh/cache"
-  rm -f "${HOME}/.zsh"/*.zwc
-  local f; for f in "$HOME/.zsh"/*.zsh; do zcompile "$f" 2>/dev/null; done
-  echo "Cache cleared, configs compiled. Restart zsh to regenerate."
-}
+# Cached tool-generated completions
+cached-completions fnm "fnm completions --shell zsh"
+cached-completions atuin "atuin gen-completions --shell zsh"
 
 _cached_eval fnm "fnm env --use-on-cd"
 if [[ "$CLAUDECODE" != "1" ]]; then
@@ -87,3 +70,14 @@ if [[ "$CLAUDECODE" != "1" ]]; then
   _cached_eval starship "starship init zsh"
   alias cd="z"
 fi
+
+# Auto-compile configs when stale so the next shell loads .zwc files
+() {
+  local f
+  for f in ~/.zshrc "$HOME"/.zsh/*.zsh(N) "$HOME"/.zim/init.zsh(N); do
+    if [[ ! "${f}.zwc" -nt "$f" ]]; then
+      zcompile "$f" 2>/dev/null
+    fi
+  done
+  return 0
+}
