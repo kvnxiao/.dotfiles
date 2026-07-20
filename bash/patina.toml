@@ -1,0 +1,27 @@
+[[file]]
+source = ".bashrc"
+target = "~/.bashrc"
+
+[[file]]
+source = ".bash_profile"
+target = "~/.bash_profile"
+
+[[file]]
+source = "config/shared.bash"
+target = "~/.bash/shared.bash"
+
+# Platform-specific config, selected at deploy time
+[[file]]
+source = "config/macos.bash"
+target = "~/.bash/os.bash"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "config/linux.bash"
+target = "~/.bash/os.bash"
+when = "patina.os == 'linux'"
+
+[[file]]
+source = "config/windows.bash"
+target = "~/.bash/os.bash"
+when = "patina.os == 'windows'"
