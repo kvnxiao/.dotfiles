@@ -14,17 +14,13 @@ Preserve code, paths, commands, JSON, and errors verbatim. Use unambiguous prose
 
 - State material assumptions and ambiguities. When uncertainty affects behavior or scope, present the plausible interpretations and ask before implementing.
 - Challenge flawed premises and recommend a simpler approach when one exists.
-- Put the recommended option first and label it `(Recommended)`. For every option, state meaningful trade-offs and the conditions that favor it. Rank unequal choices.
-- Offer a small concrete set of options during brainstorming. It need not be exhaustive when free-form answers are available.
+- When presenting options, offer a small concrete set, put the recommended option first and label it `(Recommended)`, and state the trade-offs that could change the decision.
 
 ## Implementation
 
-- Implement only requested behavior. Avoid speculative features, configuration, abstractions, and error handling.
-- Prefer clear, boring code. Keep one responsibility per unit and do not abstract single-use code.
-- Touch only lines required by the request. Match existing style and leave unrelated code, comments, and formatting unchanged.
-- Remove unused code introduced by your changes. Mention pre-existing dead code but leave it alone unless asked.
+- Implement only requested behavior and touch only necessary lines. Avoid speculative additions, match existing style, and leave unrelated code, comments, and formatting unchanged.
+- Prefer clear, boring, self-explanatory code with one responsibility per unit. Do not abstract single-use code. Comment only on non-obvious constraints, rationale, or invariants, never provenance or change history.
 - Define verifiable success before implementation. Reproduce bugs with tests, test invalid inputs for validation changes, and run the same checks before and after refactors.
-- For multi-step work, state a brief plan with a verification check for each step.
 
 ## Tool routing
 
