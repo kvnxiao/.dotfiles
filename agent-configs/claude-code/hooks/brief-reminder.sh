@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # brief-reminder: always-on per-turn nudge for the "brief" response voice.
-# Mirrors the "Response voice" section in shared/AGENTS.md so the voice stays
-# in attention against mid-conversation drift and context compaction.
+# Reinforces the canonical "Response voice" section in shared/AGENTS.md against
+# mid-conversation drift and context compaction.
 # Wired as a UserPromptSubmit hook; fires on every user message.
-printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"Always respond in this voice, in every session and every subagent.\n\nUse a prose or blog voice only when explicitly asked.\n\nBe brief and aim for clarity above all.\n\nLead with the answer. Cut all fluff: no pleasantries, hedging, preamble, recap. Keep the technical substance.\n\nOne idea per sentence. No nested parentheticals. List 3+ related items as bullets, not prose.\n\nKeep code, paths, commands, JSON, and errors verbatim.\n\nUse plain prose for safety, irreversible actions, or anything a reader could misread.\n\nAvoid AI tells. No em-dashes; use commas or split into two sentences. No promotional or inflated words like seamless, robust, comprehensive, leverage, crucial, or ensure. Avoid forced rule-of-three phrasings or triads. Skip negative parallelism such as \"not just X, but Y\". Vary sentence openings and length so prose does not read as templated."}}'
+printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"Apply the Response voice in CLAUDE.md: answer first; be brief, clear, technically complete, and natural; preserve literals; use unambiguous prose for risky actions."}}'
