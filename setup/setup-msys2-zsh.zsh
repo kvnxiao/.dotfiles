@@ -4,10 +4,16 @@
 # and /etc/profile.d/{lang,tzset}.sh. Pre-setting them skips those spawns.
 # The PATH ensures coreutils are available when using --no-globalrcs.
 #
+# MSYS2 only: locale -uU and tzset are Cygwin/MSYS2 tools.
 # Run this once on each machine (or after changing timezone/locale):
-#   zsh ~/.dotfiles/setup-zshenv.zsh
+#   just setup-msys2-zsh
 
 set -e
+
+if [[ $OSTYPE != msys && $OSTYPE != cygwin ]]; then
+  echo "setup-msys2-zsh: MSYS2 only, nothing to do on $OSTYPE" >&2
+  exit 1
+fi
 
 ZSHENV="$HOME/.zshenv"
 
@@ -32,7 +38,7 @@ fi
 cat >> "$ZSHENV" <<EOF
 # --- setup-zshenv generated ---
 # Pre-set to skip subprocess spawns in /etc/profile and /etc/profile.d/*.sh
-# Regenerate with: zsh ~/.dotfiles/setup-zshenv.zsh
+# Regenerate with: just setup-msys2-zsh
 export HOSTNAME="$_hostname"
 export LANG="$_lang"
 export TZ="$_tz"

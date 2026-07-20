@@ -21,20 +21,15 @@ deploy: _ensure-installed
 _ensure-installed:
     & pwsh -NoProfile -ExecutionPolicy Bypass -File setup\ensure-installed.ps1
 
-# Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL
-[unix]
-setup-zshenv:
-    zsh setup/setup-zshenv.zsh
-
-# Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL
+# Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL (MSYS2 only)
 [windows]
-setup-zshenv:
-    C:\msys64\usr\bin\zsh.exe setup/setup-zshenv.zsh
+setup-msys2-zsh:
+    C:\msys64\usr\bin\zsh.exe setup/setup-msys2-zsh.zsh
 
-# Set up ~/.config/fish/conf.d/_local-env.fish with computed HOSTNAME, LANG, TZ, SHELL
+# Set up ~/.config/fish/conf.d/_local-env.fish with computed HOSTNAME, LANG, TZ, SHELL (MSYS2 only)
 [windows]
-setup-fishenv:
-    C:\msys64\usr\bin\fish.exe setup/setup-fishenv.fish
+setup-msys2-fish:
+    C:\msys64\usr\bin\fish.exe setup/setup-msys2-fish.fish
 
 # Apply Windows Defender exclusions (requires admin)
 [windows]
@@ -47,8 +42,8 @@ setup-hooks:
 
 # Full setup: deploy + platform-specific setup
 [windows]
-setup: deploy defender-exclusions setup-zshenv setup-fishenv setup-hooks
+setup: deploy defender-exclusions setup-msys2-zsh setup-msys2-fish setup-hooks
 
 # Full setup: deploy + platform-specific setup
 [unix]
-setup: deploy setup-zshenv setup-hooks
+setup: deploy setup-hooks

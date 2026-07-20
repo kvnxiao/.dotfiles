@@ -23,10 +23,21 @@ $zshConfigPath = "$env:USERPROFILE\.zsh"
 $zshrcPath = "$env:USERPROFILE\.zshrc"
 $zshenvPath = "$env:USERPROFILE\.zshenv"
 $zcompdumpPath = "$env:USERPROFILE\.zcompdump"
-$zgenomPath = "$env:USERPROFILE\.zgenom"
+$zimPath = "$env:USERPROFILE\.zim"
 $fishConfigPath = "$env:USERPROFILE\.config\fish\config.fish"
 $fishVariablesPath = "$env:USERPROFILE\.config\fish\fish_variables"
 $fishLocalSharePath = "$env:USERPROFILE\.local\share\fish"
+$zshHistoryPath = "$env:USERPROFILE\.zsh_history"
+
+# Per-command data stores and tool dirs (hot paths)
+$atuinDataPath = "$env:USERPROFILE\.local\share\atuin"
+$zoxideDataPath = "$env:USERPROFILE\.local\share\zoxide"
+$fzfPath = "$env:USERPROFILE\.fzf"
+$scoopShimsPath = "$env:USERPROFILE\scoop\shims"
+$fnmMultishellsPath = "$env:LOCALAPPDATA\fnm_multishells"
+$fnmDataPath = "$env:APPDATA\fnm"
+$pnpmPath = "$env:USERPROFILE\.pnpm"
+$vitePlusPath = "$env:USERPROFILE\.vite-plus"
 
 $pathExclusions = @(
     $msys2Path
@@ -34,15 +45,26 @@ $pathExclusions = @(
     $dotfilesPath
     $configPath
     $zshConfigPath
-    $zgenomPath
+    $zimPath
     "$env:USERPROFILE\.cargo\bin"
     $fishLocalSharePath
+    $atuinDataPath
+    $zoxideDataPath
+    $fzfPath
+    $scoopShimsPath
+    $fnmMultishellsPath
+    $fnmDataPath
+    $pnpmPath
+    $vitePlusPath
 )
 
 $fileExclusions = @(
     $zshrcPath
+    "$zshrcPath.zwc"
     $zshenvPath
     $zcompdumpPath
+    "$zcompdumpPath.zwc"
+    $zshHistoryPath
     $fishConfigPath
     $fishVariablesPath
 )
@@ -76,6 +98,10 @@ $processExclusions = @(
     "$cargoPath\atuin.exe"
     "$cargoPath\starship.exe"
     "$cargoPath\lsd.exe"
+
+    # fzf-tab forks fzf on every tab completion; either install location
+    "$fzfPath\bin\fzf.exe"
+    "$scoopShimsPath\fzf.exe"
 )
 
 Write-Host "Adding Windows Defender path exclusions..." -ForegroundColor Cyan
