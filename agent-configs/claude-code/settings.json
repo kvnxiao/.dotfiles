@@ -10,6 +10,7 @@
       "Bash(dir:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
+      "Bash(gws:*)",
       "Bash(head:*)",
       "Bash(just:*)",
       "Bash(ls:*)",
