@@ -22,6 +22,10 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
+# Debian/Ubuntu's /etc/zsh/zshrc runs a global compinit before ~/.zshrc, which
+# makes zim's completion module warn and re-init. Clear the flag it checks so it
+# initializes cleanly; no-op where no global compinit ran (macOS, MSYS2).
+unset _comps
 source ${ZIM_HOME}/init.zsh
 
 # Completion styles
