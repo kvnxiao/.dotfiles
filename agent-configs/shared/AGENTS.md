@@ -19,8 +19,25 @@ Preserve code, paths, commands, JSON, and errors verbatim. Use unambiguous prose
 ## Implementation
 
 - Implement only requested behavior and touch only necessary lines. Avoid speculative additions, match existing style, and leave unrelated code, comments, and formatting unchanged.
-- Prefer clear, boring, self-explanatory code with one responsibility per unit. Do not abstract single-use code. Comment only on non-obvious constraints, rationale, or invariants, never provenance or change history.
+- Prefer clear, boring, self-explanatory code with one responsibility per unit. Do not abstract single-use code.
 - Define verifiable success before implementation. Reproduce bugs with tests, test invalid inputs for validation changes, and run the same checks before and after refactors.
+
+## Comments & documentation
+
+- Add a comment or docstring only when code, names, types, or tests cannot clearly express a non-obvious constraint or rationale.
+- Explain why, not what. Typical reasons include domain invariants, security, concurrency or transactions, retries or idempotency, external-system behavior, performance trade-offs, compatibility, and why the obvious approach is wrong.
+- Never restate code, narrate control flow, duplicate contracts, or cite provenance — change history ("new", "now", "previously", "moved from") or tickets and specs ("implements ENG-123"). Those are how code arrived, not why it stays; state the underlying reason. Document a shared contract once at the API or module that owns it.
+- Keep local rationale with the code and shared rationale in repository documentation.
+- Prefer descriptive test names. Comment tests only when names and helpers cannot express non-obvious setup, constraints, or failure conditions.
+
+## Before marking complete
+
+Walk this checklist and state each item's outcome in the completion summary, including anything skipped and why.
+
+- [ ] Review the full diff as a skeptical second reader. Verify correctness and edge cases, and confirm only intended lines changed.
+- [ ] Make a simplification pass over the changed code. Remove dead code, needless indirection, and incidental complexity without changing behavior.
+- [ ] Re-read every comment and docstring added or modified in the task. Remove or rewrite any that break the comment rules above.
+- [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
 
 ## Tool routing
 
