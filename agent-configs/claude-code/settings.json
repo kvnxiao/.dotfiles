@@ -73,6 +73,8 @@
             "type": "command",
             "command": "clamor",
             "args": [
+              "--when",
+              "(.prompt // \"\") | startswith(\"<task-notification>\") | not",
               "--audio",
               "~/.dotfiles/agent-configs/claude-code/snd/yes_affirmative.wav",
               "--audio",
