@@ -30,3 +30,13 @@ target = "~/.claude/skills/humanizer/SKILL.md"
 remote = "make-interfaces-feel-better"
 source = "skills/make-interfaces-feel-better"
 target = "~/.claude/skills/make-interfaces-feel-better"
+
+[[directory]]
+remote = "diagram-design"
+source = "skills/diagram-design"
+target = "~/.claude/skills/diagram-design"
+
+[[directory]]
+remote = "diagram-design"
+source = "commands"
+target = "~/.claude/commands/diagram-design"

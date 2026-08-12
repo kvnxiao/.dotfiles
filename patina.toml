@@ -10,3 +10,7 @@ ref = "main"
 [[remote]]
 url = "https://github.com/jakubkrehel/make-interfaces-feel-better"
 ref = "main"
+
+[[remote]]
+url = "https://github.com/cathrynlavery/diagram-design"
+ref = "main"

@@ -1,5 +1,11 @@
 version = 1
 
+[remotes.diagram-design]
+url = "https://github.com/cathrynlavery/diagram-design"
+ref = "main"
+rev = "3c5c34ba3bf9dcf204b55c2dd613f8fa194cf584"
+updated_at = "2026-08-12T20:49:46Z"
+
 [remotes.humanizer]
 url = "https://github.com/blader/humanizer"
 ref = "main"
