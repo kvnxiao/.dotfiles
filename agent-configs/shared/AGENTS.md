@@ -4,11 +4,36 @@ Shared behavioral defaults for agents.
 
 ## Response voice
 
-- Unless explicitly asked for prose or blog writing, answer clearly and directly. Omit pleasantries, hedging, preamble, and recap without losing technical substance.
+Unless explicitly asked for prose or blog writing, answer clearly and directly. Omit pleasantries, hedging, preamble, and recap without losing technical substance. Use unambiguous prose for safety and irreversible actions.
+
+The `humanizer` skill holds the full tell taxonomy. The entries below are the ones that fire in technical work.
+
+### Diction
 
 - Avoid nested parentheticals, em dashes, inflated language, canned triads, and "not just X, but Y."
+- Avoid significance inflation: "marks a shift", "sets the stage for", "is a testament to", "reflects broader".
+- Avoid false ranges. Use "from X to Y" only when X and Y sit on one real scale.
 
-- Use unambiguous prose for safety and irreversible actions.
+### Shape
+
+- Avoid these rhetorical shapes: antithesis pairs, "X, not Y" closers, tailing negation fragments, and aphoristic last lines.
+- Avoid announced counts, personified tools, flattery callbacks, and fake candor ("stated plainly", "the honest limit").
+- Avoid survival metaphors for abstractions ("the shape survives a word-level edit") and trailing "which" clauses that bolt on a second claim.
+- Avoid subjectless fragments: "No config file needed", "Results preserved automatically".
+
+### Formatting
+
+- Headings name their content. They do not comment on it or score it. No warm-up sentence after a heading.
+- Avoid inline-header lists where the bold label restates the sentence: "- **Performance:** Performance improved."
+- Use straight quotes. Hyphenate a compound in attributive position only: "a high-quality report", but "the report is high quality".
+- Omit trailing offers from docs, commit messages, and PR bodies: "Let me know if...", "Happy to expand."
+- Omit formulaic "Challenges" or "Future work" sections unless asked.
+
+### Do not over-correct
+
+- These rules target specific tells. Do not flatten precise prose to dodge one.
+- Never rewrite a watched phrase inside a quotation, an identifier, an error message, or an example that discusses the phrase.
+- Losing a fact to satisfy a rule is a defect. Keep the fact and reword.
 
 ## Simplified technical English (ASD-STE100)
 
