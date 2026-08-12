@@ -20,3 +20,13 @@ target = "~/.claude/CLAUDE.md"
 [[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
+
+[[file]]
+remote = "humanizer"
+source = "SKILL.md"
+target = "~/.claude/skills/humanizer/SKILL.md"
+
+[[directory]]
+remote = "make-interfaces-feel-better"
+source = "skills/make-interfaces-feel-better"
+target = "~/.claude/skills/make-interfaces-feel-better"
