@@ -4,7 +4,7 @@ source "$CONFIG_DIR/workspaces.sh"
 
 SPACE_ICONS=("一" "二" "三" "四" "五" "六" "七" "八" "九" "十" "十一" "十二" "十三" "十四" "十五")
 
-# Focus a space on left click. New space by left clicking separator (>)
+# Focus a space on left click.
 
 # Aerospace creates and destroys workspaces as windows move, so the chip for
 # every id exists up front and plugins/aerospace.sh decides which ones draw.
@@ -39,17 +39,6 @@ spaces_bracket=(
   background.border_color=$BACKGROUND_2
 )
 
-separator=(
-  icon=􀆊
-  icon.font="$FONT:Heavy:16.0"
-  padding_left=10
-  padding_right=8
-  label.drawing=off
-  associated_display=active
-  click_script='yabai -m space --create && sketchybar --trigger space_change'
-  icon.color=$WHITE
-)
-
 # Hidden driver for the chips above. updates=on keeps it running while it is
 # invisible, so it still redraws them on every aerospace event.
 spaces_observer=(
@@ -60,9 +49,6 @@ spaces_observer=(
 
 sketchybar --add bracket spaces_bracket '/space\..*/' \
   --set spaces_bracket "${spaces_bracket[@]}" \
-  \
-  --add item separator left \
-  --set separator "${separator[@]}" \
   \
   --add item spaces_observer left \
   --set spaces_observer "${spaces_observer[@]}" \
