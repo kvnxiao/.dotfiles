@@ -13,6 +13,11 @@ source = "shared/skills"
 target = "~/.claude/skills"
 mode = "symlink-tree"
 
+[[directory]]
+source = "shared/skills"
+target = "~/.agents/skills"
+mode = "symlink-tree"
+
 [[file]]
 source = "shared/AGENTS.md"
 target = "~/.claude/CLAUDE.md"
@@ -26,15 +31,30 @@ remote = "humanizer"
 source = "SKILL.md"
 target = "~/.claude/skills/humanizer/SKILL.md"
 
+[[file]]
+remote = "humanizer"
+source = "SKILL.md"
+target = "~/.agents/skills/humanizer/SKILL.md"
+
 [[directory]]
 remote = "make-interfaces-feel-better"
 source = "skills/make-interfaces-feel-better"
 target = "~/.claude/skills/make-interfaces-feel-better"
 
 [[directory]]
+remote = "make-interfaces-feel-better"
+source = "skills/make-interfaces-feel-better"
+target = "~/.agents/skills/make-interfaces-feel-better"
+
+[[directory]]
 remote = "diagram-design"
 source = "skills/diagram-design"
 target = "~/.claude/skills/diagram-design"
+
+[[directory]]
+remote = "diagram-design"
+source = "skills/diagram-design"
+target = "~/.agents/skills/diagram-design"
 
 [[directory]]
 remote = "diagram-design"
