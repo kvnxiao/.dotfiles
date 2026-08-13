@@ -1,6 +1,6 @@
 ---
 name: completion-check
-description: Run a completion checklist over the current change set when work is considered done and ready to commit. Composes a correctness review, a simplification pass, a comment and prose audit, and the repository checks. Use before marking a task complete, before committing, before pushing to open a PR, or when the user says "commit for me", "open a PR", "completion check", "run the checklist", or "are we done".
+description: Run a completion checklist over the current change set when work is considered done and ready to commit. Checks for correctness, simplification candidates, comment and prose audits, and repository-specific checks. Use before marking a task complete, e.g. before committing or pushing to open a PR, or when the user says "commit for me", "open a PR", "are we done".
 ---
 
 # Completion check
