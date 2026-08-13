@@ -26,6 +26,12 @@ exec-on-workspace-change = [
   '~/.config/aerospace/aerospace-follow-workspace.sh',
 ]
 
+# Moving a window to another workspace leaves the focused workspace alone, so
+# 'exec-on-workspace-change' misses it. Focus does change, so redraw here too.
+on-focus-changed = [
+  'exec-and-forget sketchybar --trigger aerospace_workspace_change',
+]
+
 # Start AeroSpace at login
 start-at-login = true
 
