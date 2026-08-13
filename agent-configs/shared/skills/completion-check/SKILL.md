@@ -5,27 +5,27 @@ description: Run a completion checklist over the current change set when work is
 
 # Completion check
 
-Run the following checklist over the working-tree change set.
+Consider the proportionality of the changes and run the following checklist over the working-tree change set.
 
-Run applicable reviews in step 1 in parallel as read-only subagent reviews of the same unchanged diff. Restrict their tools to read-only access when supported. Reviewers must report findings without editing files or running mutating commands. Only the coordinating agent may edit the working tree.
-
-1. [ ] Gather review reports:
-   - [ ] 1a. Review the full diff as a skeptical second reader. Verify correctness and edge cases, and confirm only intended lines changed. Use the `code-review` skill if available.
-   - [ ] 1b. Find dead code, needless indirection, and incidental complexity that can be removed without changing behavior. Use the `simplify` skill if available.
-   - [ ] 1c. Audit every comment, docstring, and documentation line the change set added or modified. Use the `prose-check` skill.
+1. [ ] Gather read-only review reports in parallel:
+   - [ ] 1a. Review the full diff as a skeptical second reader. Verify correctness and edge cases, and confirm only intended lines changed. Use the `code-review` skill (if available) in a subagent.
+   - [ ] 1b. Find dead code, needless indirection, and incidental complexity that can be removed without changing behavior. Use the `simplify` skill (if available) in a subagent.
 2. [ ] Deduplicate the reports, resolve overlaps, and apply accepted changes in one edit pass. Review the resulting full diff.
-3. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
+3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Use the `prose-check` skill in a subagent.
+4. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
+
+Parallel subagents used for Step 1's review coverage must be restricted to read-only access. Reviewers must report findings without editing files or running mutating commands. Only the coordinating agent may edit the working tree. Step 3's prose audits also use subagents, but these are allowed to directly apply changes.
 
 List anything you found but did not fix, with the reason. State what you could not verify.
 
 ## Proportionality
 
-| Change class            | Steps to run                                        |
-| ----------------------- | --------------------------------------------------- |
-| Code                    | 1a, 1b, 1c, 2, 3                                    |
-| Prose and documentation | 1c, 2, and the formatter from 3                     |
-| Config and dotfiles     | 1c, 2, 3, and 1a when the config controls behaviour |
-| Dependency bump         | 3                                                   |
+| Change class            | Steps to run                                              |
+| ----------------------- | --------------------------------------------------------- |
+| Code                    | 1a, 1b, 2, 3, 4                                           |
+| Prose and documentation | 3, and the formatter from 4                               |
+| Config and dotfiles     | 3 and 4, plus 1a and 2 when the config controls behaviour |
+| Dependency bump         | 4                                                         |
 
 A three-line documentation edit does not need a correctness review. Say what you skipped and why.
 
