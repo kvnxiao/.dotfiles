@@ -11,10 +11,11 @@ Format each question like this:
 
 ```
   ❓ **1.** - **<question title>**: <question body, might be multiple paragraphs, laying out the candidate options and their trade-offs>
-    A. <option 1>
-    B. <option 2>
-    C. <option 3>
-    ... (more options, if needed)
+
+     A. <option 1>
+     B. <option 2>
+     C. <option 3>
+     ... (more options, if needed)
 
   ➡️ <your recommended option and why>
 ```
