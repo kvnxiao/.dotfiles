@@ -23,6 +23,10 @@ source = "shared/AGENTS.md"
 target = "~/.claude/CLAUDE.md"
 
 [[file]]
+source = "shared/AGENTS.md"
+target = "~/.codex/AGENTS.md"
+
+[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 
