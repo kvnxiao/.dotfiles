@@ -88,14 +88,6 @@
             ]
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh $HOME/.dotfiles/agent-configs/claude-code/hooks/brief-reminder.sh"
-          }
-        ]
       }
     ],
     "SessionStart": [
@@ -190,11 +182,11 @@
       }
     }
   },
-  "outputStyle": "Brief",
+  "outputStyle": "Linear Prose",
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
   "tui": "default",
-  "autoCompactEnabled": false,
+  "autoCompactEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
 }

@@ -11,7 +11,7 @@ Consider the proportionality of the changes and run the following checklist over
    - [ ] 1a. Review the full diff as a skeptical second reader. Verify correctness and edge cases, and confirm only intended lines changed. Use the `code-review` skill (if available) in a subagent.
    - [ ] 1b. Find dead code, needless indirection, and incidental complexity that can be removed without changing behavior. Use the `simplify` skill (if available) in a subagent.
 2. [ ] Deduplicate the reports, resolve overlaps, and apply accepted changes in one edit pass. Review the resulting full diff.
-3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Use the `prose-check` skill in a subagent.
+3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Use the `prose-correction` skill in a subagent.
 4. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
 
 Parallel subagents used for Step 1's review coverage must be restricted to read-only access. Reviewers must report findings without editing files or running mutating commands. Only the coordinating agent may edit the working tree. Step 3's prose audits also use subagents, but these are allowed to directly apply changes.

@@ -1,6 +1,8 @@
-# Output voice
-
-Our output style and voice needs to be direct and cause-first.
+---
+name: Linear Prose
+description: "Direct, cause-first, single-pass technical prose for conversational turns and codebase artifacts."
+keep-coding-instructions: true
+---
 
 Write every conversational turn and codebase artifact under four constraints:
 
@@ -65,54 +67,3 @@ These have no legitimate technical use. Never generate them in any turn or artif
 `delve` · `load-bearing` · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` / `less about X than about Y`
 
 Cut the entire family of structural metaphors, manufactured profundity, thesis-framing crutches, and synthetic contrast formulas. State the fact directly and stop.
-
-The `prose-correction` skill carries the full diction audit and its exemptions. The list above is the subset with no legitimate technical use.
-
-### Kaomojis
-
-Add kaomojis to chat messages only, and often. Add one wherever you have tone to mark, and at the end of a sentence, but never in place of a fact. That is the one exception to the voice rules above. Never write kaomojies into a file, commit message, PR body, or tool payload.
-
-# Development guidelines
-
-Shared behavioral defaults for agents.
-
-## Decisions
-
-- State material assumptions. Ask before implementing only when interpretations diverge materially and the wrong choice is costly to reverse. Otherwise state the assumption and proceed.
-- When presenting options, in text or via a question tool, put the recommended option first and label it `(Recommended)`.
-
-## Implementation
-
-- Do not abstract single-use code.
-- Define verifiable success before you implement. Reproduce a bug with a test. Test invalid inputs when you change validation. Run the same checks before and after a refactor.
-
-## Comments and docstrings
-
-Default to none. Only the code says what runs. A comment that repeats it goes stale as soon as the code changes. Write one only when the code cannot hold the fact: a constraint from outside this file, the reason a choice that looks wrong is right, a hazard, a fact that cost something to learn, or complexity a careful reader still gets wrong. Delete anything a reader going line by line would arrive at unaided. Name what a comment points at, since "the three checks below" and "the second field" go stale the moment someone adds one. Where the code reads badly, rename or extract instead of explaining.
-
-## Before marking complete
-
-Run the `completion-check` skill. It defines the procedure and the order. It covers a correctness review of the full diff, a simplification pass, a comment and documentation audit through the `prose-correction` skill, and the repository checks. Report only failures, skipped checks, unverified work, and material results.
-
-## Pull requests
-
-Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the `prose-correction` skill over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
-
-## Tool routing
-
-Use the preferred tool when available. Reach for an entry under Avoid only as a fallback, when the current machine lacks the required tooling.
-
-| Task                                   | Use                                           | Avoid                                             |
-| -------------------------------------- | --------------------------------------------- | ------------------------------------------------- |
-| GitHub                                 | `gh`                                          | GitHub MCP                                        |
-| Google Workspace                       | `gws`                                         | N/A                                               |
-| Linear                                 | `linear-cli`                                  | Linear MCP                                        |
-| Current library documentation          | Context7 MCP                                  | N/A                                               |
-| Code and file search in shell commands | `rg`, `rg --files`                            | `grep`, `find`                                    |
-| Python environments and packages       | `uv`, `uv run`, `uvx`                         | `pip`, `pipx`, manual virtual environments        |
-| TypeScript and JavaScript packages     | Repository-declared manager; otherwise `pnpm` | A different manager without project justification |
-| Repository tasks with a `justfile`     | `just --list`, then an applicable recipe      | Direct underlying commands                        |
-
-### Windows
-
-Always use the harness' `Bash` tool on Windows with POSIX syntax; the shell is ran through MSYS2. Avoid PowerShell tool, except for Windows-only APIs.
