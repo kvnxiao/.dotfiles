@@ -37,7 +37,7 @@ Maintenance inference: verify comment fidelity and usefulness. Do not make delet
 - As instruction complexity rises, constraint satisfaction declines. Jiang et al., “FollowBench: A Multi-level Fine-grained Constraints Following Benchmark for Large Language Models” (2024): <https://aclanthology.org/2024.acl-long.257/>.
 - Models can underuse relevant information in the middle of long contexts. Liu et al., “Lost in the Middle: How Language Models Use Long Contexts” (2024): <https://doi.org/10.1162/tacl_a_00638>.
 
-Maintenance inference: keep the operational skill concise and load detailed instruments only for the mode that needs them. Lexical tokens live in `diction.md` alone, so `SKILL.md` stays procedural and no token has two homes to drift between.
+Maintenance inference: keep the operational skill concise and load detailed instruments only for the mode that needs them. Lexical tokens live in `diction.md` alone, so `SKILL.md` stays procedural without maintaining redundant token lists.
 
 ## Candidate generation
 
