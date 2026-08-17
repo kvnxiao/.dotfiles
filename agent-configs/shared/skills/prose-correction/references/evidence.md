@@ -37,7 +37,21 @@ Maintenance inference: verify comment fidelity and usefulness. Do not make delet
 - As instruction complexity rises, constraint satisfaction declines. Jiang et al., “FollowBench: A Multi-level Fine-grained Constraints Following Benchmark for Large Language Models” (2024): <https://aclanthology.org/2024.acl-long.257/>.
 - Models can underuse relevant information in the middle of long contexts. Liu et al., “Lost in the Middle: How Language Models Use Long Contexts” (2024): <https://doi.org/10.1162/tacl_a_00638>.
 
-Maintenance inference: keep the operational skill concise and load detailed instruments only for the mode that needs them.
+Maintenance inference: keep the operational skill concise and load detailed instruments only for the mode that needs them. Lexical tokens live in `diction.md` alone, so `SKILL.md` stays procedural and no token has two homes to drift between.
+
+## Delegated verification
+
+The delegation of the verification pass to a fresh subagent rests on the instruction-load findings above plus one house observation, not on a controlled study of self-review.
+
+Observation from a full audit of the `patina-elevate` crate (August 2026): the in-context reread approved three of its own replacements that had swapped a bare `this` for a trailing `, which` clause, a lateral move between two constructions the same audit had just flagged elsewhere. The same pass did catch three other self-introduced defects, so the failure is partial rather than total.
+
+Maintenance inference: treat fresh-context verification as a house preference supported by observed self-approval of repair traps. Do not claim a measured error-rate reduction. The single-round limit and the requirement that the subagent name a rule for every patch exist to bound the cost of a preference that has not been measured.
+
+## Repair traps
+
+The cleft, demonstrative noun-echo, and coordinator-chaining tripwires were added from tells observed in this skill's own output, not from a corpus study. Reinhart et al. (above) covers participial overproduction; it does not cover these three.
+
+Maintenance inference: these are house preferences aimed at rewrite artifacts rather than at prose in general. Each carries an explicit keep condition, and none should be promoted to an unconditional ban without evidence that the construction harms readers across the artifacts this skill audits.
 
 ## Candidate generation
 

@@ -2,7 +2,13 @@
 
 After semantic fidelity, artifact convention, and discourse structure hold, load this reference. The entries are review signals, not a specification. If a match is the precise literal or technical term, it may remain.
 
-The banned-at-generation list stays in `SKILL.md`. Its duplication here keeps this reference usable during an audit.
+This file is the sole authority for the skill's lexical tokens. `SKILL.md` carries procedure and discourse rules and names no words of its own, so a token added or retired here takes effect everywhere without a second edit.
+
+## Never generate
+
+These expressions have no legitimate technical use. Never write one into new prose. Encountering one in existing prose is a tripwire like any other: correct it where it carries no verified sense, and record a keep-reason where the surrounding artifact demands it.
+
+`delve` · `load-bearing` · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · false-dichotomy formulas such as `it is not just X, it is Y` or `less about X than about Y`
 
 ## Review categories
 
@@ -15,6 +21,7 @@ The banned-at-generation list stays in `SKILL.md`. Its duplication here keeps th
 - **Padding participles:** If `ensuring`, `highlighting`, `fostering`, `indicating`, `showcasing`, `emphasizing`, or `demonstrating` appends an unstated rationale or consequence, split or rewrite the clause.
 - **Copula avoidance:** If `is`, `contains`, `is marked`, `preserves`, `executes`, or `reports success` states the fact more directly, use it instead of `serves as`, `stands as`, `represents`, `functions as`, `holds`, `carries`, `keeps`, or `claims a success`.
 - **Motion applied to static state:** If no motion occurs, replace `comes back unchanged`, `ends up empty`, and `comes out plain` with `is preserved`, `is empty`, or `is plain`.
+- **Anthropomorphic verbs in mechanical contexts:** A dependency graph, file format, build gate, or test harness has no intent. Review `arrives`, `earns`, `wants`, `knows`, `decides`, `chooses`, and `agrees` when one of them is the subject. Prefer `winsafe is linked unconditionally` over `winsafe arrives unconditionally`, and `the format is tested on every host` over `the format earns a cross-platform test`. Keep the verb where a component performs the act literally, such as a server refusing a fetch or Defender rejecting a write.
 - **Unneeded emphasis:** If the plain tense carries the fact, remove `did bump`, `does hold`, and `is in fact`. If emphasis establishes a contrast the reader could otherwise miss, keep it.
 - **Conversational preambles:** If `Basically`, `Note that`, `Let's dive in`, `Here's what you need to know`, or `The reality is` delays the claim, remove it.
 - **Unsupported case sweeps:** Verify the paths covered by `whichever`, `whatever`, `no matter how`, `regardless of`, and `in every case`. If the authority supports the sweep, keep it.
