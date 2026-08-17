@@ -89,14 +89,75 @@ function vid2mkv([Parameter(ValueFromPipeline = $true)][string]$file) {
             Write-Output "Please provide a valid video file"
             return
         }
-        
+
         # Generate output filename by replacing extension with .mkv
         $output = [System.IO.Path]::ChangeExtension($file, ".mkv")
-        
+
         # Use FFmpeg to remux without re-encoding:
         # -i: input file
         # -vcodec copy: copy video stream without re-encoding
         # -acodec copy: copy audio stream without re-encoding
         ffmpeg.exe -i $file -vcodec copy -acodec copy $output
     }
+}
+
+<#
+.SYNOPSIS
+    Copies pipeline input to the Windows clipboard.
+
+.DESCRIPTION
+    Buffers the entire pipeline before writing, then renders it once through
+    Out-String. Rendering the collection as a whole keeps table layout intact for
+    formatted objects; rendering item by item would emit a header per row.
+    Out-String terminates every line with CRLF. Only the final terminator is
+    removed: pipeline items are joined by CRLF and trailing blank items are
+    preserved.
+
+.PARAMETER InputObject
+    Objects or strings to copy. Accepts pipeline input.
+
+.EXAMPLE
+    git log --oneline -10 | pbcopy
+    Copies the commit list.
+
+.EXAMPLE
+    Get-ChildItem *.md | Select-Object Name, Length | pbcopy
+    Copies the rendered table rather than the object type names.
+
+.NOTES
+    Named after the macOS utility of the same name.
+    An empty pipeline clears the clipboard.
+#>
+function pbcopy {
+    param([Parameter(ValueFromPipeline = $true)][psobject]$InputObject)
+    begin { $items = [System.Collections.Generic.List[psobject]]::new() }
+    process { $items.Add($InputObject) }
+    end {
+        $text = $items | Out-String
+        if ($text.EndsWith("`r`n")) { $text = $text.Substring(0, $text.Length - 2) }
+        Set-Clipboard -Value $text
+    }
+}
+
+<#
+.SYNOPSIS
+    Prints the Windows clipboard.
+
+.DESCRIPTION
+    Forwards every argument to Get-Clipboard, so clipboard text arrives as one
+    string per line and pipes into line-oriented cmdlets unchanged.
+
+.EXAMPLE
+    pbpaste | Select-String 'error'
+    Filters clipboard text line by line.
+
+.EXAMPLE
+    pbpaste -Raw > clip.txt
+    Writes the clipboard as a single string, preserving its CRLF line endings.
+
+.NOTES
+    Named after the macOS utility of the same name.
+#>
+function pbpaste {
+    Get-Clipboard @args
 }

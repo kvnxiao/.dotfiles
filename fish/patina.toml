@@ -125,3 +125,13 @@ when = "patina.os == 'windows'"
 source = "functions/windows/mpv.fish"
 target = "~/.config/fish/functions/windows/mpv.fish"
 when = "patina.os == 'windows'"
+
+[[file]]
+source = "functions/windows/pbcopy.fish"
+target = "~/.config/fish/functions/windows/pbcopy.fish"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "functions/windows/pbpaste.fish"
+target = "~/.config/fish/functions/windows/pbpaste.fish"
+when = "patina.os == 'windows'"

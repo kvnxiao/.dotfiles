@@ -24,6 +24,21 @@ function pwd {
   cygpath -m "$PWD"
 }
 
+# clip.exe decodes stdin as UTF-16LE; raw UTF-8 lands as mojibake. clip.exe
+# rewrites LF and lone CR to CRLF. Redirecting to /dev/clipboard instead is
+# unreliable: writes usually exit 0 yet leave the clipboard empty, and
+# intermittently fail with EACCES.
+function pbcopy {
+  iconv -f UTF-8 -t UTF-16LE | clip.exe
+}
+
+# clip.exe is write-only; /dev/clipboard reads are byte-exact and uncapped.
+# Windows stores CRLF. sed strips CR only at line ends and preserves lone CRs
+# embedded mid-line, where tr -d would delete them.
+function pbpaste {
+  sed 's/\r$//' < /dev/clipboard
+}
+
 function unzipjis {
   7z.exe x $1 -mcp=932
 }
