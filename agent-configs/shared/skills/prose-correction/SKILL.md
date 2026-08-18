@@ -12,6 +12,17 @@ Apply these priorities in order. A lower priority never overrides a higher one.
 3. **Reader clarity:** Order and phrase each claim for the intended reader and surrounding discourse.
 4. **House diction:** After the first three priorities hold, remove synthetic phrasing.
 
+## Scope gate
+
+Resolve scope before auditing prose:
+
+- Request prose is the target even without a file path.
+- With no named target, audit `git diff HEAD` and files reported by `git status --porcelain`.
+- A named directory, subtree, or glob includes every nested file, including unchanged tests, helpers, fixtures, and harnesses.
+- In a named test tree, apply `Default to Deletion` and the test artifact contract to every file.
+- A named file, symbol, or line range limits the audit to that item.
+- Report defects outside the resolved scope without editing them.
+
 House style binds prose composed during the task. During an audit, treat a generation-time ban as a tripwire for existing prose, not an automatic defect. When semantics, ecosystem convention, or context favors an existing construction, do not rewrite it solely to satisfy that ban. Apply house style to each replacement without weakening a higher priority.
 
 Over-correction is itself a defect. Evading a banned construction with a syntactic crutch produces worse prose than the construction it replaced. These repair traps recur, and a rewrite that trades one for another has not improved the prose:
@@ -40,15 +51,7 @@ Rewriting is the second option. Ask whether the item should exist before asking 
 - **Rename before annotating.** When a comment exists because a name is unclear, rename the function, test, field, or variable, then delete the comment. A test named for its assertion needs no header.
 - **Deleting is a claim too.** Run the over-cutting check below before every deletion: name the surviving site that states the fact, and restore the text when none does.
 
-## Resolve Scope and Mode
-
-Honor the scope specified in the request.
-
-- With prose supplied in the request, treat that prose as the target even without a named file path.
-- With no named target, audit prose in `git diff HEAD` and files reported by `git status --porcelain`. Edit only changed prose.
-- With a named directory, subtree, or glob, inspect every prose item inside it. Do not narrow the audit to changed files.
-- With a named file, symbol, or line range, inspect only that item.
-- Outside the resolved scope, report a defect without editing it.
+## Audit mode
 
 If the target exceeds a complete read within context bounds, state the audited boundary and the unread remainder. Do not claim full coverage for a search-only pass.
 
