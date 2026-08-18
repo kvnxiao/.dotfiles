@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prose Correction"
+  short_description: "Audit and rewrite technical prose for clarity and verified meaning."
+  default_prompt: "Use $prose-correction to audit this prose."
+
+policy:
+  allow_implicit_invocation: true
