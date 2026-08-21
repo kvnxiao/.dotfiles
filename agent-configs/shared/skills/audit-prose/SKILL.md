@@ -1,9 +1,9 @@
 ---
-name: prose-correction
-description: Audit or rewrite technical prose to preserve verified meaning, follow ecosystem and artifact conventions, and remove synthetic diction. Supports quick rewrites, change-set audits, and full prose audits across comments, docstrings, commit messages, PR copy, documentation, instruction files, and chat. Use before a PR or completion check. Use for requests to correct prose, fix writing, remove AI tells, or make text more direct.
+name: audit-prose
+description: Audit or rewrite technical prose to preserve verified meaning, follow ecosystem and artifact conventions, and remove synthetic diction. Covers comments, docstrings, commit messages, PR copy, documentation, instruction files, and chat, as a quick rewrite, a change-set audit, or a full-file audit. Use before a PR, inside the verify-changes skill, or for requests to correct prose, fix writing, remove AI tells, or make text more direct.
 ---
 
-# Prose Correction
+# Audit prose
 
 Apply these priorities in order. A lower priority never overrides a higher one.
 
@@ -59,7 +59,7 @@ If the target exceeds a complete read within context bounds, state the audited b
 Choose the least expensive mode that satisfies the request.
 
 - **Quick rewrite:** Use for a sentence, paragraph, commit message, PR draft, or small named file. Unless the user requests an audit ledger, return only the corrected artifact.
-- **Change-set audit:** Use for an unnamed target, a completion check, or a normal review of changed prose. Read every changed prose item in context and report material findings.
+- **Change-set audit:** Use for an unnamed target, a verify-changes run, or a normal review of changed prose. Read every changed prose item in context and report material findings.
 - **Full audit:** Use for exhaustive coverage, broad public-documentation releases, or high-risk behavioral contracts. Before running this mode, read [references/instruments.md](references/instruments.md).
 
 Grep and mechanical matches may order the work. They do not replace reading the prose in context.

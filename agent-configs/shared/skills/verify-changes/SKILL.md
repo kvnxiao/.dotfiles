@@ -1,9 +1,9 @@
 ---
-name: completion-check
-description: Run a completion checklist over the current change set when work is considered done and ready to commit. Checks for correctness, simplification candidates, comment and prose audits, and repository-specific checks. Use before marking a task complete, e.g. before committing or pushing to open a PR, or when the user says "commit for me", "open a PR", "are we done".
+name: verify-changes
+description: Verify the working-tree change set before a commit or PR. Reviews the full diff for correctness, finds simplification candidates, audits every comment and documentation line through the audit-prose skill, and runs the repository format, lint, type-check, and test commands. Use when an implementation is finished, or when the user says "commit for me", "open a PR", "push this", "are we done".
 ---
 
-# Completion check
+# Verify changes
 
 Consider the proportionality of the changes and run the following checklist over the working-tree change set.
 
@@ -11,7 +11,7 @@ Consider the proportionality of the changes and run the following checklist over
    - [ ] 1a. Review the full diff as a skeptical second reader. Verify correctness and edge cases, and confirm only intended lines changed. Use the `code-review` skill (if available) in a subagent.
    - [ ] 1b. Find dead code, needless indirection, and incidental complexity that can be removed without changing behavior. Use the `simplify` skill (if available) in a subagent.
 2. [ ] Deduplicate the reports, resolve overlaps, and apply accepted changes in one edit pass. Review the resulting full diff.
-3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Use the `prose-correction` skill in a subagent.
+3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Use the `audit-prose` skill in a subagent.
 4. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
 
 Parallel subagents used for Step 1's review coverage must be restricted to read-only access. Reviewers must report findings without editing files or running mutating commands. Only the coordinating agent may edit the working tree. Step 3's prose audits also use subagents, but these are allowed to directly apply changes.

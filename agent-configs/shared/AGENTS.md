@@ -81,7 +81,7 @@ These have no legitimate technical use. Never generate them in any turn or artif
 
 Cut the entire family of structural metaphors, manufactured profundity, thesis-framing crutches, and synthetic contrast formulas. State the fact directly and stop.
 
-The `prose-correction` skill carries the full diction audit and its exemptions. The list above is the subset with no legitimate technical use.
+The `audit-prose` skill carries the full diction audit and its exemptions. The list above is the subset with no legitimate technical use.
 
 ### Kaomojis
 
@@ -105,13 +105,17 @@ Shared behavioral defaults for agents.
 
 Default to Silence above governs whether a comment exists at all. Two tests decide the remainder: delete anything a reader going line by line would arrive at unaided, and where the code reads badly, rename or extract instead of explaining.
 
-## Before marking complete
+## Verifying changes
 
-Run the `completion-check` skill. It defines the procedure and the order. It covers a correctness review of the full diff, a simplification pass, a comment and documentation audit through the `prose-correction` skill, and the repository checks. Report only failures, skipped checks, unverified work, and material results.
+Always run `verify-changes` once on the accumulated change set before finishing the request.
+
+- **Scope:** The full request, not individual todo items.
+- **Timing:** Immediately before `git commit`, `git push`, or `gh pr create`. In a file-editing todo list, place it directly before the commit subtask.
+- **Skipping:** When you end a turn that edited files without running it, tell the user why.
 
 ## Pull requests
 
-Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the `prose-correction` skill over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
+Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the `audit-prose` skill over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
 
 ## Tool routing
 

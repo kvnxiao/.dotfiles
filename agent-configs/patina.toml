@@ -15,6 +15,16 @@ source = "shared/output-styles"
 target = "~/.claude/output-styles"
 mode = "symlink"
 
+# audit-prose
+[[directory]]
+source = "shared/skills/audit-prose"
+target = "~/.claude/skills/audit-prose"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/audit-prose"
+target = "~/.agents/skills/audit-prose"
+mode = "symlink"
+
 # brainstorm
 [[directory]]
 source = "shared/skills/brainstorm"
@@ -25,24 +35,14 @@ source = "shared/skills/brainstorm"
 target = "~/.agents/skills/brainstorm"
 mode = "symlink"
 
-# completion-check
+# verify-changes
 [[directory]]
-source = "shared/skills/completion-check"
-target = "~/.claude/skills/completion-check"
+source = "shared/skills/verify-changes"
+target = "~/.claude/skills/verify-changes"
 mode = "symlink"
 [[directory]]
-source = "shared/skills/completion-check"
-target = "~/.agents/skills/completion-check"
-mode = "symlink"
-
-# prose-correction
-[[directory]]
-source = "shared/skills/prose-correction"
-target = "~/.claude/skills/prose-correction"
-mode = "symlink"
-[[directory]]
-source = "shared/skills/prose-correction"
-target = "~/.agents/skills/prose-correction"
+source = "shared/skills/verify-changes"
+target = "~/.agents/skills/verify-changes"
 mode = "symlink"
 
 # humanizer

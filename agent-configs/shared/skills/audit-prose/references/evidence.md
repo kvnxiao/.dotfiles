@@ -1,4 +1,4 @@
-# Evidence for maintaining prose-correction
+# Evidence for maintaining audit-prose
 
 When changing the skill's rules, read this reference. During a normal prose audit, do not load it.
 
