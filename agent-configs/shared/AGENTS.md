@@ -107,7 +107,7 @@ Default to Silence above governs whether a comment exists at all. Two tests deci
 
 ## Verifying changes
 
-Always run `verify-changes` once on the accumulated change set before finishing the request.
+Always run `verify-changes` once on the accumulated change set before finishing the request. The `verify-changes` skill is explicitly allowed to spawn subagents.
 
 - **Scope:** The full request, not individual todo items.
 - **Timing:** Immediately before `git commit`, `git push`, or `gh pr create`. In a file-editing todo list, place it directly before the commit subtask.
