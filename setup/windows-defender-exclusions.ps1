@@ -29,6 +29,13 @@ $fishVariablesPath = "$env:USERPROFILE\.config\fish\fish_variables"
 $fishLocalSharePath = "$env:USERPROFILE\.local\share\fish"
 $zshHistoryPath = "$env:USERPROFILE\.zsh_history"
 
+# PowerShell installation, profile / module tree, eval cache, and the module
+# analysis cache pwsh reads at startup
+$pwshPath = "C:\Program Files\PowerShell\7"
+$pwshProfilePath = "$env:USERPROFILE\OneDrive\Documents\PowerShell"
+$pwshLocalSharePath = "$env:USERPROFILE\.local\share\powershell"
+$pwshStartupCachePath = "$env:LOCALAPPDATA\Microsoft\Windows\PowerShell"
+
 # Per-command data stores and tool dirs (hot paths)
 $atuinDataPath = "$env:USERPROFILE\.local\share\atuin"
 $zoxideDataPath = "$env:USERPROFILE\.local\share\zoxide"
@@ -48,6 +55,10 @@ $pathExclusions = @(
     $zimPath
     "$env:USERPROFILE\.cargo\bin"
     $fishLocalSharePath
+    $pwshPath
+    $pwshProfilePath
+    $pwshLocalSharePath
+    $pwshStartupCachePath
     $atuinDataPath
     $zoxideDataPath
     $fzfPath

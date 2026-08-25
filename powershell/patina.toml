@@ -1,6 +1,6 @@
 # `profile.ps1` targets the OneDrive-redirected Documents path, which only
-# exists on Windows, so it is gated. `abbr.ps1` / `commands.ps1` land in the
-# cross-platform PowerShell Core config dir and stay ungated.
+# exists on Windows, so it is gated. Every other file lands in the
+# cross-platform PowerShell Core config dir and stays ungated.
 [[file]]
 source = "profile.ps1"
 target = "~/OneDrive/Documents/PowerShell/Microsoft.PowerShell_profile.ps1"
@@ -13,3 +13,11 @@ target = "~/.config/powershell/PSAbbreviations.ps1"
 [[file]]
 source = "commands.ps1"
 target = "~/.config/powershell/commands.ps1"
+
+[[file]]
+source = "cache.ps1"
+target = "~/.config/powershell/cache.ps1"
+
+[[file]]
+source = "cache-hooks.ps1"
+target = "~/.config/powershell/cache-hooks.ps1"

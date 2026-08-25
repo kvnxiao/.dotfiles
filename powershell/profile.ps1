@@ -1,3 +1,5 @@
+. "$HOME\.config\powershell\cache.ps1"
+
 # Load abbreviations module
 . "$HOME\.config\powershell\PSAbbreviations.ps1"
 
@@ -40,12 +42,15 @@ abbr 'gr=gh repo view --web'
 abbr 'gl=git l'
 abbr 'gla=git la'
 
-# Setup interactive shell
-fnm env --use-on-cd | Out-String | Invoke-Expression
-
-# PSFfzf
 $env:FZF_DEFAULT_OPTS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796,fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6,marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+u' -PSReadlineChordReverseHistory 'Ctrl+r'
+# Importing PSFzf costs ~180ms.
+Set-PSReadLineKeyHandler -Chord 'Ctrl+u' -BriefDescription 'Import PSFzf, then run its file provider' -ScriptBlock {
+    Import-Module PSFzf
+    Set-PSReadLineKeyHandler -Chord 'Ctrl+u' -BriefDescription 'PSFzf file provider' -ScriptBlock {
+        Invoke-FzfPsReadlineHandlerProvider
+    }
+    Invoke-FzfPsReadlineHandlerProvider
+}
 
 # Claude Code
 $env:ENABLE_LSP_TOOL=1
@@ -54,6 +59,17 @@ $env:ANTHROPIC_MODEL="opus[1m]"
 $env:CLAUDE_CODE_ENABLE_TASKS="true"
 $env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS="1"
 
-Invoke-Expression (&starship init powershell)
-Invoke-Expression (& { (atuin init powershell --disable-up-arrow | Out-String) })
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
+# Run `clear-cache` after upgrading any of these tools, or after editing
+# starship.toml: the continuation prompt is baked in at cache time.
+# zoxide stays last: it wraps whatever `prompt` it finds, and starship replaces
+# `prompt` outright, so loading zoxide first would drop zoxide's directory
+# tracking. The atuin init claims Ctrl+r, overriding any earlier binding.
+$initScripts = @(
+    cached-eval fnm      'fnm env --use-on-cd --shell power-shell'
+    cached-eval starship 'starship init powershell --print-full-init'
+    cached-eval atuin    'atuin init powershell --disable-up-arrow'
+    cached-eval zoxide   'zoxide init powershell'
+)
+foreach ($initScript in $initScripts) {
+    . $initScript
+}
