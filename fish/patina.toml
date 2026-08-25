@@ -44,6 +44,10 @@ source = "functions/__editor_delete.fish"
 target = "~/.config/fish/functions/__editor_delete.fish"
 
 [[file]]
+source = "functions/_fnm_reserve.fish"
+target = "~/.config/fish/functions/_fnm_reserve.fish"
+
+[[file]]
 source = "functions/cached-completions.fish"
 target = "~/.config/fish/functions/cached-completions.fish"
 
@@ -78,6 +82,10 @@ target = "~/.config/fish/functions/gh-raw.fish"
 [[file]]
 source = "functions/hooks/_cached_eval_post_atuin.fish"
 target = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
+
+[[file]]
+source = "functions/hooks/_cached_eval_post_fnm.fish"
+target = "~/.config/fish/functions/hooks/_cached_eval_post_fnm.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_post_starship.fish"

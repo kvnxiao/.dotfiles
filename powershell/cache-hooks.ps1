@@ -54,20 +54,49 @@ function _cached_eval_post_atuin {
 function _cached_eval_post_fnm {
     param([string]$File)
 
-    $text = Get-Content -Raw -LiteralPath $File
+    $lines = @(Get-Content -LiteralPath $File)
 
-    # fnm assigns a full PATH snapshot. Caching that assignment would pin PATH
-    # to its value at generation time.
-    if ($text -match '(?im)^\$env:PATH\s*=\s*"(?<paths>[^"]*)"$') {
-        $assignment = $Matches[0]
-        $multishell = ($Matches.paths -split ';')[0]
-        $text = $text.Replace($assignment, '$env:PATH = "' + $multishell + ';$env:PATH"')
-    } else {
-        Write-Warning '_cached_eval_post_fnm: no PATH assignment found; fnm may no longer put node on PATH'
+    # fnm assigns a full PATH snapshot whose first entry is a symlink it mints
+    # per call, so a cached copy both freezes PATH at generation time and pins
+    # every shell to one link: `fnm use` in one shell switches node in all of
+    # them, and the entry dangles for good once that version is uninstalled.
+    # Keep fnm's static assignments and reserve the link instead.
+    $sep = [System.IO.Path]::PathSeparator
+    $link = $null
+    $dir = $null
+    switch -regex ($lines) {
+        '^\$env:PATH\s*=\s*"([^"]*)"$'    { $link = ($Matches[1] -split $sep)[0] }
+        '^\$env:FNM_DIR\s*=\s*"([^"]*)"$' { $dir = $Matches[1] }
     }
-    if ($text -match '(?im)^\$env:PATH\s*=\s*"[^"]*;[^"]*;') {
-        throw 'a PATH snapshot survives the rewrite; caching it would freeze PATH at generation time'
+    if (-not $link) { throw 'no PATH assignment found; fnm may no longer put node on PATH' }
+    if (-not $dir) { throw 'no FNM_DIR assignment found; the default-alias entry cannot be derived' }
+
+    $name = [System.IO.Path]::GetFileName($link)
+    if (-not $name -or -not $link.EndsWith($name)) {
+        throw "link name '$name' is not the tail of the PATH entry; the prefix would be mis-sliced"
+    }
+    $prefix = $link.Substring(0, $link.Length - $name.Length)
+    $defaultAlias = [System.IO.Path]::Combine($dir, 'aliases', 'default')
+
+    # The reserved link does not exist until the first `fnm use`; until then node
+    # resolves through the default alias behind it. FNM_MULTISHELL_PATH doubles
+    # as the only temporary, so the reserve lines do not leak a variable into
+    # the dot-source scope. The reserved link is already an absent PATH entry, so
+    # guarding the alias on Test-Path buys nothing and would load
+    # Microsoft.PowerShell.Management for ~16ms of startup.
+    $quote = { param([string]$s) "'" + $s.Replace("'", "''") + "'" }
+    $reserve = @(
+        ('$env:FNM_MULTISHELL_PATH = ' + (& $quote $prefix) + ' + $PID + "_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()')
+        ('$env:PATH = $env:FNM_MULTISHELL_PATH + ' + (& $quote "$sep$defaultAlias$sep") + ' + $env:PATH')
+    )
+
+    $out = @($lines | Where-Object {
+        $_ -notmatch '^\$env:(PATH|FNM_MULTISHELL_PATH)\s*='
+    }) + $reserve
+
+    if ($out | Where-Object { $_ -like "*$name*" }) {
+        throw 'the minted link name survives the rewrite; every shell would share one node version'
     }
 
-    Set-Content -LiteralPath $File -Value $text -NoNewline -Encoding utf8NoBOM
+    Set-Content -LiteralPath $File -Value (($out -join "`n") + "`n") -NoNewline -Encoding utf8NoBOM
 }

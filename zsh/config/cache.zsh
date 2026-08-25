@@ -31,8 +31,10 @@ _cached_eval() {
     local tmp="${cache}.$$"
     print -r -- "$out" > "$tmp"
     # Run post-processing hook if defined: _cached_eval_post_<name>
-    if (( ${+functions[_cached_eval_post_${name}]} )); then
-      "_cached_eval_post_${name}" "$tmp"
+    if (( ${+functions[_cached_eval_post_${name}]} )) && ! "_cached_eval_post_${name}" "$tmp"; then
+      print -u2 "_cached_eval: post-processing hook for '${name}' rejected the output; discarding"
+      rm -f "$tmp"
+      return 1
     fi
     if ! zsh -n "$tmp"; then
       print -u2 "_cached_eval: cache for '${name}' failed syntax check; discarding"
@@ -73,6 +75,23 @@ _cached_eval_post_starship() {
   fi
 }
 
+# zoxide 0.10.0's Cygwin branch emits `cygpath -w "\builtin pwd -L"` with the
+# command substitution missing, so every directory change feeds cygpath a
+# literal string and the database records nothing. On macOS and Linux, zoxide
+# does not emit a cygpath call and the pattern cannot match.
+_cached_eval_post_zoxide() {
+  local file="$1" tmp="$1.postzoxide"
+  # Capturing the command avoids writing a literal-backslash pattern, which
+  # this sed does not match. An already-substituted line ends in `pwd -L)"` and
+  # cannot re-match.
+  sed 's|cygpath -w "\(.*\) pwd -L"|cygpath -w "$(\1 pwd -L)"|' "$file" > "$tmp" \
+    && mv -f "$tmp" "$file"
+  if grep -qF 'cygpath -w "\builtin' "$file"; then
+    print -u2 "_cached_eval_post_zoxide: unsubstituted pwd remains; every directory change would feed cygpath a literal string"
+    return 1
+  fi
+}
+
 # Write `atuin uuid`'s 32-char simple UUIDv7 format into REPLY. A command
 # substitution would fork and leave RANDOM unadvanced in this shell, so every
 # call would return the same random bits.
@@ -94,6 +113,84 @@ _cached_eval_post_atuin() {
   if grep -qE '^[[:space:]]*export ATUIN_SESSION=\$\(atuin uuid\)$' "$file"; then
     print -u2 "_cached_eval_post_atuin: 'atuin uuid' spawn remains in cache"
   fi
+}
+
+# The reserved link does not exist until the first `fnm use`; until then node
+# resolves through the default alias behind it.
+_fnm_reserve() {
+  local msys_prefix="$1" win_prefix="$2" default_alias="$3"
+  local -i ms=$(( EPOCHREALTIME * 1000 ))
+  local name="$$_${ms}"
+  export FNM_MULTISHELL_PATH="${win_prefix}${name}"
+  path=( "${msys_prefix}${name}" "$default_alias" $path )
+}
+
+# The first `fnm use` in a shell moves node from the default alias to the
+# reserved link and changes which PATH entry wins. zsh keeps running the path
+# it hashed, so `fnm current` and `node --version` report different versions
+# until a rehash. fish and PowerShell re-resolve on their own and do not need
+# the wrapper.
+fnm() {
+  command fnm "$@"
+  local ret=$?
+  rehash
+  return $ret
+}
+
+# `fnm env` mints a symlink per call and writes it into PATH as a literal, so a
+# cached copy pins every shell to one link: `fnm use` in one shell switches
+# node in all of them, and the entry dangles for good once that version is
+# uninstalled. Keep fnm's static exports and reserve the link instead.
+_cached_eval_post_fnm() {
+  local file="$1" tmp="$1.postfnm"
+  local line msys_link='' win_link='' win_dir=''
+  local -a kept=()
+
+  for line in "${(@f)$(<$file)}"; do
+    case $line in
+      ('export PATH='*)
+        msys_link=${${line#export PATH=\"}%%\"*}
+        continue ;;
+      ('export FNM_MULTISHELL_PATH='*)
+        win_link=${${line#export FNM_MULTISHELL_PATH=\"}%\"}
+        continue ;;
+      ('export FNM_DIR='*)
+        win_dir=${${line#export FNM_DIR=\"}%\"} ;;
+    esac
+    kept+=( "$line" )
+  done
+  if [[ -z $msys_link || -z $win_link || -z $win_dir ]]; then
+    print -u2 "_cached_eval_post_fnm: fnm env output shape changed; caching it would pin one symlink across every shell"
+    return 1
+  fi
+
+  # fnm's zsh dialect formats paths through Rust's {:?}, which doubles every
+  # backslash.
+  win_link=${win_link//\\\\/\\}
+  win_dir=${win_dir//\\\\/\\}
+  local name=${msys_link:t}
+  local msys_prefix=${msys_link%"$name"} win_prefix=${win_link%"$name"}
+  if [[ $win_prefix == $win_link ]]; then
+    print -u2 "_cached_eval_post_fnm: link name '${name}' is not the tail of FNM_MULTISHELL_PATH; not caching"
+    return 1
+  fi
+
+  local native_dir=$win_dir
+  if [[ $win_dir == [A-Za-z]:* || $win_dir == '\\'* ]] \
+    && ! native_dir="$(cygpath -u "$win_dir")"; then
+    print -u2 "_cached_eval_post_fnm: could not convert FNM_DIR '${win_dir}' to a native path; not caching"
+    return 1
+  fi
+  local default_alias="${native_dir%/}/aliases/default"
+
+  print -rl -- "${kept[@]}" \
+    "_fnm_reserve ${(qq)msys_prefix} ${(qq)win_prefix} ${(qq)default_alias}" > "$tmp" || return 1
+  if grep -qF -- "$name" "$tmp"; then
+    print -u2 "_cached_eval_post_fnm: the minted link name survives the rewrite; every shell would share one node version"
+    rm -f "$tmp"
+    return 1
+  fi
+  mv -f "$tmp" "$file"
 }
 
 # Cache tool-generated completion files into a directory on fpath.

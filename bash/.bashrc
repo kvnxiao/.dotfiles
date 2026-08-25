@@ -24,7 +24,12 @@ case $- in
         eval "$(starship init bash --print-full-init | sed -E "s@'?([A-Za-z]:)?[A-Za-z0-9_./\\\\ :-]*[/\\\\]starship(\.exe)?'?@starship@g")"
       fi
       # zoxide defines `z`/`zi`; `cd` is left as the builtin on purpose.
-      command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
+      # zoxide 0.10.0's Cygwin branch emits `cygpath -w "\builtin pwd -L"`
+      # without the command substitution, so every directory change feeds
+      # cygpath a literal string. Capturing the command avoids a
+      # literal-backslash pattern, which this sed does not match. Same fix as
+      # zsh/config/cache.zsh's _cached_eval_post_zoxide.
+      command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash | sed 's|cygpath -w "\(.*\) pwd -L"|cygpath -w "$(\1 pwd -L)"|')"
     fi
     ;;
 esac

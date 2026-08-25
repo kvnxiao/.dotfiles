@@ -34,11 +34,17 @@ function cached-eval --description "Cache command output and source it"
     # Run post-processing hook if defined: _cached_eval_post_<name>
     set -l hook "_cached_eval_post_$name"
     if functions -q $hook
-      $hook "$tmp_file"
+      if not $hook "$tmp_file"
+        echo "cached-eval: post-processing hook for '$name' rejected the output; discarding" >&2
+        rm -f "$tmp_file"
+        return 1
+      end
     end
 
     if not fish --no-execute "$tmp_file"
-      echo "cached-eval: cache for '$name' failed syntax check: $cache_file" >&2
+      echo "cached-eval: cache for '$name' failed syntax check; discarding" >&2
+      rm -f "$tmp_file"
+      return 1
     end
     mv -f "$tmp_file" "$cache_file"
   end
