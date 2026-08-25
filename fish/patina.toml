@@ -16,6 +16,10 @@ source = "conf.d/key-bindings.fish"
 target = "~/.config/fish/conf.d/key-bindings.fish"
 
 [[file]]
+source = "completions/just.fish"
+target = "~/.config/fish/completions/just.fish"
+
+[[file]]
 source = "completions/pip.fish"
 target = "~/.config/fish/completions/pip.fish"
 
