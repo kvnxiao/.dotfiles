@@ -17,19 +17,19 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = ['exec-and-forget sketchybar']
+after-startup-command = ["exec-and-forget sketchybar"]
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
-  '/bin/bash',
-  '-c',
-  '~/.config/aerospace/aerospace-follow-workspace.sh',
+  "/bin/bash",
+  "-c",
+  "~/.config/aerospace/aerospace-follow-workspace.sh",
 ]
 
 # Moving a window to another workspace leaves the focused workspace alone, so
 # 'exec-on-workspace-change' misses it. Focus does change, so redraw here too.
 on-focus-changed = [
-  'exec-and-forget sketchybar --trigger aerospace_workspace_change',
+  "exec-and-forget sketchybar --trigger aerospace_workspace_change",
 ]
 
 # Start AeroSpace at login
@@ -45,132 +45,132 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 accordion-padding = 30
 
 # Possible values: tiles|accordion
-default-root-container-layout = 'tiles'
+default-root-container-layout = "tiles"
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
 #               tall monitor (anything higher than wide) gets vertical orientation
-default-root-container-orientation = 'auto'
+default-root-container-orientation = "auto"
 
 # Possible values: (qwerty|dvorak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
-key-mapping.preset = 'qwerty'
+key-mapping.preset = "qwerty"
 
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
 
 [[on-window-detected]]
-if.app-id = 'com.glzr.zebar' # Zebar status bar
+if.app-id = "com.glzr.zebar" # Zebar status bar
 if.during-aerospace-startup = true
-run = ['layout floating']
+run = ["layout floating"]
 
 [[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm' # WezTerm
+if.app-id = "com.github.wez.wezterm" # WezTerm
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 1']
+run = ["layout tiling", "move-node-to-workspace 1"]
 
 [[on-window-detected]]
-if.app-id = 'org.yanex.marta' # Marta file manager
+if.app-id = "org.yanex.marta" # Marta file manager
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 1']
+run = ["layout tiling", "move-node-to-workspace 1"]
 
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap' # Slack
+if.app-id = "com.tinyspeck.slackmacgap" # Slack
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 1']
+run = ["layout tiling", "move-node-to-workspace 1"]
 
 [[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser' # Arc
+if.app-id = "company.thebrowser.Browser" # Arc
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 2']
+run = ["layout tiling", "move-node-to-workspace 2"]
 
 [[on-window-detected]]
-if.app-id = 'com.figma.Desktop' # Figma
+if.app-id = "com.figma.Desktop" # Figma
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 4']
+run = ["layout tiling", "move-node-to-workspace 4"]
 
 [[on-window-detected]]
-if.app-id = 'com.linear' # Linear Desktop
+if.app-id = "com.linear" # Linear Desktop
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 5']
+run = ["layout tiling", "move-node-to-workspace 5"]
 
 [[on-window-detected]]
-if.app-id = 'app.zen-browser.zen' # Zen browser
+if.app-id = "app.zen-browser.zen" # Zen browser
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 2']
+run = ["layout tiling", "move-node-to-workspace 2"]
 
 [[on-window-detected]]
-if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
+if.app-id = "com.todesktop.230313mzl4w4u92" # Cursor
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 3']
+run = ["layout tiling", "move-node-to-workspace 3"]
 
 [[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode' # Visual Studio Code
+if.app-id = "com.microsoft.VSCode" # Visual Studio Code
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 3']
+run = ["layout tiling", "move-node-to-workspace 3"]
 
 [[on-window-detected]]
-if.app-id = 'com.hnc.Discord' # Discord
+if.app-id = "com.hnc.Discord" # Discord
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 8']
+run = ["layout tiling", "move-node-to-workspace 8"]
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client' # Spotify
+if.app-id = "com.spotify.client" # Spotify
 if.during-aerospace-startup = true
-run = ['layout tiling', 'move-node-to-workspace 9']
+run = ["layout tiling", "move-node-to-workspace 9"]
 
 [[on-window-detected]]
-if.app-id = 'com.YoStarEN.AzurLane' # Azur Lane
-run = ['layout floating', 'move-node-to-workspace 8']
+if.app-id = "com.YoStarEN.AzurLane" # Azur Lane
+run = ["layout floating", "move-node-to-workspace 8"]
 
 [[on-window-detected]]
-if.app-id = 'com.HoYoverse.hkrpgoversea' # Honkai Star Rail
-run = ['layout floating', 'move-node-to-workspace 8']
+if.app-id = "com.HoYoverse.hkrpgoversea" # Honkai Star Rail
+run = ["layout floating", "move-node-to-workspace 8"]
 
 [[on-window-detected]]
-if.app-id = 'com.miHoYo.GenshinImpact' # Genshin Impact
-run = ['layout floating', 'move-node-to-workspace 8']
+if.app-id = "com.miHoYo.GenshinImpact" # Genshin Impact
+run = ["layout floating", "move-node-to-workspace 8"]
 
 [[on-window-detected]]
-if.app-id = 'com.Sunborn.SnqxExilium.Glo' # GFL2 EXILIUM
-run = ['layout floating', 'move-node-to-workspace 8']
+if.app-id = "com.Sunborn.SnqxExilium.Glo" # GFL2 EXILIUM
+run = ["layout floating", "move-node-to-workspace 8"]
 
 [[on-window-detected]]
-if.app-id = 'com.apple.systempreferences' # System Preferences
-run = ['layout floating']
+if.app-id = "com.apple.systempreferences" # System Preferences
+run = ["layout floating"]
 
 [[on-window-detected]]
-if.app-id = 'com.jetbrains.toolbox' # JetBrains Toolbox
-run = ['layout floating']
+if.app-id = "com.jetbrains.toolbox" # JetBrains Toolbox
+run = ["layout floating"]
 
 ### Force floating window for certain browser windows and apps
 
 [[on-window-detected]]
-if.app-id = 'com.versualizer.app' # versualizer-dioxus
-run = ['layout floating']
+if.app-id = "com.versualizer.app" # versualizer-dioxus
+run = ["layout floating"]
 
 [[on-window-detected]]
-if.app-id = 'app.zen-browser.zen' # Zen browser PiP mode
-if.window-title-regex-substring = 'Picture-in-Picture'
-run = ['layout floating']
+if.app-id = "app.zen-browser.zen" # Zen browser PiP mode
+if.window-title-regex-substring = "Picture-in-Picture"
+run = ["layout floating"]
 
 # Google Meet sharing indicator
 [[on-window-detected]]
-if.window-title-regex-substring = 'sharing indicator'
-run = ['layout floating']
+if.window-title-regex-substring = "sharing indicator"
+run = ["layout floating"]
 
 # Slack huddle floating indicator
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-if.window-title-regex-substring = '^slack$'
-run = ['layout floating']
+if.app-id = "com.tinyspeck.slackmacgap"
+if.window-title-regex-substring = "^slack$"
+run = ["layout floating"]
 
 [[on-window-detected]]
 check-further-callbacks = true
-run = 'layout tiling'
+run = "layout tiling"
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
@@ -222,70 +222,70 @@ outer.right = 0
 # '''
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt-shift-h = 'layout tiles horizontal'
-alt-shift-v = 'layout tiles vertical'
-alt-shift-a = 'layout accordion'
-alt-shift-d = 'layout floating'
+alt-shift-h = "layout tiles horizontal"
+alt-shift-v = "layout tiles vertical"
+alt-shift-a = "layout accordion"
+alt-shift-d = "layout floating"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-alt-j = 'focus left'
-alt-k = 'focus down'
-alt-i = 'focus up'
-alt-l = 'focus right'
+alt-j = "focus left"
+alt-k = "focus down"
+alt-i = "focus up"
+alt-l = "focus right"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
-alt-shift-j = 'move left'
-alt-shift-k = 'move down'
-alt-shift-i = 'move up'
-alt-shift-l = 'move right'
-alt-shift-f = 'fullscreen'
-ctrl-alt-shift-f = 'macos-native-fullscreen'
+alt-shift-j = "move left"
+alt-shift-k = "move down"
+alt-shift-i = "move up"
+alt-shift-l = "move right"
+alt-shift-f = "fullscreen"
+ctrl-alt-shift-f = "macos-native-fullscreen"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
-alt-shift-b = 'balance-sizes'
+alt-shift-minus = "resize smart -50"
+alt-shift-equal = "resize smart +50"
+alt-shift-b = "balance-sizes"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-alt-0 = 'workspace 10'
+alt-1 = "workspace 1"
+alt-2 = "workspace 2"
+alt-3 = "workspace 3"
+alt-4 = "workspace 4"
+alt-5 = "workspace 5"
+alt-6 = "workspace 6"
+alt-7 = "workspace 7"
+alt-8 = "workspace 8"
+alt-9 = "workspace 9"
+alt-0 = "workspace 10"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
+alt-shift-1 = "move-node-to-workspace 1"
+alt-shift-2 = "move-node-to-workspace 2"
+alt-shift-3 = "move-node-to-workspace 3"
+alt-shift-4 = "move-node-to-workspace 4"
+alt-shift-5 = "move-node-to-workspace 5"
+alt-shift-6 = "move-node-to-workspace 6"
+alt-shift-7 = "move-node-to-workspace 7"
+alt-shift-8 = "move-node-to-workspace 8"
+alt-shift-9 = "move-node-to-workspace 9"
+alt-shift-0 = "move-node-to-workspace 10"
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-shift-semicolon = 'mode service'
+alt-shift-semicolon = "mode service"
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-esc = ['reload-config', 'mode main']
-r = ['flatten-workspace-tree', 'mode main'] # reset layout
+esc = ["reload-config", "mode main"]
+r = ["flatten-workspace-tree", "mode main"] # reset layout
 # s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = [
-  'layout floating tiling',
-  'mode main',
+  "layout floating tiling",
+  "mode main",
 ] # Toggle between floating and tiling layout
-backspace = ['close-all-windows-but-current', 'mode main']
+backspace = ["close-all-windows-but-current", "mode main"]
 
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
+alt-shift-h = ["join-with left", "mode main"]
+alt-shift-j = ["join-with down", "mode main"]
+alt-shift-k = ["join-with up", "mode main"]
+alt-shift-l = ["join-with right", "mode main"]
