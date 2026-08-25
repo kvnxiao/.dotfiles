@@ -1,0 +1,4 @@
+[[file]]
+source = "starship.toml"
+target = "~/.config/starship.toml"
+mode = "symlink"

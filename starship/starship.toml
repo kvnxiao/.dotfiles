@@ -1,0 +1,11 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+[shell]
+bash_indicator = ""
+fish_indicator = ""
+zsh_indicator = ''
+powershell_indicator = ''
+unknown_indicator = '?'
+style = 'cyan bold'
+disabled = false
