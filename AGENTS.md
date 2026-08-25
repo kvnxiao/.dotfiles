@@ -1,4 +1,4 @@
-# Dotfiles agent guide
+# Dotfiles guidelines
 
 This repository holds the user's dotfiles. [patina](https://github.com/kvnxiao/patina),
 a cross-platform dotfile manager, deploys them.
@@ -16,7 +16,7 @@ new kind of file as in scope.
 - `justfile` wraps the deploy and per-platform setup steps.
 - `setup/` holds the platform bootstrap scripts the justfile calls.
 
-Patina renders a source ending in `.tmpl` through MiniJinja instead of linking it.
+Patina renders a source that ends in `.tmpl` through MiniJinja instead of linking it.
 
 ## Deploying
 
@@ -45,3 +45,7 @@ over staged files once `just setup-hooks` has wired the hooks in.
 ## This file
 
 `CLAUDE.md` is a symlink to `AGENTS.md`. Edit `AGENTS.md`.
+
+## Benchmarking
+
+Changes made to a shell's dotfiles (bash, fish, zsh, powershell) must run the appropriate `just benchmark-*` task to benchmark the time-to-interactive shell startup and ensure it is not significantly increased.

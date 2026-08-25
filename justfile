@@ -47,3 +47,16 @@ setup: deploy defender-exclusions setup-msys2-zsh setup-msys2-fish setup-hooks
 # Full setup: deploy + platform-specific setup
 [unix]
 setup: deploy setup-hooks
+
+# Benchmark fish shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
+benchmark-fish:
+  hyperfine "fish -i -c 'exit 0'" -N -w 5 -r 20
+
+# Benchmark zsh shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
+benchmark-zsh:
+  hyperfine "zsh -i -c 'exit 0'" -N -w 5 -r 20
+
+# Benchmark pwsh shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
+[windows]
+benchmark-pwsh:
+  hyperfine "pwsh -Command 'exit 0'" -N -w 5 -r 20
