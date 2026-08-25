@@ -1,6 +1,8 @@
 ## Cache shell init output from slow commands.
 ## Run `clear-cache` after upgrading fnm/zoxide/atuin/starship/fzf.
 
+zmodload zsh/datetime
+
 _cached_eval() {
   local cache_dir="${HOME}/.zsh/cache"
   if [[ "$1" == --clear ]]; then
@@ -33,7 +35,9 @@ _cached_eval() {
       "_cached_eval_post_${name}" "$tmp"
     fi
     if ! zsh -n "$tmp"; then
-      print -u2 "_cached_eval: cache for '${name}' failed syntax check: ${cache}"
+      print -u2 "_cached_eval: cache for '${name}' failed syntax check; discarding"
+      rm -f "$tmp"
+      return 1
     fi
     mv -f "$tmp" "$cache"
     zcompile "$cache" 2>/dev/null
@@ -43,13 +47,52 @@ _cached_eval() {
 
 # Rewrite absolute starship paths to a bare `starship` so the cache survives
 # binary relocations (e.g. homebrew -> cargo) and MSYS2's quoted Windows-style
-# emissions ('C:\...\starship.exe'), which zsh under MSYS2 cannot exec.
+# emissions ('C:\...\starship.exe'), which zsh under MSYS2 cannot exec. Bake in
+# PROMPT2, which starship otherwise emits as a per-shell command substitution.
 _cached_eval_post_starship() {
   local file="$1" tmp="$1.postsed"
   sed -E "s@'?([A-Za-z]:)?[A-Za-z0-9_./\\\\ :-]*[/\\\\]starship(\.exe)?'?@starship@g" "$file" > "$tmp" \
     && mv -f "$tmp" "$file"
   if grep -q '/starship' "$file"; then
     print -u2 "_cached_eval_post_starship: absolute starship path remains in cache; prompt may break if the binary moves"
+  fi
+
+  # STARSHIP_SHELL selects the escape dialect, and only the zsh dialect wraps
+  # escapes in %{...%} for zle to count prompt width. A zsh launched from bash
+  # or fish inherits their STARSHIP_SHELL. An edited `continuation_prompt` in
+  # starship.toml takes effect only after `clear-cache`.
+  local continuation
+  if ! continuation="$(STARSHIP_SHELL=zsh starship prompt --continuation)" || [[ -z $continuation ]]; then
+    print -u2 "_cached_eval_post_starship: could not render continuation prompt; PROMPT2 keeps its per-shell spawn"
+    return
+  fi
+  sed -E '/^PROMPT2=/d' "$file" > "$tmp" && mv -f "$tmp" "$file"
+  print -r -- "PROMPT2=${(qqqq)continuation}" >> "$file"
+  if grep -q '^PROMPT2=.*starship' "$file"; then
+    print -u2 "_cached_eval_post_starship: PROMPT2 still spawns starship in every shell"
+  fi
+}
+
+# Write `atuin uuid`'s 32-char simple UUIDv7 format into REPLY. A command
+# substitution would fork and leave RANDOM unadvanced in this shell, so every
+# call would return the same random bits.
+_atuin_uuid7() {
+  typeset -g REPLY
+  local -i ms=$(( EPOCHREALTIME * 1000 ))
+  printf -v REPLY '%012x7%03x%x%015x' $ms $(( RANDOM & 0xfff )) \
+    $(( 8 + (RANDOM & 3) )) \
+    $(( (RANDOM << 45) ^ (RANDOM << 30) ^ (RANDOM << 15) ^ RANDOM ))
+}
+
+# `atuin uuid` costs a ~120 ms process spawn under MSYS2. The generated cache
+# outlives edits to this file, so the rewritten line guards on _atuin_uuid7
+# and falls back to the spawn instead of exporting a stale REPLY.
+_cached_eval_post_atuin() {
+  local file="$1" tmp="$1.postsed"
+  sed -E 's@^([[:space:]]*)export ATUIN_SESSION=\$\(atuin uuid\)$@\1if (( ${+functions[_atuin_uuid7]} )); then _atuin_uuid7; export ATUIN_SESSION=$REPLY; else export ATUIN_SESSION=$(atuin uuid); fi@' \
+    "$file" > "$tmp" && mv -f "$tmp" "$file"
+  if grep -qE '^[[:space:]]*export ATUIN_SESSION=\$\(atuin uuid\)$' "$file"; then
+    print -u2 "_cached_eval_post_atuin: 'atuin uuid' spawn remains in cache"
   fi
 }
 
