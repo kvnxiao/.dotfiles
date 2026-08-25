@@ -76,10 +76,6 @@ source = "functions/gh-raw.fish"
 target = "~/.config/fish/functions/gh-raw.fish"
 
 [[file]]
-source = "functions/hooks/_atuin_ensure_session.fish"
-target = "~/.config/fish/functions/hooks/_atuin_ensure_session.fish"
-
-[[file]]
 source = "functions/hooks/_cached_eval_post_atuin.fish"
 target = "~/.config/fish/functions/hooks/_cached_eval_post_atuin.fish"
 
