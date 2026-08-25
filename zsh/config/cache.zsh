@@ -116,13 +116,14 @@ _cached_eval_post_atuin() {
 }
 
 # The reserved link does not exist until the first `fnm use`; until then node
-# resolves through the default alias behind it.
+# resolves through the default alias behind it. A cache generated before
+# link_suffix existed passes three arguments, so link_suffix stays last.
 _fnm_reserve() {
-  local msys_prefix="$1" win_prefix="$2" default_alias="$3"
+  local msys_prefix="$1" win_prefix="$2" default_alias="$3" link_suffix="$4"
   local -i ms=$(( EPOCHREALTIME * 1000 ))
   local name="$$_${ms}"
   export FNM_MULTISHELL_PATH="${win_prefix}${name}"
-  path=( "${msys_prefix}${name}" "$default_alias" $path )
+  path=( "${msys_prefix}${name}${link_suffix}" "$default_alias" $path )
 }
 
 # The first `fnm use` in a shell moves node from the default alias to the
@@ -168,10 +169,20 @@ _cached_eval_post_fnm() {
   # backslash.
   win_link=${win_link//\\\\/\\}
   win_dir=${win_dir//\\\\/\\}
-  local name=${msys_link:t}
-  local msys_prefix=${msys_link%"$name"} win_prefix=${win_link%"$name"}
-  if [[ $win_prefix == $win_link ]]; then
-    print -u2 "_cached_eval_post_fnm: link name '${name}' is not the tail of FNM_MULTISHELL_PATH; not caching"
+  local name=${win_link##*[/\\]}
+  local win_prefix=${win_link%"$name"}
+  if [[ -z $name || -z $win_prefix ]]; then
+    print -u2 "_cached_eval_post_fnm: FNM_MULTISHELL_PATH '${win_link}' does not split into a prefix and a link name; not caching"
+    return 1
+  fi
+  if [[ $msys_link != *"$name"* ]]; then
+    print -u2 "_cached_eval_post_fnm: PATH entry '${msys_link}' does not contain link name '${name}'; not caching"
+    return 1
+  fi
+  # fnm puts node in <link>/bin on Unix and node.exe in <link> on Windows.
+  local msys_prefix=${msys_link%"$name"*} link_suffix=${msys_link##*"$name"}
+  if [[ $msys_prefix != */ ]]; then
+    print -u2 "_cached_eval_post_fnm: PATH entry '${msys_link}' is not a POSIX path; not caching"
     return 1
   fi
 
@@ -181,10 +192,10 @@ _cached_eval_post_fnm() {
     print -u2 "_cached_eval_post_fnm: could not convert FNM_DIR '${win_dir}' to a native path; not caching"
     return 1
   fi
-  local default_alias="${native_dir%/}/aliases/default"
+  local default_alias="${native_dir%/}/aliases/default${link_suffix}"
 
   print -rl -- "${kept[@]}" \
-    "_fnm_reserve ${(qq)msys_prefix} ${(qq)win_prefix} ${(qq)default_alias}" > "$tmp" || return 1
+    "_fnm_reserve ${(qq)msys_prefix} ${(qq)win_prefix} ${(qq)default_alias} ${(qq)link_suffix}" > "$tmp" || return 1
   if grep -qF -- "$name" "$tmp"; then
     print -u2 "_cached_eval_post_fnm: the minted link name survives the rewrite; every shell would share one node version"
     rm -f "$tmp"

@@ -22,11 +22,22 @@ function _cached_eval_post_fnm --description "Post-process fnm env cache"
   # backslash.
   set win_link (string replace -a '\\\\' '\\' -- $win_link)
   set win_dir (string replace -a '\\\\' '\\' -- $win_dir)
-  set -l name (path basename $msys_link)
-  set -l msys_prefix (string replace -- $name '' $msys_link)
-  set -l win_prefix (string replace -- $name '' $win_link)
-  if test "$win_prefix$name" != "$win_link"
-    echo "_cached_eval_post_fnm: link name '$name' is not the tail of FNM_MULTISHELL_PATH; not caching" >&2
+  set -l name (string replace -r '^.*[/\\\\]' '' -- $win_link)
+  set -l win_prefix (string replace -r '[^/\\\\]*$' '' -- $win_link)
+  if test -z "$name" -o -z "$win_prefix"
+    echo "_cached_eval_post_fnm: FNM_MULTISHELL_PATH '$win_link' does not split into a prefix and a link name; not caching" >&2
+    return 1
+  end
+  # fnm puts node in <link>/bin on Unix and node.exe in <link> on Windows.
+  set -l parts (string split -r -m1 -- $name $msys_link)
+  if test (count $parts) -ne 2
+    echo "_cached_eval_post_fnm: PATH entry '$msys_link' does not contain link name '$name'; not caching" >&2
+    return 1
+  end
+  set -l msys_prefix $parts[1]
+  set -l link_suffix $parts[2]
+  if not string match -q '*/' -- $msys_prefix
+    echo "_cached_eval_post_fnm: PATH entry '$msys_link' is not a POSIX path; not caching" >&2
     return 1
   end
 
@@ -38,7 +49,7 @@ function _cached_eval_post_fnm --description "Post-process fnm env cache"
       return 1
     end
   end
-  set -l default_alias (string replace -r '/$' '' -- $native_dir)/aliases/default
+  set -l default_alias (string replace -r '/$' '' -- $native_dir)/aliases/default$link_suffix
 
   set -l out
   for line in $lines
@@ -46,7 +57,7 @@ function _cached_eval_post_fnm --description "Post-process fnm env cache"
     string match -q 'set -gx FNM_MULTISHELL_PATH *' -- $line; and continue
     set -a out "$line"
   end
-  set -l args (string escape -- $msys_prefix $win_prefix $default_alias)
+  set -l args (string escape -- $msys_prefix $win_prefix $default_alias $link_suffix)
   set -a out "_fnm_reserve $args"
 
   if string match -q -- "*$name*" $out
