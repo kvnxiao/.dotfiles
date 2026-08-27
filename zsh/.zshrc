@@ -49,10 +49,6 @@ zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:descriptions' format '[%d]'
 # set list-colors to enable filename colorizing
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# preview directory's content with lsd when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always $realpath'
-# switch group using `,` and `.`
-zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Cache helpers (must load before configs that call _cached_eval)
 source "$HOME/.zsh/cache.zsh"
@@ -65,12 +61,10 @@ source "$HOME/.zsh/os.zsh"
 
 # Cached tool-generated completions
 cached-completions fnm "fnm completions --shell zsh"
-cached-completions atuin "atuin gen-completions --shell zsh"
 
 _cached_eval fnm "fnm env --use-on-cd"
 if [[ "$CLAUDECODE" != "1" ]]; then
   _cached_eval zoxide "zoxide init zsh"
-  _cached_eval atuin "atuin init zsh --disable-up-arrow"
   _cached_eval starship "starship init zsh"
   alias cd="z"
 fi

@@ -42,15 +42,7 @@ abbr 'gr=gh repo view --web'
 abbr 'gl=git l'
 abbr 'gla=git la'
 
-$env:FZF_DEFAULT_OPTS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796,fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6,marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
-# Importing PSFzf costs ~180ms.
-Set-PSReadLineKeyHandler -Chord 'Ctrl+u' -BriefDescription 'Import PSFzf, then run its file provider' -ScriptBlock {
-    Import-Module PSFzf
-    Set-PSReadLineKeyHandler -Chord 'Ctrl+u' -BriefDescription 'PSFzf file provider' -ScriptBlock {
-        Invoke-FzfPsReadlineHandlerProvider
-    }
-    Invoke-FzfPsReadlineHandlerProvider
-}
+$env:SKIM_DEFAULT_OPTIONS="--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796,fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6,marker:#f4dbd6,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796"
 
 # Claude Code
 $env:ENABLE_LSP_TOOL=1
@@ -63,13 +55,20 @@ $env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS="1"
 # starship.toml: the continuation prompt is baked in at cache time.
 # zoxide stays last: it wraps whatever `prompt` it finds, and starship replaces
 # `prompt` outright, so loading zoxide first would drop zoxide's directory
-# tracking. The atuin init claims Ctrl+r, overriding any earlier binding.
+# tracking.
 $initScripts = @(
     cached-eval fnm      'fnm env --use-on-cd --shell power-shell'
     cached-eval starship 'starship init powershell --print-full-init'
-    cached-eval atuin    'atuin init powershell --disable-up-arrow'
     cached-eval zoxide   'zoxide init powershell'
 )
 foreach ($initScript in $initScripts) {
     . $initScript
+}
+
+# skell must import after starship and zoxide: the `prompt` wrapper defined
+# last runs first, which is the only point where $? still belongs to the user's
+# command.
+$skellModule = "$HOME\github\skell\powershell\Skell.psm1"
+if (Test-Path -LiteralPath $skellModule) {
+    Import-Module $skellModule
 }

@@ -4,12 +4,6 @@
 export TEMP="$HOME/AppData/Local/Temp"
 export TMP=$TEMP
 
-# fzf autocompletions and keybindings setup
-[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.zsh" 2>/dev/null
-if [[ -f "$HOME/.fzf/shell/key-bindings.zsh" ]]; then
-  source "$HOME/.fzf/shell/key-bindings.zsh"
-fi
-
 function open {
   # Replace MSYS-style unix path with Windows path
   explorer.exe "$(cygpath -w $1)"

@@ -1,8 +1,5 @@
 ## MacOS config
 
-# fzf completions & keybindings, cached (`source <(fzf --zsh)` forks fzf at every startup)
-_cached_eval fzf "fzf --zsh"
-
 # Google Cloud SDK PATH. Homebrew prefix is hardcoded: two `brew --prefix`
 # forks cost ~30ms per startup.
 if [[ -f /opt/homebrew/share/google-cloud-sdk/path.zsh.inc ]]; then

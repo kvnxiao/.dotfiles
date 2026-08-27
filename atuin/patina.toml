@@ -1,3 +1,0 @@
-[[file]]
-source = "config.toml"
-target = "~/.config/atuin/config.toml"

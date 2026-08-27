@@ -1,6 +1,9 @@
 zmodule zsh-users/zsh-completions --fpath src
 zmodule completion
-zmodule Aloxaf/fzf-tab
+# An absolute path marks the module external, so zim never installs or updates
+# it. Binding a ZLE widget requires the slot after compinit and before
+# fast-syntax-highlighting.
+zmodule ~/github/skell/zsh -n skell
 zmodule olets/zsh-abbr --use git
 zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search

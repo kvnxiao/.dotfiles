@@ -29,28 +29,6 @@ function _cached_eval_post_starship {
     Set-Content -LiteralPath $File -Value $text -NoNewline -Encoding utf8NoBOM
 }
 
-function _cached_eval_post_atuin {
-    param([string]$File)
-
-    # Loading the module spawns `atuin uuid` (~120ms). .NET emits the same
-    # UUIDv7 simple format in-process. CreateVersion7 requires .NET 9, so
-    # pwsh 7.4 and older keep the spawn.
-    if (-not [Guid].GetMethod('CreateVersion7', [Type]::EmptyTypes)) {
-        Write-Warning '_cached_eval_post_atuin: Guid.CreateVersion7 needs .NET 9; `atuin uuid` still spawns at startup'
-        return
-    }
-
-    $spawn = '        $env:ATUIN_SESSION = atuin uuid'
-    $inProcess = "        `$env:ATUIN_SESSION = [Guid]::CreateVersion7().ToString('N')"
-
-    $text = Get-Content -Raw -LiteralPath $File
-    if (-not $text.Contains($spawn)) {
-        Write-Warning '_cached_eval_post_atuin: session assignment not found; `atuin uuid` still spawns at startup'
-        return
-    }
-    Set-Content -LiteralPath $File -Value $text.Replace($spawn, $inProcess) -NoNewline -Encoding utf8NoBOM
-}
-
 function _cached_eval_post_fnm {
     param([string]$File)
 

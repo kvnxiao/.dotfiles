@@ -48,15 +48,32 @@ setup: deploy defender-exclusions setup-msys2-zsh setup-msys2-fish setup-hooks
 [unix]
 setup: deploy setup-hooks
 
-# Benchmark fish shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
-benchmark-fish:
-  hyperfine "fish -i -c 'exit 0'" -N -w 5 -r 20
-
-# Benchmark zsh shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
-benchmark-zsh:
-  hyperfine "zsh -i -c 'exit 0'" -N -w 5 -r 20
-
-# Benchmark pwsh shell ["--shell=none" (-N flag), 5 warmup runs, 20 repetitions]
+# Time-to-interactive benchmark. `.bashrc` and `.zshrc` gate starship and
+# zoxide on CLAUDECODE, so `_benchmark` blanks the variable before invoking
+# hyperfine. A gated bash measures 104ms against its real 344ms. fish and
+# powershell have no such gate.
 [windows]
-benchmark-pwsh:
-  hyperfine "pwsh -Command 'exit 0'" -N -w 5 -r 20
+_benchmark cmd:
+    $env:CLAUDECODE=$null; hyperfine "{{ cmd }}" -N -w 5 -r 20
+
+[unix]
+_benchmark cmd:
+    CLAUDECODE= hyperfine "{{ cmd }}" -N -w 5 -r 20
+
+# Benchmark bash startup [-N, 5 warmup runs, 20 repetitions]
+[windows]
+benchmark-bash: (_benchmark "C:/msys64/usr/bin/bash.exe -i -c 'exit 0'")
+
+# Benchmark bash startup [-N, 5 warmup runs, 20 repetitions]
+[unix]
+benchmark-bash: (_benchmark "bash -i -c 'exit 0'")
+
+# Benchmark fish startup [-N, 5 warmup runs, 20 repetitions]
+benchmark-fish: (_benchmark "fish -i -c 'exit 0'")
+
+# Benchmark zsh startup [-N, 5 warmup runs, 20 repetitions]
+benchmark-zsh: (_benchmark "zsh -i -c 'exit 0'")
+
+# Benchmark pwsh startup [-N, 5 warmup runs, 20 repetitions]
+[windows]
+benchmark-pwsh: (_benchmark "pwsh -Command 'exit 0'")

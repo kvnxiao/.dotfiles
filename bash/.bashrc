@@ -16,6 +16,9 @@
 # the zsh/fish setups.
 case $- in
   *i*)
+    # skell must load before starship, which moves any PROMPT_COMMAND it finds
+    # into STARSHIP_PROMPT_COMMAND and runs it with $? restored.
+    [ -f "$HOME/github/skell/bash/skell.bash" ] && . "$HOME/github/skell/bash/skell.bash"
     if [ "$CLAUDECODE" != "1" ]; then
       if command -v starship >/dev/null 2>&1; then
         # MSYS2 emits a Windows-style starship path (e.g. C:\...\starship.exe)

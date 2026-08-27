@@ -49,3 +49,17 @@ over staged files once `just setup-hooks` has wired the hooks in.
 ## Benchmarking
 
 Changes made to a shell's dotfiles (bash, fish, zsh, powershell) must run the appropriate `just benchmark-*` task to benchmark the time-to-interactive shell startup and ensure it is not significantly increased.
+
+## Ad hoc shell scripts on Windows
+
+A native Windows binary ignores the MSYS signal that `timeout` sends, so
+`timeout N script -q -c '…'` bounds nothing that `script` starts. Driving `sk` or an
+interactive shell through a pty that way leaves the wrapper and its children spinning on
+CPU long after the timeout expires, and they accumulate across a session. End them with
+`Stop-Process -Id <pid> -Force` from PowerShell; matching on process name alone would also
+kill the interactive shells the user is working in.
+
+MSYS2's zsh and the Git-for-Windows bash that an agent runs are separate Cygwin runtimes,
+so `env VAR=x zsh …` reaches zsh with `VAR` unset. A harness that sets `ZDOTDIR` this way
+silently tests the real config instead of the fixture. Write test configuration to a file
+and source it as the first line of the session.

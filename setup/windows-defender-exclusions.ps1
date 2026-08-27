@@ -37,9 +37,8 @@ $pwshLocalSharePath = "$env:USERPROFILE\.local\share\powershell"
 $pwshStartupCachePath = "$env:LOCALAPPDATA\Microsoft\Windows\PowerShell"
 
 # Per-command data stores and tool dirs (hot paths)
-$atuinDataPath = "$env:USERPROFILE\.local\share\atuin"
+$skellDataPath = "$env:USERPROFILE\.local\share\skell"
 $zoxideDataPath = "$env:USERPROFILE\.local\share\zoxide"
-$fzfPath = "$env:USERPROFILE\.fzf"
 $scoopShimsPath = "$env:USERPROFILE\scoop\shims"
 $fnmMultishellsPath = "$env:LOCALAPPDATA\fnm_multishells"
 $fnmDataPath = "$env:APPDATA\fnm"
@@ -59,9 +58,8 @@ $pathExclusions = @(
     $pwshProfilePath
     $pwshLocalSharePath
     $pwshStartupCachePath
-    $atuinDataPath
+    $skellDataPath
     $zoxideDataPath
-    $fzfPath
     $scoopShimsPath
     $fnmMultishellsPath
     $fnmDataPath
@@ -106,13 +104,15 @@ $processExclusions = @(
     # Tools forked during shell startup (cached-eval, etc.)
     "$cargoPath\fnm.exe"
     "$cargoPath\zoxide.exe"
-    "$cargoPath\atuin.exe"
     "$cargoPath\starship.exe"
     "$cargoPath\lsd.exe"
 
-    # fzf-tab forks fzf on every tab completion; either install location
-    "$fzfPath\bin\fzf.exe"
-    "$scoopShimsPath\fzf.exe"
+    # skell forks sk once per Ctrl+R and once per Tab, and gawk once per
+    # preview keystroke. A native Windows sk runs its preview under cmd.exe,
+    # which resolves gawk from the Windows PATH where Git's copy is first.
+    "$cargoPath\sk.exe"
+    "$msys2Path\usr\bin\gawk.exe"
+    "C:\Program Files\Git\usr\bin\gawk.exe"
 )
 
 Write-Host "Adding Windows Defender path exclusions..." -ForegroundColor Cyan

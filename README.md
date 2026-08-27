@@ -15,7 +15,7 @@ Install the following before running any setup commands:
 | [starship](https://starship.rs/)                | shell prompt            |
 | [fnm](https://github.com/Schniz/fnm)            | Node.js version manager |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | smarter cd              |
-| [atuin](https://github.com/atuinsh/atuin)       | shell history           |
+| [skell](https://github.com/kvnxiao/skell)       | shell history           |
 | [lsd](https://github.com/lsd-rs/lsd)            | ls replacement          |
 | [skim](https://github.com/skim-rs/skim)         | fuzzy finder            |
 | [broot](https://github.com/Canop/broot)         | file navigator          |

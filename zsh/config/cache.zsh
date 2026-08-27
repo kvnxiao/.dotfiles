@@ -1,5 +1,5 @@
 ## Cache shell init output from slow commands.
-## Run `clear-cache` after upgrading fnm/zoxide/atuin/starship/fzf.
+## Run `clear-cache` after upgrading fnm/zoxide/starship.
 
 zmodload zsh/datetime
 
@@ -89,29 +89,6 @@ _cached_eval_post_zoxide() {
   if grep -qF 'cygpath -w "\builtin' "$file"; then
     print -u2 "_cached_eval_post_zoxide: unsubstituted pwd remains; every directory change would feed cygpath a literal string"
     return 1
-  fi
-}
-
-# Write `atuin uuid`'s 32-char simple UUIDv7 format into REPLY. A command
-# substitution would fork and leave RANDOM unadvanced in this shell, so every
-# call would return the same random bits.
-_atuin_uuid7() {
-  typeset -g REPLY
-  local -i ms=$(( EPOCHREALTIME * 1000 ))
-  printf -v REPLY '%012x7%03x%x%015x' $ms $(( RANDOM & 0xfff )) \
-    $(( 8 + (RANDOM & 3) )) \
-    $(( (RANDOM << 45) ^ (RANDOM << 30) ^ (RANDOM << 15) ^ RANDOM ))
-}
-
-# `atuin uuid` costs a ~120 ms process spawn under MSYS2. The generated cache
-# outlives edits to this file, so the rewritten line guards on _atuin_uuid7
-# and falls back to the spawn instead of exporting a stale REPLY.
-_cached_eval_post_atuin() {
-  local file="$1" tmp="$1.postsed"
-  sed -E 's@^([[:space:]]*)export ATUIN_SESSION=\$\(atuin uuid\)$@\1if (( ${+functions[_atuin_uuid7]} )); then _atuin_uuid7; export ATUIN_SESSION=$REPLY; else export ATUIN_SESSION=$(atuin uuid); fi@' \
-    "$file" > "$tmp" && mv -f "$tmp" "$file"
-  if grep -qE '^[[:space:]]*export ATUIN_SESSION=\$\(atuin uuid\)$' "$file"; then
-    print -u2 "_cached_eval_post_atuin: 'atuin uuid' spawn remains in cache"
   fi
 }
 
