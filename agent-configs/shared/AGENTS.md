@@ -105,6 +105,12 @@ Shared behavioral defaults for agents.
 
 Default to Silence above governs whether a comment exists at all. Two tests decide the remainder: delete anything a reader going line by line would arrive at unaided, and where the code reads badly, rename or extract instead of explaining.
 
+## Prose audits
+
+Where a rule calls for a prose audit, invoke `audit-prose-via-codex` when your skill list offers it, and `audit-prose` when it does not.
+
+`audit-prose-via-codex` is already an independent pass: do not wrap it in a subagent, re-audit its edits, or revise its findings.
+
 ## Verifying changes
 
 Always run `verify-changes` once on the accumulated change set before finishing the request. The `verify-changes` skill is explicitly allowed to spawn subagents.
@@ -115,7 +121,7 @@ Always run `verify-changes` once on the accumulated change set before finishing 
 
 ## Pull requests
 
-Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the `audit-prose` skill over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
+Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the prose audit over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
 
 ## Tool routing
 

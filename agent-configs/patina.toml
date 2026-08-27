@@ -25,6 +25,14 @@ source = "shared/skills/audit-prose"
 target = "~/.agents/skills/audit-prose"
 mode = "symlink"
 
+# audit-prose-via-codex
+# Deploy only to Claude Code. Do not add a ~/.agents/skills entry:
+# Codex would then invoke this skill and start a nested Codex run.
+[[directory]]
+source = "shared/skills/audit-prose-via-codex"
+target = "~/.claude/skills/audit-prose-via-codex"
+mode = "symlink"
+
 # brainstorm
 [[directory]]
 source = "shared/skills/brainstorm"
