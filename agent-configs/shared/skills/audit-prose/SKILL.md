@@ -22,6 +22,7 @@ Resolve scope before auditing prose:
 - In a named test tree, apply `Default to Deletion` and the test artifact contract to every file.
 - A named file, symbol, or line range limits the audit to that item.
 - Report defects outside the resolved scope without editing them.
+- Editing prose is the whole task. Do not run formatters, linters, type-checkers, tests, or build commands, or report their results. Record skipped checks as required by the Reporting section. `verify-changes` runs repository checks over the edited files after the audit returns.
 
 House style binds prose composed during the task. During an audit, treat a generation-time ban as a tripwire for existing prose, not an automatic defect. When semantics, ecosystem convention, or context favors an existing construction, do not rewrite it solely to satisfy that ban. Apply house style to each replacement without weakening a higher priority.
 

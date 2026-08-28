@@ -31,6 +31,7 @@ Apply fixes to in-scope files in place. Do not emit a patch, stage anything, com
 Run the verification pass inline in this session, as the skill's `Run the verification pass inline` section requires.
 Do not delegate any part of the audit to a subagent. You are already the delegated pass.
 Report a defect outside the resolved scope instead of editing it.
+Do not run formatters, linters, type-checkers, tests, or build commands, or report their results. Record skipped checks as required by the Reporting section. The repository instructions naming a formatter do not apply to this run; when `verify-changes` invokes this audit, it runs repository checks after this audit returns.
 </execution_rules>
 
 <reporting>

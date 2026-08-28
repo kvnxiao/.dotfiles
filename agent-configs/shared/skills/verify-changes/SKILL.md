@@ -15,7 +15,7 @@ Consider the proportionality of the changes and run the following checklist over
      - If matching rules exist for the languages, frameworks, or layers touched by the diff, invoke them in a read-only subagent to verify adherence to local conventions.
 2. [ ] Deduplicate the reports (from 1a, 1b, and 1c), resolve overlaps, and apply accepted changes in one edit pass. Review the resulting full diff.
 3. [ ] Audit every comment, docstring, and documentation line the change set added or modified, including prose written during step 2. Invoke `audit-prose-via-codex` where your skill list offers it; it is already an independent pass, so do not wrap it in a subagent. Otherwise use the `audit-prose` skill in a subagent.
-4. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable.
+4. [ ] Run the repository checks relevant and proportionate to the change: formatting, linting, type-checking, and tests when applicable. Step 3 runs none of them.
 
 Parallel subagents used for Step 1's review coverage (1a, 1b, 1c) must be restricted to read-only access. Reviewers must report findings without editing files or running mutating commands. Only the coordinating agent may edit the working tree. Step 3's prose audit is the exception: whether it runs as `audit-prose-via-codex` or as an `audit-prose` subagent, the prose-audit pass applies its own changes directly.
 
