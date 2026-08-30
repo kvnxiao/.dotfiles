@@ -53,6 +53,16 @@ source = "shared/skills/verify-changes"
 target = "~/.agents/skills/verify-changes"
 mode = "symlink"
 
+# update-docs
+[[directory]]
+source = "shared/skills/update-docs"
+target = "~/.claude/skills/update-docs"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/update-docs"
+target = "~/.agents/skills/update-docs"
+mode = "symlink"
+
 # humanizer
 [[directory]]
 remote = "humanizer"

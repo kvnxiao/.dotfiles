@@ -89,7 +89,7 @@ Do not undo scoped edits; leave that decision to the user.
 
 ## Concurrency
 
-Codex writes the scoped files while this session keeps running. Invoke this skill only when the change set is settled, and edit nothing in scope until the run reports. Inside `verify-changes`, invoke it after the accepted changes from the review pass land and before repository checks run.
+Codex writes the scoped files while this session keeps running. After the change set is settled, invoke this skill and edit nothing in scope until the run reports. Inside `verify-changes`, after `update-docs` finishes, invoke it before repository checks run.
 
 ## Cost
 
