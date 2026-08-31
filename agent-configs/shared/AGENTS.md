@@ -109,19 +109,19 @@ Default to Silence above governs whether a comment exists at all. Two tests deci
 
 Where a rule calls for a prose audit, invoke `audit-prose-via-codex` when your skill list offers it, and `audit-prose` when it does not.
 
-`audit-prose-via-codex` is already an independent pass: do not wrap it in a subagent, re-audit its edits, or revise its findings.
+Run `audit-prose-via-codex` as an independent pass; do not wrap it in a subagent. Read its patch for scoped paths, semantic preservation, and non-prose changes. Apply the whole patch only when those checks pass; do not re-audit its style or rewrite individual hunks.
 
 ## Verifying changes
 
-Always run `verify-changes` once on the accumulated change set before finishing the request. The `verify-changes` skill is explicitly allowed to spawn subagents.
+Always run `verify-changes` once on the accumulated change set before finishing the request. The `verify-changes` skill may spawn subagents.
 
 - **Scope:** The full request, not individual todo items.
 - **Timing:** Immediately before `git commit`, `git push`, or `gh pr create`. In a file-editing todo list, place it directly before the commit subtask.
 - **Skipping:** When you end a turn that edited files without running it, tell the user why.
 
-## Pull requests
+## Commit and PR copy
 
-Before opening any PR, draft the PR body and title first. Write the draft body to a file, run the prose audit over that file and the draft title, then open the PR with `--body-file` pointing at the audited file. An inline `--body` or a heredoc skips the audit.
+After repository verification, write planned commit messages, PR titles, and PR bodies to separate draft files. When a commit and PR are planned together, audit the draft files in one quick-rewrite invocation. Apply the accepted prose patch to the drafts before running `git commit` or `gh pr create`, and point `--body-file` at the audited PR body. Drafting a commit message, PR title, or PR body inline or in a heredoc bypasses the audit.
 
 ## Tool routing
 
