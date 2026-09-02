@@ -22,6 +22,72 @@ ALLOWED_EVENT_TYPES = {
     "item.completed",
     "turn.completed",
 }
+RETRYABLE_EVENT_RE = re.compile(
+    r"reconnect|stream disconnected|websocket|connection reset|timed out|temporarily unavailable",
+    re.IGNORECASE,
+)
+TRAILER_RE = re.compile(
+    r"^(?:Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs|Fixes|Closes|Linear|BREAKING CHANGE):\s",
+)
+GENERATED_LINE_RE = re.compile(r"^\s*(?:\U0001F916|Generated with)\s")
+PROSE_SUFFIXES = {".md", ".markdown", ".txt", ".rst", ".adoc", ".mdx"}
+PROSE_NAMES = {"README", "CHANGELOG", "LICENSE", "NOTICE", "AGENTS", "CLAUDE"}
+COMMENT_SYNTAX = {
+    ".sql": (("--",), (("/*", "*/"),)),
+    ".ts": (("//",), (("/*", "*/"),)),
+    ".tsx": (("//",), (("/*", "*/"),)),
+    ".js": (("//",), (("/*", "*/"),)),
+    ".jsx": (("//",), (("/*", "*/"),)),
+    ".mjs": (("//",), (("/*", "*/"),)),
+    ".cjs": (("//",), (("/*", "*/"),)),
+    ".go": (("//",), (("/*", "*/"),)),
+    ".rs": (("//",), (("/*", "*/"),)),
+    ".java": (("//",), (("/*", "*/"),)),
+    ".kt": (("//",), (("/*", "*/"),)),
+    ".swift": (("//",), (("/*", "*/"),)),
+    ".dart": (("//",), (("/*", "*/"),)),
+    ".c": (("//",), (("/*", "*/"),)),
+    ".h": (("//",), (("/*", "*/"),)),
+    ".cpp": (("//",), (("/*", "*/"),)),
+    ".cs": (("//",), (("/*", "*/"),)),
+    ".css": ((), (("/*", "*/"),)),
+    ".scss": (("//",), (("/*", "*/"),)),
+    ".tf": (("#", "//"), (("/*", "*/"),)),
+    ".hcl": (("#", "//"), (("/*", "*/"),)),
+    ".py": (("#",), (('"""', '"""'), ("'''", "'''"))),
+    ".sh": (("#",), ()),
+    ".bash": (("#",), ()),
+    ".zsh": (("#",), ()),
+    ".fish": (("#",), ()),
+    ".rb": (("#",), ()),
+    ".pl": (("#",), ()),
+    ".yaml": (("#",), ()),
+    ".yml": (("#",), ()),
+    ".toml": (("#",), ()),
+    ".just": (("#",), ()),
+    ".html": ((), (("<!--", "-->"),)),
+    ".xml": ((), (("<!--", "-->"),)),
+}
+COMMENT_NAMES = {
+    "Dockerfile": (("#",), ()),
+    "Makefile": (("#",), ()),
+    "justfile": (("#",), ()),
+    "Justfile": (("#",), ()),
+}
+DRAFT_KINDS = {
+    "commit-subject",
+    "commit-message",
+    "commit-body",
+    "pr-title",
+    "pr-body",
+    "draft-prose",
+}
+WIDTH_LIMITED_KINDS = {"commit-subject", "commit-message", "commit-body"}
+COMMIT_LINE_LIMIT = 72
+WRAP_SLACK = 8
+BLOCK_START_RE = re.compile(r"^\s*(?:[-*+]\s|\d+[.)]\s|#{1,6}\s|>\s|\|)")
+DUPLICATE_MIN_CHARS = 40
+DEFAULT_MAX_INPUT_CHARS = 400_000
 
 
 def fail(message: str, code: int = 1) -> None:
@@ -176,6 +242,111 @@ def numbered_source(text: str, ranges: list[tuple[int, int]] | None) -> str:
     return "\n".join(rendered)
 
 
+def intersect_ranges(
+    left: list[tuple[int, int]], right: list[tuple[int, int]]
+) -> list[tuple[int, int]]:
+    overlaps: list[tuple[int, int]] = []
+    for left_start, left_end in left:
+        for right_start, right_end in right:
+            start = max(left_start, right_start)
+            end = min(left_end, right_end)
+            if start <= end:
+                overlaps.append((start, end))
+    return merge_ranges(overlaps) if overlaps else []
+
+
+def invert_ranges(excluded: set[int], line_count: int) -> list[tuple[int, int]]:
+    kept = [number for number in range(1, line_count + 1) if number not in excluded]
+    return merge_ranges([(number, number) for number in kept]) if kept else []
+
+
+def comment_syntax(relative: str) -> tuple[tuple[str, ...], tuple[tuple[str, str], ...]] | None:
+    path = Path(relative)
+    if path.name in COMMENT_NAMES:
+        return COMMENT_NAMES[path.name]
+    return COMMENT_SYNTAX.get(path.suffix.lower())
+
+
+def classify_path(relative: str) -> str:
+    path = Path(relative)
+    if path.suffix.lower() in PROSE_SUFFIXES or path.name in PROSE_NAMES:
+        return "prose"
+    if comment_syntax(relative) is not None:
+        return "code"
+    return "excluded"
+
+
+def comment_ranges(text: str, relative: str) -> list[tuple[int, int]]:
+    syntax = comment_syntax(relative)
+    if syntax is None:
+        return []
+    line_prefixes, block_pairs = syntax
+    ranges: list[tuple[int, int]] = []
+    open_close: tuple[str, str] | None = None
+    for number, line in enumerate(split_file_lines(text), start=1):
+        stripped = line.strip()
+        if open_close is not None:
+            ranges.append((number, number))
+            if open_close[1] in line:
+                open_close = None
+            continue
+        opened = next(
+            (pair for pair in block_pairs if stripped.startswith(pair[0])), None
+        )
+        if opened is not None:
+            ranges.append((number, number))
+            remainder = stripped[len(opened[0]) :]
+            if opened[1] not in remainder:
+                open_close = opened
+            continue
+        if line_prefixes and stripped.startswith(line_prefixes):
+            ranges.append((number, number))
+    return merge_ranges(ranges) if ranges else []
+
+
+def paragraph_ranges(text: str) -> list[tuple[int, int]]:
+    blocks: list[tuple[int, int]] = []
+    current: list[int] = []
+    for number, line in enumerate(split_file_lines(text), start=1):
+        if not line.strip() or BLOCK_START_RE.match(line):
+            if current:
+                blocks.append((current[0], current[-1]))
+                current = []
+            if not line.strip():
+                continue
+        current.append(number)
+    if current:
+        blocks.append((current[0], current[-1]))
+    return blocks
+
+
+def expand_to_blocks(
+    changed: list[tuple[int, int]], blocks: list[tuple[int, int]]
+) -> list[tuple[int, int]]:
+    touched = [
+        block
+        for block in blocks
+        if any(
+            start <= block[1] and block[0] <= end for start, end in changed
+        )
+    ]
+    return merge_ranges(touched) if touched else []
+
+
+def draft_ranges(text: str) -> list[tuple[int, int]]:
+    lines = split_file_lines(text)
+    protected = {
+        number
+        for number, line in enumerate(lines, start=1)
+        if not line.strip() or TRAILER_RE.match(line) or GENERATED_LINE_RE.match(line)
+    }
+    return invert_ranges(protected, len(lines))
+
+
+def normalized(line: str) -> str:
+    return " ".join(line.split())
+
+
 def inventory_hash(root: Path, scope_kind: str) -> str | None:
     if scope_kind != "repository-change-set":
         return None
@@ -221,6 +392,27 @@ def make_schema() -> dict:
     }
 
 
+def split_batches(
+    paths: list[str], sections: list[str], budget: int
+) -> list[list[str]]:
+    if budget < 1:
+        fail("Input budget leaves no room for source content")
+    batches: list[list[str]] = []
+    current: list[str] = []
+    used = 0
+    for relative, section in zip(paths, sections):
+        size = len(section) + 1
+        if current and used + size > budget:
+            batches.append(current)
+            current = []
+            used = 0
+        current.append(relative)
+        used += size
+    if current:
+        batches.append(current)
+    return batches
+
+
 def prepare(args: argparse.Namespace) -> None:
     root = Path(args.patch_root).resolve()
     run_dir = Path(args.run_dir).resolve()
@@ -229,6 +421,7 @@ def prepare(args: argparse.Namespace) -> None:
     mode_text, effort = MODES[args.mode]
     paths: list[str] = []
     range_map: dict[str, list[tuple[int, int]]] = {}
+    kind_map: dict[str, str] = {}
     skipped: list[dict[str, str]] = []
     inventory_before = inventory_hash(root, args.scope_kind)
     candidate_resolved: dict[str, Path] = {}
@@ -266,6 +459,16 @@ def prepare(args: argparse.Namespace) -> None:
         if inventory_hash(root, args.scope_kind) != inventory_before:
             fail("The repository change inventory changed during discovery")
         for relative in tracked:
+            file_kind = classify_path(relative)
+            if file_kind == "excluded":
+                skipped.append(
+                    {
+                        "path": relative,
+                        "reason": "non-prose-file",
+                        "sha256": candidate_hashes_before[relative],
+                    }
+                )
+                continue
             try:
                 diff = git(root, "diff", "--unified=0", "HEAD", "--", relative).decode(
                     "utf-8"
@@ -273,33 +476,87 @@ def prepare(args: argparse.Namespace) -> None:
             except UnicodeDecodeError as error:
                 fail(f"Git returned a non-UTF-8 diff for {relative}: {error}")
             ranges = changed_ranges(diff)
-            if ranges:
-                paths.append(relative)
-                range_map[relative] = ranges
-        for relative in untracked:
-            if relative not in paths:
-                if is_utf8_text(resolve_target(root, relative)):
-                    paths.append(relative)
-                    range_map[relative] = []
-                else:
+            if not ranges:
+                continue
+            text = read_utf8(candidate_resolved[relative])
+            if file_kind == "code":
+                ranges = expand_to_blocks(ranges, comment_ranges(text, relative))
+                if not ranges:
                     skipped.append(
                         {
                             "path": relative,
-                            "reason": "binary-or-non-UTF-8",
+                            "reason": "no-changed-comment-lines",
                             "sha256": candidate_hashes_before[relative],
                         }
                     )
+                    continue
+            else:
+                ranges = expand_to_blocks(ranges, paragraph_ranges(text))
+            paths.append(relative)
+            range_map[relative] = ranges
+            kind_map[relative] = (
+                "code-comment" if file_kind == "code" else "documentation"
+            )
+        for relative in untracked:
+            if relative in paths:
+                continue
+            resolved_path = resolve_target(root, relative)
+            if not is_utf8_text(resolved_path):
+                skipped.append(
+                    {
+                        "path": relative,
+                        "reason": "binary-or-non-UTF-8",
+                        "sha256": candidate_hashes_before[relative],
+                    }
+                )
+                continue
+            file_kind = classify_path(relative)
+            if file_kind == "excluded":
+                skipped.append(
+                    {
+                        "path": relative,
+                        "reason": "non-prose-file",
+                        "sha256": candidate_hashes_before[relative],
+                    }
+                )
+                continue
+            if file_kind == "code":
+                ranges = comment_ranges(read_utf8(resolved_path), relative)
+                if not ranges:
+                    skipped.append(
+                        {
+                            "path": relative,
+                            "reason": "no-comment-lines",
+                            "sha256": candidate_hashes_before[relative],
+                        }
+                    )
+                    continue
+                range_map[relative] = ranges
+                kind_map[relative] = "code-comment"
+            else:
+                range_map[relative] = []
+                kind_map[relative] = "documentation"
+            paths.append(relative)
     else:
         paths = list(args.target or [])
         for relative, start, end in args.line_range or []:
             if relative not in paths:
                 paths.append(relative)
             range_map.setdefault(relative, []).append((int(start), int(end)))
+        for relative, declared_kind in getattr(args, "target_kind", None) or []:
+            if declared_kind not in DRAFT_KINDS:
+                fail(f"Unknown target kind: {declared_kind}")
+            if args.scope_kind != "transient":
+                fail("Target kinds apply to transient drafts only")
+            if relative not in paths:
+                paths.append(relative)
+            kind_map[relative.replace("\\", "/")] = declared_kind
 
     paths = list(dict.fromkeys(path.replace("\\", "/") for path in paths))
     range_map = {
         path.replace("\\", "/"): ranges for path, ranges in range_map.items()
     }
+    kind_map = {path.replace("\\", "/"): kind for path, kind in kind_map.items()}
     if skipped:
         write_text(
             run_dir / "skipped-targets.json",
@@ -325,44 +582,75 @@ def prepare(args: argparse.Namespace) -> None:
         hashes_before = {
             relative: file_hash(path) for relative, path in resolved.items()
         }
-    targets: list[dict] = []
-    source_sections: list[str] = []
-
-    for target_id, relative in enumerate(paths, start=1):
-        text = read_utf8(resolved[relative])
-        raw_ranges = range_map.get(relative)
-        if args.scope_kind == "repository-change-set" and raw_ranges == []:
-            ranges = None
-        elif raw_ranges:
-            ranges = merge_ranges(raw_ranges)
-        else:
-            ranges = None
-        line_count = len(split_file_lines(text))
-        if ranges and any(end > line_count for _, end in ranges):
-            fail(f"Editable range exceeds {relative}'s {line_count} lines")
-        target = {
-            "id": target_id,
-            "path": relative,
-            "editable": ranges,
-            "line_ending": line_ending(resolved[relative]),
-            "sha256": hashes_before[relative],
-        }
-        targets.append(target)
-        source_sections.append(
-            "\n".join(
-                [
-                    f"===== TARGET {target_id} BEGIN =====",
-                    f"path: {relative}",
-                    "source-kind: current-lines",
-                    f"editable: {format_ranges(ranges)}",
-                    f"line-ending: {target['line_ending']}",
-                    f"final-newline: {'yes' if text.endswith(chr(10)) else 'no'}",
-                    "content-lines:",
-                    numbered_source(text, ranges),
-                    f"===== TARGET {target_id} END =====",
-                ]
+    def build(selected: list[str]) -> tuple[list[dict], list[str]]:
+        targets: list[dict] = []
+        source_sections: list[str] = []
+        for target_id, relative in enumerate(selected, start=1):
+            text = read_utf8(resolved[relative])
+            raw_ranges = range_map.get(relative)
+            if args.scope_kind == "repository-change-set" and raw_ranges == []:
+                ranges = None
+            elif raw_ranges:
+                ranges = merge_ranges(raw_ranges)
+            else:
+                ranges = None
+            kind = kind_map.get(relative)
+            if args.scope_kind == "transient":
+                kind = kind or "draft-prose"
+                allowed = draft_ranges(text)
+                ranges = intersect_ranges(ranges, allowed) if ranges else allowed
+                if not ranges:
+                    fail(f"No editable draft line remains in {relative}")
+            elif args.scope_kind == "named":
+                file_kind = classify_path(relative)
+                if file_kind == "excluded":
+                    fail(f"Named target is not auditable prose: {relative}")
+                if file_kind == "code":
+                    kind = "code-comment"
+                    allowed = comment_ranges(text, relative)
+                    ranges = intersect_ranges(ranges, allowed) if ranges else allowed
+                    if not ranges:
+                        fail(f"Named target has no comment line to audit: {relative}")
+                else:
+                    kind = "documentation"
+            kind = kind or "documentation"
+            line_count = len(split_file_lines(text))
+            if ranges and any(end > line_count for _, end in ranges):
+                fail(f"Editable range exceeds {relative}'s {line_count} lines")
+            target = {
+                "id": target_id,
+                "path": relative,
+                "kind": kind,
+                "editable": ranges,
+                "line_ending": line_ending(resolved[relative]),
+                "sha256": hashes_before[relative],
+            }
+            targets.append(target)
+            width_note = (
+                [f"max-line-width: {COMMIT_LINE_LIMIT}"]
+                if kind in WIDTH_LIMITED_KINDS
+                else []
             )
-        )
+            source_sections.append(
+                "\n".join(
+                    [
+                        f"===== TARGET {target_id} BEGIN =====",
+                        f"path: {relative}",
+                        f"artifact-kind: {kind}",
+                        *width_note,
+                        "source-kind: current-lines",
+                        f"editable: {format_ranges(ranges)}",
+                        f"line-ending: {target['line_ending']}",
+                        f"final-newline: {'yes' if text.endswith(chr(10)) else 'no'}",
+                        "content-lines:",
+                        numbered_source(text, ranges),
+                        f"===== TARGET {target_id} END =====",
+                    ]
+                )
+            )
+        return targets, source_sections
+
+    targets, source_sections = build(paths)
 
     if args.scope_kind == "repository-change-set":
         hashes_after = {
@@ -381,27 +669,60 @@ def prepare(args: argparse.Namespace) -> None:
     if not diction.strip() or "{{AUDIT_INPUT}}" not in template or "{{BUNDLE_HASH}}" not in template:
         fail("Diction and prompt template inputs must be complete")
 
-    target_list = "\n".join(f"{target['id']}\t{target['path']}" for target in targets)
-    audit_input = "\n".join(
-        [
-            "<mode>",
-            mode_text,
-            "</mode>",
-            "<patch_root>",
-            str(root),
-            "</patch_root>",
-            "<targets>",
-            target_list,
-            "</targets>",
-            "<diction_reference>",
-            diction.rstrip("\n"),
-            "</diction_reference>",
-            "<source>",
-            "\n".join(source_sections),
-            "</source>",
-            "",
-        ]
-    )
+    def render_input(built: list[dict], sections: list[str]) -> str:
+        target_list = "\n".join(
+            f"{target['id']}\t{target['kind']}\t{target['path']}" for target in built
+        )
+        return "\n".join(
+            [
+                "<mode>",
+                mode_text,
+                "</mode>",
+                "<patch_root>",
+                str(root),
+                "</patch_root>",
+                "<targets>",
+                target_list,
+                "</targets>",
+                "<diction_reference>",
+                diction.rstrip("\n"),
+                "</diction_reference>",
+                "<source>",
+                "\n".join(sections),
+                "</source>",
+                "",
+            ]
+        )
+
+    audit_input = render_input(targets, source_sections)
+    batch_index = getattr(args, "batch", None)
+    budget = getattr(args, "max_input_chars", None) or DEFAULT_MAX_INPUT_CHARS
+    overhead = len(audit_input) - sum(len(section) for section in source_sections)
+    batches = split_batches(paths, source_sections, budget - overhead)
+    if len(batches) > 1:
+        if batch_index is None:
+            write_text(
+                run_dir / "batches.json",
+                json.dumps(
+                    [
+                        {"batch": index, "targets": group}
+                        for index, group in enumerate(batches, start=1)
+                    ],
+                    indent=2,
+                )
+                + "\n",
+            )
+            fail(
+                f"Bundle of {len(audit_input)} characters exceeds the {budget}-character "
+                f"input budget; prepared {len(batches)} batches in batches.json",
+                5,
+            )
+        if batch_index < 1 or batch_index > len(batches):
+            fail(f"Batch index must fall between 1 and {len(batches)}")
+        targets, source_sections = build(batches[batch_index - 1])
+        audit_input = render_input(targets, source_sections)
+    elif batch_index is not None and batch_index != 1:
+        fail("This bundle needs no batching; omit --batch or pass 1")
     bundle_hash = hashlib.sha256(audit_input.encode("utf-8")).hexdigest()
     prompt = template.replace("{{BUNDLE_HASH}}", bundle_hash).replace("{{AUDIT_INPUT}}", audit_input)
 
@@ -465,6 +786,9 @@ def validate_events(path: Path) -> str:
             fail(f"Invalid JSONL event object at line {line_number}")
         event_type = event.get("type")
         if event_type in {"error", "turn.failed"}:
+            message = event.get("message")
+            if isinstance(message, str) and RETRYABLE_EVENT_RE.search(message):
+                fail(f"Transient Codex transport failure: {message.strip()}", 6)
             fail(f"Codex event stream reports {event_type}")
         if event_type not in ALLOWED_EVENT_TYPES:
             fail(f"Codex event stream contains an unknown event: {event_type}")
@@ -517,8 +841,24 @@ def render_diff_lines(lines: list[str]) -> list[str]:
     return rendered
 
 
-def render_patch(edits: list, targets: list[dict], root: Path) -> str:
+class TargetRejected(Exception):
+    pass
+
+
+def render_patch(
+    edits: list, targets: list[dict], root: Path
+) -> tuple[list[tuple[dict, str]], list[tuple[dict, str]]]:
     target_by_id = {target["id"]: target for target in targets}
+    sources = {
+        target["id"]: split_file_lines(read_utf8(resolve_target(root, target["path"])))
+        for target in targets
+    }
+    owners: dict[str, set[int]] = {}
+    for owner_id, owner_lines in sources.items():
+        for owner_line in owner_lines:
+            text = normalized(owner_line)
+            if len(text) >= DUPLICATE_MIN_CHARS:
+                owners.setdefault(text, set()).add(owner_id)
     grouped: dict[int, list[dict]] = {}
     required_edit_keys = {
         "target_id",
@@ -546,23 +886,67 @@ def render_patch(edits: list, targets: list[dict], root: Path) -> str:
             fail("Replacement lines must be strings without line separators or NUL bytes")
         grouped.setdefault(target_id, []).append(edit)
 
-    sections: list[str] = []
+    sections: list[tuple[dict, str]] = []
+    dropped: list[tuple[dict, str]] = []
     for target_id, target_edits in grouped.items():
         target = target_by_id[target_id]
         source_text = read_utf8(resolve_target(root, target["path"]))
-        source_lines = split_file_lines(source_text)
+        source_lines = sources[target_id]
+        width_limit = (
+            COMMIT_LINE_LIMIT
+            if target["kind"] == "commit-subject"
+            else max(
+                COMMIT_LINE_LIMIT, max((len(line) for line in source_lines), default=0)
+            )
+            + WRAP_SLACK
+        )
         previous_end = 0
-        for edit in sorted(target_edits, key=lambda value: value["start_line"]):
-            if edit["end_line"] > len(source_lines):
-                fail(f"Edit exceeds {target['path']}'s {len(source_lines)} lines")
-            if edit["start_line"] <= previous_end:
-                fail(f"Edits overlap in {target['path']}")
-            if any(
-                not is_allowed(line_number, target["editable"])
-                for line_number in range(edit["start_line"], edit["end_line"] + 1)
-            ):
-                fail(f"Edit exceeds the editable scope in {target['path']}")
-            previous_end = edit["end_line"]
+        try:
+            for edit in sorted(target_edits, key=lambda value: value["start_line"]):
+                if edit["end_line"] > len(source_lines):
+                    fail(f"Edit exceeds {target['path']}'s {len(source_lines)} lines")
+                if edit["start_line"] <= previous_end:
+                    fail(f"Edits overlap in {target['path']}")
+                outside = [
+                    line_number
+                    for line_number in range(edit["start_line"], edit["end_line"] + 1)
+                    if not is_allowed(line_number, target["editable"])
+                ]
+                if outside:
+                    raise TargetRejected(
+                        "edit touches line(s) "
+                        f"{','.join(str(number) for number in outside)} outside "
+                        f"{format_ranges(target['editable'])}"
+                    )
+                if target["kind"] in WIDTH_LIMITED_KINDS and any(
+                    len(line) > width_limit for line in edit["replacement_lines"]
+                ):
+                    raise TargetRejected(
+                        f"replacement rewraps past {width_limit} characters"
+                    )
+                if target["kind"] == "commit-subject" and len(
+                    edit["replacement_lines"]
+                ) != edit["end_line"] - edit["start_line"] + 1:
+                    raise TargetRejected("replacement changes the subject line count")
+                replaced = {
+                    normalized(line)
+                    for line in source_lines[edit["start_line"] - 1 : edit["end_line"]]
+                }
+                for line in edit["replacement_lines"]:
+                    text = normalized(line)
+                    if len(text) < DUPLICATE_MIN_CHARS or text in replaced:
+                        continue
+                    line_owners = owners.get(text, set())
+                    if line_owners - {target_id}:
+                        raise TargetRejected("replacement copies a line from another target")
+                    if target_id in line_owners:
+                        raise TargetRejected(
+                            "replacement duplicates a line the target already holds"
+                        )
+                previous_end = edit["end_line"]
+        except TargetRejected as rejection:
+            dropped.append((target, str(rejection)))
+            continue
 
         updated_lines = list(source_lines)
         for edit in sorted(
@@ -588,13 +972,21 @@ def render_patch(edits: list, targets: list[dict], root: Path) -> str:
             )
         )
         sections.append(
-            "\n".join(
-                [f"diff --git a/{target['path']} b/{target['path']}", *diff_lines]
+            (
+                target,
+                "\n".join(
+                    [f"diff --git a/{target['path']} b/{target['path']}", *diff_lines]
+                ),
             )
         )
     if not sections:
+        if dropped:
+            detail = "; ".join(
+                f"{target['path']} ({reason})" for target, reason in dropped
+            )
+            fail(f"Every edited target was rejected: {detail}")
         fail("Patch edits produce no changes")
-    return "\n".join(sections) + "\n"
+    return sections, dropped
 
 
 def write_patch(path: Path, patch: str, targets: list[dict]) -> None:
@@ -665,9 +1057,20 @@ def validate(args: argparse.Namespace) -> None:
         raise SystemExit(4)
     if status != "patch" or reason or not edits:
         fail(f"Invalid result status: {status}")
-    patch = render_patch(edits, snapshot["targets"], Path(snapshot["patch_root"]))
+    sections, dropped = render_patch(
+        edits, snapshot["targets"], Path(snapshot["patch_root"])
+    )
+    patch = "\n".join(section for _, section in sections) + "\n"
     write_patch(run_dir / "result.patch", patch, snapshot["targets"])
+    for target, section in sections:
+        write_patch(
+            run_dir / f"result-{target['id']}.patch", section + "\n", snapshot["targets"]
+        )
     print("PATCH")
+    for target, reason in dropped:
+        print(f"DROPPED\t{target['id']}\t{target['path']}\t{reason}")
+    for target, _ in sections:
+        print(f"{target['id']}\t{target['kind']}\t{target['path']}\tresult-{target['id']}.patch")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -686,6 +1089,9 @@ def parser() -> argparse.ArgumentParser:
     prepare_parser.add_argument("--prompt-template", required=True)
     prepare_parser.add_argument("--target", action="append")
     prepare_parser.add_argument("--line-range", action="append", nargs=3, metavar=("PATH", "START", "END"))
+    prepare_parser.add_argument("--target-kind", action="append", nargs=2, metavar=("PATH", "KIND"))
+    prepare_parser.add_argument("--max-input-chars", type=int, default=DEFAULT_MAX_INPUT_CHARS)
+    prepare_parser.add_argument("--batch", type=int)
     prepare_parser.set_defaults(handler=prepare)
 
     validate_parser = subparsers.add_parser("validate")

@@ -1,4 +1,6 @@
 import argparse
+import contextlib
+import io
 import json
 import subprocess
 import tempfile
@@ -12,7 +14,7 @@ class AuditIoTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary_directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary_directory.cleanup)
-        self.base = Path(self.temporary_directory.name)
+        self.base = Path(self.temporary_directory.name).resolve()
         self.root = self.base / "repository"
         self.run_dir = self.base / "run"
         self.root.mkdir()
@@ -46,23 +48,37 @@ class AuditIoTests(unittest.TestCase):
             )
         return result
 
-    def prepare(self) -> None:
-        audit_io.prepare(
-            argparse.Namespace(
-                patch_root=str(self.root),
-                run_dir=str(self.run_dir),
-                mode="change-set",
-                scope_kind="repository-change-set",
-                diction=str(self.diction),
-                prompt_template=str(self.template),
-                target=None,
-                line_range=None,
-            )
-        )
+    def prepare(self, **overrides) -> None:
+        if "run_dir" in overrides:
+            self.run_dir = Path(overrides["run_dir"])
+            self.run_dir.mkdir(exist_ok=True)
+        namespace = {
+            "patch_root": str(self.root),
+            "run_dir": str(self.run_dir),
+            "mode": "change-set",
+            "scope_kind": "repository-change-set",
+            "diction": str(self.diction),
+            "prompt_template": str(self.template),
+            "target": None,
+            "line_range": None,
+            "target_kind": None,
+            "max_input_chars": audit_io.DEFAULT_MAX_INPUT_CHARS,
+            "batch": None,
+        }
+        namespace.update(overrides)
+        audit_io.prepare(argparse.Namespace(**namespace))
         snapshot = json.loads(
             (self.run_dir / "snapshot.json").read_text(encoding="utf-8")
         )
         self.targets = snapshot["targets"]
+
+    def target_id(self, path: str) -> int:
+        return next(target["id"] for target in self.targets if target["path"] == path)
+
+    def expect_rejection(self, edits: list[dict], code: int = 1) -> None:
+        with self.assertRaises(SystemExit) as raised:
+            self.validate(self.write_result(edits=edits), self.write_events())
+        self.assertEqual(raised.exception.code, code)
 
     def write_events(
         self, item_type: str = "agent_message", message: str | None = None
@@ -367,6 +383,7 @@ class AuditIoTests(unittest.TestCase):
         target = {
             "id": 1,
             "path": "subject.txt",
+            "kind": "draft-prose",
             "editable": None,
             "line_ending": "lf",
         }
@@ -378,7 +395,10 @@ class AuditIoTests(unittest.TestCase):
                 "replacement_lines": ["A direct subject"],
             }
         ]
-        patch_text = audit_io.render_patch(edits, [target], draft_root)
+        patch_text = "\n".join(
+            section
+            for _, section in audit_io.render_patch(edits, [target], draft_root)[0]
+        ) + "\n"
         patch = self.base / "no-final-newline.patch"
         audit_io.write_patch(patch, patch_text, [target])
         self.root = draft_root
@@ -392,6 +412,7 @@ class AuditIoTests(unittest.TestCase):
         target = {
             "id": 1,
             "path": "body.txt",
+            "kind": "draft-prose",
             "editable": None,
             "line_ending": "lf",
         }
@@ -403,7 +424,10 @@ class AuditIoTests(unittest.TestCase):
                 "replacement_lines": [],
             }
         ]
-        patch_text = audit_io.render_patch(edits, [target], draft_root)
+        patch_text = "\n".join(
+            section
+            for _, section in audit_io.render_patch(edits, [target], draft_root)[0]
+        ) + "\n"
         patch = self.base / "delete-final-line.patch"
         audit_io.write_patch(patch, patch_text, [target])
         self.root = draft_root
@@ -415,6 +439,259 @@ class AuditIoTests(unittest.TestCase):
             audit_io.split_file_lines("one\vstill-one\fstill-one\u2028still-one\n"),
             ["one\vstill-one\fstill-one\u2028still-one"],
         )
+
+
+    def prepare_drafts(self, label: str, name: str, text: str, kind: str) -> None:
+        drafts = self.base / f"drafts-{label}"
+        drafts.mkdir(exist_ok=True)
+        (drafts / name).write_text(text, encoding="utf-8")
+        self.prepare(
+            run_dir=str(self.base / f"run-{label}"),
+            patch_root=str(drafts),
+            scope_kind="transient",
+            mode="quick",
+            target=[name],
+            target_kind=[[name, kind]],
+        )
+
+    def test_sql_code_lines_stay_out_of_editable_scope(self) -> None:
+        change = self.root / "change.sql"
+        change.write_text("-- Old note.\nSELECT 1;\n", encoding="utf-8")
+        self.run_git("add", "change.sql")
+        self.run_git("commit", "--quiet", "-m", "Add sql fixture")
+        change.write_text("-- A seamless note.\nSELECT 2;\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "sql-run"))
+        target = next(item for item in self.targets if item["path"] == "change.sql")
+        self.assertEqual(target["kind"], "code-comment")
+        self.assertEqual(target["editable"], [[1, 1]])
+        self.expect_rejection(
+            [
+                {
+                    "target_id": target["id"],
+                    "start_line": 2,
+                    "end_line": 2,
+                    "replacement_lines": ["SELECT 3;"],
+                }
+            ]
+        )
+
+    def test_code_file_without_changed_comments_is_skipped(self) -> None:
+        change = self.root / "only-code.sql"
+        change.write_text("SELECT 1;\n", encoding="utf-8")
+        self.run_git("add", "only-code.sql")
+        self.run_git("commit", "--quiet", "-m", "Add code-only fixture")
+        change.write_text("SELECT 2;\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "code-only-run"))
+        self.assertNotIn("only-code.sql", [item["path"] for item in self.targets])
+        skipped = json.loads(
+            (self.run_dir / "skipped-targets.json").read_text(encoding="utf-8")
+        )
+        self.assertIn(
+            {"path": "only-code.sql", "reason": "no-changed-comment-lines"}, skipped
+        )
+
+    def test_machine_parsed_file_is_not_audited(self) -> None:
+        (self.root / "plan.json").write_text('{"change": "one"}\n', encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "json-run"))
+        self.assertNotIn("plan.json", [item["path"] for item in self.targets])
+        skipped = json.loads(
+            (self.run_dir / "skipped-targets.json").read_text(encoding="utf-8")
+        )
+        self.assertIn({"path": "plan.json", "reason": "non-prose-file"}, skipped)
+
+    def test_cross_target_copy_is_rejected(self) -> None:
+        shared = "The backfill mints one singleton enterprise per soft-deleted workspace."
+        (self.root / "NOTES.md").write_text(shared + "\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "copy-run"))
+        self.expect_rejection(
+            [
+                {
+                    "target_id": self.target_id("doc.md"),
+                    "start_line": 1,
+                    "end_line": 1,
+                    "replacement_lines": [shared],
+                }
+            ]
+        )
+
+    def test_duplicate_line_is_rejected(self) -> None:
+        repeated = "The coordinator retries the shadow write once before it gives up."
+        guide = self.root / "guide.md"
+        guide.write_text(f"Old opening line.\n{repeated}\n", encoding="utf-8")
+        self.run_git("add", "guide.md")
+        self.run_git("commit", "--quiet", "-m", "Add guide fixture")
+        guide.write_text(f"A seamless opening line.\n{repeated}\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "duplicate-run"))
+        self.expect_rejection(
+            [
+                {
+                    "target_id": self.target_id("guide.md"),
+                    "start_line": 1,
+                    "end_line": 1,
+                    "replacement_lines": [repeated],
+                }
+            ]
+        )
+
+    def test_commit_trailer_and_blank_lines_are_protected(self) -> None:
+        self.prepare_drafts(
+            "trailer",
+            "commit-message.txt",
+            "[COR-1] Add the thing\n"
+            "\n"
+            "A seamless body line worth rewriting.\n"
+            "\n"
+            "Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>\n",
+            "commit-message",
+        )
+        target = self.targets[0]
+        self.assertEqual(target["kind"], "commit-message")
+        self.assertEqual(target["editable"], [[1, 1], [3, 3]])
+        self.expect_rejection(
+            [
+                {
+                    "target_id": target["id"],
+                    "start_line": 5,
+                    "end_line": 5,
+                    "replacement_lines": [],
+                }
+            ]
+        )
+
+    def test_commit_body_rewrap_is_rejected(self) -> None:
+        self.prepare_drafts(
+            "rewrap",
+            "commit-message.txt",
+            "[COR-1] Add the thing\n\nA seamless body line worth rewriting.\n",
+            "commit-message",
+        )
+        target = self.targets[0]
+        self.expect_rejection(
+            [
+                {
+                    "target_id": target["id"],
+                    "start_line": 3,
+                    "end_line": 3,
+                    "replacement_lines": ["A direct body line worth rewriting " * 3],
+                }
+            ]
+        )
+
+    def test_retryable_transport_error_is_distinct(self) -> None:
+        result = self.write_result()
+        events = self.run_dir / "events.jsonl"
+        events.write_text(
+            json.dumps(
+                {
+                    "type": "error",
+                    "message": "Reconnecting... 2/5 (stream disconnected before completion)",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        with self.assertRaises(SystemExit) as raised:
+            self.validate(result, events)
+        self.assertEqual(raised.exception.code, 6)
+
+    def test_oversized_bundle_prepares_batches(self) -> None:
+        for index in range(3):
+            (self.root / f"extra{index}.md").write_text(
+                "A seamless body line.\n" * 40, encoding="utf-8"
+            )
+        run_dir = self.base / "batch-run"
+        with self.assertRaises(SystemExit) as raised:
+            self.prepare(run_dir=str(run_dir), max_input_chars=2000)
+        self.assertEqual(raised.exception.code, 5)
+        batches = json.loads((run_dir / "batches.json").read_text(encoding="utf-8"))
+        self.assertGreater(len(batches), 1)
+        self.prepare(run_dir=str(run_dir), max_input_chars=2000, batch=1)
+        self.assertEqual(
+            [item["path"] for item in self.targets], batches[0]["targets"]
+        )
+
+    def test_validate_writes_one_patch_per_target(self) -> None:
+        self.validate(self.write_result(), self.write_events())
+        target_id = self.target_id("doc.md")
+        self.assertTrue((self.run_dir / "result.patch").is_file())
+        self.assertTrue((self.run_dir / f"result-{target_id}.patch").is_file())
+
+
+    def test_changed_comment_line_expands_to_its_block(self) -> None:
+        block = self.root / "block.sql"
+        block.write_text(
+            "-- First line of the note.\n-- Second line of the note.\nSELECT 1;\n",
+            encoding="utf-8",
+        )
+        self.run_git("add", "block.sql")
+        self.run_git("commit", "--quiet", "-m", "Add block fixture")
+        block.write_text(
+            "-- First line of the note.\n-- A seamless second line.\nSELECT 1;\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "block-run"))
+        target = next(item for item in self.targets if item["path"] == "block.sql")
+        self.assertEqual(target["editable"], [[1, 2]])
+
+    def test_changed_prose_line_expands_to_its_paragraph(self) -> None:
+        page = self.root / "page.md"
+        page.write_text("One.\nTwo.\nThree.\n\nApart.\n", encoding="utf-8")
+        self.run_git("add", "page.md")
+        self.run_git("commit", "--quiet", "-m", "Add page fixture")
+        page.write_text(
+            "One.\nA seamless two.\nThree.\n\nApart.\n", encoding="utf-8"
+        )
+        self.prepare(run_dir=str(self.base / "paragraph-run"))
+        target = next(item for item in self.targets if item["path"] == "page.md")
+        self.assertEqual(target["editable"], [[1, 3]])
+
+    def test_out_of_scope_edit_drops_only_its_target(self) -> None:
+        doc_id = self.target_id("doc.md")
+        notes_id = self.target_id("NOTES.md")
+        snapshot_path = self.run_dir / "snapshot.json"
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        for target in snapshot["targets"]:
+            if target["path"] == "doc.md":
+                target["editable"] = [[2, 2]]
+        snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
+        edits = [
+            {
+                "target_id": doc_id,
+                "start_line": 1,
+                "end_line": 1,
+                "replacement_lines": ["A direct process."],
+            },
+            {
+                "target_id": notes_id,
+                "start_line": 1,
+                "end_line": 1,
+                "replacement_lines": ["This states the details."],
+            },
+        ]
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            self.validate(self.write_result(edits=edits), self.write_events())
+        self.assertIn("DROPPED", printed.getvalue())
+        self.assertTrue((self.run_dir / f"result-{notes_id}.patch").is_file())
+        self.assertFalse((self.run_dir / f"result-{doc_id}.patch").is_file())
+
+
+    def test_list_items_are_separate_prose_blocks(self) -> None:
+        page = self.root / "list.md"
+        page.write_text(
+            "- First bullet.\n- Second bullet\n  continued here.\n- Third bullet.\n",
+            encoding="utf-8",
+        )
+        self.run_git("add", "list.md")
+        self.run_git("commit", "--quiet", "-m", "Add list fixture")
+        page.write_text(
+            "- First bullet.\n- A seamless second bullet\n  continued here.\n"
+            "- Third bullet.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "list-run"))
+        target = next(item for item in self.targets if item["path"] == "list.md")
+        self.assertEqual(target["editable"], [[2, 3]])
 
 
 if __name__ == "__main__":
