@@ -15,5 +15,5 @@ updated_at = "2026-08-25T00:50:07Z"
 [remotes.make-interfaces-feel-better]
 url = "https://github.com/jakubkrehel/make-interfaces-feel-better"
 ref = "main"
-rev = "5a4076ac611d6610b9cb4d67f5275cb4f869411b"
-updated_at = "2026-08-15T19:26:36Z"
+rev = "35545ea1512ad59fa463e6b1f95ca9c052981fe6"
+updated_at = "2026-09-02T03:07:56Z"
