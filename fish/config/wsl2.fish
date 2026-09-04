@@ -1,0 +1,2 @@
+set -gx GALLIUM_DRIVER d3d12
+set -gx LIBVA_DRIVER_NAME d3d12

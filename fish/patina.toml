@@ -32,6 +32,11 @@ source = "config.fish"
 target = "~/.config/fish/config.fish"
 
 [[file]]
+source = "config/wsl2.fish"
+target = "~/.config/fish/wsl2.fish"
+when = "patina.os == 'linux'"
+
+[[file]]
 source = "fish_plugins"
 target = "~/.config/fish/fish_plugins"
 

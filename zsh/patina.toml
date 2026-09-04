@@ -26,6 +26,11 @@ target = "~/.zsh/os.zsh"
 when = "patina.os == 'linux'"
 
 [[file]]
+source = "config/wsl2.zsh"
+target = "~/.zsh/wsl2.zsh"
+when = "patina.os == 'linux'"
+
+[[file]]
 source = "config/windows.zsh"
 target = "~/.zsh/os.zsh"
 when = "patina.os == 'windows'"

@@ -1,0 +1,2 @@
+export GALLIUM_DRIVER=d3d12
+export LIBVA_DRIVER_NAME=d3d12

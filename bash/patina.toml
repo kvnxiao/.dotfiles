@@ -22,6 +22,11 @@ target = "~/.bash/os.bash"
 when = "patina.os == 'linux'"
 
 [[file]]
+source = "config/wsl2.bash"
+target = "~/.bash/wsl2.bash"
+when = "patina.os == 'linux'"
+
+[[file]]
 source = "config/windows.bash"
 target = "~/.bash/os.bash"
 when = "patina.os == 'windows'"
