@@ -113,12 +113,12 @@ source = "functions/vllm.fish"
 target = "~/.config/fish/functions/vllm.fish"
 
 [[file]]
-source = "vllm/profiles/qwen3.8.fish"
-target = "~/.config/fish/vllm/profiles/qwen3.8.fish"
+source = "vllm/profiles/qwen3.8.yaml"
+target = "~/.config/fish/vllm/profiles/qwen3.8.yaml"
 
 [[file]]
-source = "vllm/profiles/gemma4.fish"
-target = "~/.config/fish/vllm/profiles/gemma4.fish"
+source = "vllm/profiles/gemma4.yaml"
+target = "~/.config/fish/vllm/profiles/gemma4.yaml"
 
 [[file]]
 source = "conf.d/os-detect.windows.fish"

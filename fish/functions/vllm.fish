@@ -70,20 +70,32 @@ function vllm
 
     set -l vllm_profile
     set -l vllm_image docker.io/vllm/vllm-openai:latest
+    set -l vllm_config
+    set -l container_config /etc/vllm/config.yaml
     set -l vllm_args
     set -l vllm_verify_log_patterns
     if contains -- $action start verify; and test $is_webui -eq 0
         set vllm_profile (_vllm-select-profile $model $profile_override)
         or return $status
 
-        set -l profile_file "$__fish_config_dir/vllm/profiles/$vllm_profile.fish"
-        if not test -r $profile_file
-            echo "$vllm_profile profile: $profile_file is not readable." >&2
+        set vllm_config "$__fish_config_dir/vllm/profiles/$vllm_profile.yaml"
+        if not test -r $vllm_config
+            echo "$vllm_profile profile: $vllm_config is not readable." >&2
             return 1
         end
 
-        source $profile_file
-        or return $status
+        set vllm_args $model --config $container_config
+        switch $vllm_profile
+            case qwen3.8
+                set vllm_verify_log_patterns \
+                    'Using (FLASHINFER attention backend|FLASHINFER backend\.)' \
+                    'Using fp8 data type to store kv cache\.' \
+                    'FlashInfer resolved query dtypes:.*kv_cache_dtype=(fp8|torch\.float8_e4m3fn)' \
+                    'Using Triton/FLA GDN prefill kernel \(requested=triton,'
+            case gemma4
+                set vllm_verify_log_patterns \
+                    'Using fp8 data type to store kv cache\.'
+        end
     end
 
     switch $action
@@ -234,6 +246,7 @@ function vllm
                 -p 8000:8000 \
                 -v ~/.cache/huggingface:/root/.cache/huggingface \
                 -v ~/.cache/vllm:/root/.cache/vllm \
+                -v "$vllm_config:$container_config:ro" \
                 -e VLLM_CACHE_ROOT=/root/.cache/vllm \
                 -e HF_HUB_OFFLINE=1 \
                 -e TRANSFORMERS_OFFLINE=1 \

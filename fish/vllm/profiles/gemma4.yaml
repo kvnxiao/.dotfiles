@@ -1,0 +1,17 @@
+model: cyankiwi/gemma-4-31B-it-qat-AWQ-INT4
+max-model-len: 131072
+max-num-seqs: 2
+max-num-batched-tokens: 8192
+enable-chunked-prefill: true
+enable-prefix-caching: true
+kv-cache-dtype: fp8
+gpu-memory-utilization: 0.92
+async-scheduling: true
+enable-auto-tool-choice: true
+tool-call-parser: gemma4
+reasoning-parser: gemma4
+chat-template: examples/tool_chat_template_gemma4.jinja
+limit-mm-per-prompt:
+  image: 1
+  audio: 0
+  video: 0
