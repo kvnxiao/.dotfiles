@@ -113,6 +113,14 @@ source = "functions/vllm.fish"
 target = "~/.config/fish/functions/vllm.fish"
 
 [[file]]
+source = "vllm/profiles/qwen3.8.fish"
+target = "~/.config/fish/vllm/profiles/qwen3.8.fish"
+
+[[file]]
+source = "vllm/profiles/gemma4.fish"
+target = "~/.config/fish/vllm/profiles/gemma4.fish"
+
+[[file]]
 source = "conf.d/os-detect.windows.fish"
 target = "~/.config/fish/conf.d/os-detect.fish"
 when = "patina.os == 'windows'"

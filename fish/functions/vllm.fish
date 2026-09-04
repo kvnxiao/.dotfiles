@@ -1,9 +1,9 @@
 function vllm
     set -l action $argv[1]
     set -l model $argv[2]
-    set -l usage "Usage: vllm download <model> | vllm {doctor|start|stop|restart|remove} <model|webui>"
+    set -l usage "Usage: vllm download <model> | vllm {doctor|stop|restart|remove} <model|webui> | vllm {start|verify} <model> [--profile <name>] | vllm start webui"
 
-    if not contains -- $action doctor download start stop restart remove
+    if not contains -- $action doctor download start stop restart remove verify
         echo $usage >&2
         return 2
     end
@@ -11,6 +11,26 @@ function vllm
     if test -z "$model"
         echo $usage >&2
         return 2
+    end
+
+    set -l profile_override
+    if test (count $argv) -gt 2
+        if test (count $argv) -ne 4
+            echo $usage >&2
+            return 2
+        end
+
+        if test "$argv[3]" != --profile -o -z "$argv[4]"
+            echo $usage >&2
+            return 2
+        end
+
+        if not contains -- $action start verify
+            echo "--profile is valid only with start or verify." >&2
+            return 2
+        end
+
+        set profile_override $argv[4]
     end
 
     if test $action = download
@@ -48,6 +68,24 @@ function vllm
         set container vllm-$model_slug
     end
 
+    set -l vllm_profile
+    set -l vllm_image docker.io/vllm/vllm-openai:latest-cu130-ubuntu2404
+    set -l vllm_args
+    set -l vllm_verify_log_patterns
+    if contains -- $action start verify; and test $is_webui -eq 0
+        set vllm_profile (_vllm-select-profile $model $profile_override)
+        or return $status
+
+        set -l profile_file "$__fish_config_dir/vllm/profiles/$vllm_profile.fish"
+        if not test -r $profile_file
+            echo "$vllm_profile profile: $profile_file is not readable." >&2
+            return 1
+        end
+
+        source $profile_file
+        or return $status
+    end
+
     switch $action
         case doctor
             echo "podman: found"
@@ -67,6 +105,73 @@ function vllm
                 echo "$container: check failed" >&2
                 return $exists_status
             end
+        case verify
+            if test $is_webui -eq 1
+                echo "verify requires a model profile." >&2
+                return 2
+            end
+
+            podman container exists $container
+            set -l exists_status $status
+            if test $exists_status -eq 1
+                echo "$container: not found" >&2
+                return 1
+            else if test $exists_status -ne 0
+                echo "$container: check failed" >&2
+                return $exists_status
+            end
+
+            set -l running (podman container inspect --format '{{.State.Running}}' $container)
+            or return $status
+            if test "$running" != true
+                echo "$container: not running" >&2
+                return 1
+            end
+            echo "$container: running"
+
+            set -l actual_image (podman container inspect --format '{{.ImageName}}' $container)
+            or return $status
+            set -l actual_image_digest (podman container inspect --format '{{.ImageDigest}}' $container)
+            or return $status
+            if test "$actual_image" != "$vllm_image"
+                echo "$container: image differs from $vllm_image." >&2
+                _vllm-print-recreate-command $model $profile_override
+                return 1
+            end
+            echo "$container image: verified ($actual_image_digest)"
+
+            set -l actual_arg_lines (podman container inspect --format '{{range .Config.Cmd}}{{println .}}{{end}}' $container)
+            or return $status
+            set -l actual_args (string join \n -- $actual_arg_lines | string collect)
+            set -l expected_args (string join \n -- $vllm_args | string collect)
+            if test "$actual_args" != "$expected_args"
+                echo "$container: arguments differ from the $vllm_profile profile." >&2
+                _vllm-print-recreate-command $model $profile_override
+                return 1
+            end
+            echo "$container arguments: verified"
+
+            set -l started_at (podman container inspect --format '{{.State.StartedAt}}' $container)
+            or return $status
+            set -l container_logs (podman logs --since $started_at $container 2>&1)
+            or return $status
+
+            for pattern in $vllm_verify_log_patterns
+                if not string match --quiet --regex -- $pattern $container_logs
+                    echo "$container: runtime log did not match '$pattern'." >&2
+                    return 1
+                end
+            end
+            echo "$container runtime: verified"
+
+            if not type -q curl
+                echo "curl: not found" >&2
+                return 127
+            end
+
+            curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8000/health >/dev/null
+            or return $status
+            echo "$container health: verified"
         case start restart
             _vllm-ensure-network
             or return $status
@@ -120,20 +225,6 @@ function vllm
                 return $status
             end
 
-            set -l parser_args
-            switch (string lower -- $model)
-                case '*gemma-4*'
-                    set parser_args \
-                        --enable-auto-tool-choice \
-                        --tool-call-parser gemma4 \
-                        --reasoning-parser gemma4
-                case '*qwen3.8*'
-                    set parser_args \
-                        --enable-auto-tool-choice \
-                        --tool-call-parser hermes \
-                        --reasoning-parser qwen3
-            end
-
             podman run -d \
                 --name $container \
                 --network ai-net \
@@ -144,26 +235,53 @@ function vllm
                 -v ~/.cache/huggingface:/root/.cache/huggingface \
                 -v ~/.cache/vllm:/root/.cache/vllm \
                 -e VLLM_CACHE_ROOT=/root/.cache/vllm \
-                -e VLLM_WSL2_ENABLE_PIN_MEMORY=1 \
                 -e HF_HUB_OFFLINE=1 \
-                -e TORCH_CUDA_ARCH_LIST=12.0 \
+                -e TRANSFORMERS_OFFLINE=1 \
+                -e VLLM_NO_USAGE_STATS=1 \
                 -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
-                -e VLLM_TEST_ENABLE_JIT_WARMUP=1 \
-                docker.io/vllm/vllm-openai:latest \
-                --model $model \
-                --max-model-len 131072 \
-                --max-num-seqs 2 \
-                --max-num-batched-tokens 8192 \
-                --enable-chunked-prefill \
-                --enable-prefix-caching \
-                --kv-cache-dtype fp8 \
-                --gpu-memory-utilization 0.93 \
-                $parser_args \
-                --trust-remote-code
+                $vllm_image \
+                $vllm_args
         case stop
             podman stop $container
         case remove
             podman rm --force $container
+    end
+end
+
+function _vllm-select-profile
+    set -l model $argv[1]
+    set -l override $argv[2]
+    set -l profiles qwen3.8 gemma4
+
+    if test -n "$override"
+        if contains -- $override $profiles
+            echo $override
+            return 0
+        end
+
+        echo "Unknown vLLM profile '$override'. Available profiles: "(string join ', ' $profiles) >&2
+        return 2
+    end
+
+    switch (string lower -- $model)
+        case '*qwen3.8*'
+            echo qwen3.8
+        case '*gemma-4*' '*gemma4*'
+            echo gemma4
+        case '*'
+            echo "No vLLM profile matches '$model'. Available profiles: "(string join ', ' $profiles) >&2
+            return 2
+    end
+end
+
+function _vllm-print-recreate-command
+    set -l model $argv[1]
+    set -l profile $argv[2]
+
+    if test -n "$profile"
+        echo "Run 'vllm remove $model', then 'vllm start $model --profile $profile'." >&2
+    else
+        echo "Run 'vllm remove $model', then 'vllm start $model'." >&2
     end
 end
 
