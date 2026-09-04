@@ -144,6 +144,7 @@ function vllm
                 -v ~/.cache/huggingface:/root/.cache/huggingface \
                 -v ~/.cache/vllm:/root/.cache/vllm \
                 -e VLLM_CACHE_ROOT=/root/.cache/vllm \
+                -e VLLM_WSL2_ENABLE_PIN_MEMORY=1 \
                 -e HF_HUB_OFFLINE=1 \
                 -e TORCH_CUDA_ARCH_LIST=12.0 \
                 -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
