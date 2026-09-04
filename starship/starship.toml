@@ -1,5 +1,12 @@
 # Get editor completions based on the config schema
 "$schema" = "https://starship.rs/config-schema.json"
+format = "${env_var.WSL2}$all"
+
+[env_var.WSL2]
+variable = "STARSHIP_WSL2"
+symbol = "🐧 "
+format = "[$symbol]($style)"
+style = "cyan bold"
 
 [shell]
 bash_indicator = ""
