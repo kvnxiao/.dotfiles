@@ -1,5 +1,10 @@
 ## Linux config
 
+if [[ -r /proc/sys/kernel/osrelease && "$(< /proc/sys/kernel/osrelease)" == *microsoft-standard-WSL2* ]]; then
+  export GALLIUM_DRIVER=d3d12
+  export LIBVA_DRIVER_NAME=d3d12
+fi
+
 # Keybinds (Linux -- wezterm)
 bindkey '^[[A' history-substring-search-up   # UP
 bindkey '^[[B' history-substring-search-down # DOWN
