@@ -1,5 +1,5 @@
 set --function vllm_args \
-    --model $model \
+    $model \
     --tensor-parallel-size 1 \
     --dtype bfloat16 \
     --kv-cache-dtype fp8 \

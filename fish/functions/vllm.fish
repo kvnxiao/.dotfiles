@@ -238,7 +238,6 @@ function vllm
                 -e HF_HUB_OFFLINE=1 \
                 -e TRANSFORMERS_OFFLINE=1 \
                 -e VLLM_NO_USAGE_STATS=1 \
-                -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
                 $vllm_image \
                 $vllm_args
         case stop

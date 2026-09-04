@@ -1,5 +1,5 @@
 set --function vllm_args \
-    --model $model \
+    $model \
     --max-model-len 131072 \
     --max-num-seqs 2 \
     --max-num-batched-tokens 8192 \
