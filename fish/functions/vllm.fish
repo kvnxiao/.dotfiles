@@ -1,7 +1,7 @@
 function vllm
     set -l action $argv[1]
     set -l model $argv[2]
-    set -l usage "Usage: vllm {doctor|download|start|stop|restart|remove} <model>"
+    set -l usage "Usage: vllm download <model> | vllm {doctor|start|stop|restart|remove} <model|webui>"
 
     if not contains -- $action doctor download start stop restart remove
         echo $usage >&2
@@ -28,17 +28,24 @@ function vllm
         return $status
     end
 
-    set -l model_slug (string lower -- $model | string replace -ra '[^a-z0-9]+' '-' | string trim -c '-')
-    if test -z "$model_slug"
-        echo "Model must contain an ASCII letter or digit." >&2
-        return 2
-    end
-
-    set -l container vllm-$model_slug
-
     if not type -q podman
         echo "podman: not found" >&2
         return 1
+    end
+
+    set -l is_webui 0
+    set -l container
+    if test $model = webui
+        set is_webui 1
+        set container open-webui
+    else
+        set -l model_slug (string lower -- $model | string replace -ra '[^a-z0-9]+' '-' | string trim -c '-')
+        if test -z "$model_slug"
+            echo "Model must contain an ASCII letter or digit." >&2
+            return 2
+        end
+
+        set container vllm-$model_slug
     end
 
     switch $action
@@ -75,16 +82,18 @@ function vllm
                 return 1
             end
 
-            set -l running_containers (podman ps --filter 'name=^vllm-' --format '{{.Names}}')
-            set -l list_status $status
-            if test $list_status -ne 0
-                return $list_status
-            end
+            if test $is_webui -eq 0
+                set -l running_containers (podman ps --filter 'name=^vllm-' --format '{{.Names}}')
+                set -l list_status $status
+                if test $list_status -ne 0
+                    return $list_status
+                end
 
-            for running_container in $running_containers
-                if test $running_container != $container
-                    podman stop $running_container
-                    or return $status
+                for running_container in $running_containers
+                    if test $running_container != $container
+                        podman stop $running_container
+                        or return $status
+                    end
                 end
             end
 
@@ -95,6 +104,19 @@ function vllm
 
             if test $exists_status -eq 0
                 podman start $container
+                return $status
+            end
+
+            if test $is_webui -eq 1
+                podman run -d \
+                    --name open-webui \
+                    --network ai-net \
+                    -p 8080:8080 \
+                    -v open-webui-data:/app/backend/data:U \
+                    -e OPENAI_API_BASE_URL=http://vllm:8000/v1 \
+                    -e OPENAI_API_KEY=sk-local \
+                    -e WEBUI_AUTH=false \
+                    ghcr.io/open-webui/open-webui:main
                 return $status
             end
 
