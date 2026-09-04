@@ -69,7 +69,7 @@ function vllm
     end
 
     set -l vllm_profile
-    set -l vllm_image docker.io/vllm/vllm-openai:latest-cu130-ubuntu2404
+    set -l vllm_image docker.io/vllm/vllm-openai:latest
     set -l vllm_args
     set -l vllm_verify_log_patterns
     if contains -- $action start verify; and test $is_webui -eq 0
