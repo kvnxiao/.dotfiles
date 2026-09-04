@@ -109,6 +109,10 @@ source = "functions/unzip.fish"
 target = "~/.config/fish/functions/unzip.fish"
 
 [[file]]
+source = "functions/vllm.fish"
+target = "~/.config/fish/functions/vllm.fish"
+
+[[file]]
 source = "conf.d/os-detect.windows.fish"
 target = "~/.config/fish/conf.d/os-detect.fish"
 when = "patina.os == 'windows'"
