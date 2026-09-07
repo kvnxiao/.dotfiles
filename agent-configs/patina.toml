@@ -43,6 +43,26 @@ source = "shared/skills/brainstorm"
 target = "~/.agents/skills/brainstorm"
 mode = "symlink"
 
+# review-changes
+[[directory]]
+source = "shared/skills/review-changes"
+target = "~/.claude/skills/review-changes"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/review-changes"
+target = "~/.agents/skills/review-changes"
+mode = "symlink"
+
+# simplify-changes
+[[directory]]
+source = "shared/skills/simplify-changes"
+target = "~/.claude/skills/simplify-changes"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/simplify-changes"
+target = "~/.agents/skills/simplify-changes"
+mode = "symlink"
+
 # verify-changes
 [[directory]]
 source = "shared/skills/verify-changes"
