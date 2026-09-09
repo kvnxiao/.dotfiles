@@ -56,7 +56,7 @@ local function get_windows_config()
       {
         key = "w",
         mods = "CTRL",
-        action = wezterm.action.CloseCurrentTab { confirm = false },
+        action = wezterm.action.CloseCurrentTab { confirm = true },
       },
       {
         key = "Backspace",
