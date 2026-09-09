@@ -99,7 +99,10 @@ Shared behavioral defaults for agents.
 ## Implementation
 
 - Do not abstract single-use code.
+- When a value depends on existing data or metadata, derive it from that source instead of maintaining a separate literal. Keep fixed policy and protocol values explicit.
+- When a name explains meaning or establishes shared ownership, introduce a named constant. Do not extract every literal or make a fixed choice configurable without a caller requirement.
 - Define verifiable success before you implement. Reproduce a bug with a test. Test invalid inputs when you change validation. Run the same checks before and after a refactor.
+- Keep expected test behavior explicit and independent of the implementation under test. Derive fixture membership and counts from fixture data, but do not calculate an expected transformation by calling the transformation being tested.
 
 ## Comments and docstrings
 
