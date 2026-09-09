@@ -3,7 +3,7 @@ if status is-interactive
   set -l TERRA_MODEL gpt-5.6-terra
   set -l LUNA_MODEL gpt-5.6-luna
   set -l EFFORT_NAMES '' high med low
-  set -l EFFORT_VALUES xhigh high med low
+  set -l EFFORT_VALUES xhigh high medium low
 
   for effort_index in (seq (count $EFFORT_NAMES))
     set -l effort_name $EFFORT_NAMES[$effort_index]
