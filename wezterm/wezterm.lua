@@ -62,7 +62,13 @@ local function get_windows_config()
         key = "Backspace",
         mods = "CTRL",
         action = wezterm.action { SendString = "\x17" },
-      }
+      },
+      {
+        key = "Enter",
+        mods = "SHIFT",
+        -- ConPTY translates a bare LF into Ctrl+Enter.
+        action = wezterm.action.SendString "\x1b[74;36;10;1;8;1_\x1b[74;36;10;0;8;1_",
+      },
     }
   }
 end
@@ -79,14 +85,19 @@ local function get_macos_config()
     font_size = 16,
     window_decorations = "RESIZE",
     keys = {
+      {
+        key = "Enter",
+        mods = "SHIFT",
+        action = wezterm.action.SendString "\x1b[13;2u",
+      },
       -- Ctrl+Shift+Arrow → word selection (override WezTerm default ActivatePaneDirection)
-      { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
+      { key = "LeftArrow",  mods = "CTRL|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
       { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action { SendString = "\x1b[1;6C" } },
       -- Opt+Shift+Arrow → word selection (Karabiner remaps Cmd+Shift+Arrow to this)
-      { key = "LeftArrow", mods = "ALT|SHIFT", action = wezterm.action { SendString = "\x1b[1;6D" } },
-      { key = "RightArrow", mods = "ALT|SHIFT", action = wezterm.action { SendString = "\x1b[1;6C" } },
+      { key = "LeftArrow",  mods = "ALT|SHIFT",  action = wezterm.action { SendString = "\x1b[1;6D" } },
+      { key = "RightArrow", mods = "ALT|SHIFT",  action = wezterm.action { SendString = "\x1b[1;6C" } },
       -- Cmd+Backspace → word delete
-      { key = "Backspace", mods = "SUPER", action = wezterm.action { SendString = "\x17" } },
+      { key = "Backspace",  mods = "SUPER",      action = wezterm.action { SendString = "\x17" } },
     }
   }
 end
@@ -102,12 +113,18 @@ local function get_linux_config()
     max_fps = 120,
     font_size = 16,
     window_decorations = "RESIZE",
-    keys = {}
+    keys = {
+      {
+        key = "Enter",
+        mods = "SHIFT",
+        action = wezterm.action.SendString "\x1b[13;2u",
+      },
+    }
   }
 end
 
 local is_macos = wezterm.target_triple == "aarch64-apple-darwin"
-  or wezterm.target_triple == "x86_64-apple-darwin"
+    or wezterm.target_triple == "x86_64-apple-darwin"
 
 local platform_config
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
@@ -119,18 +136,6 @@ else
 end
 
 local link_mod = is_macos and "SUPER" or "CTRL"
-
--- Global keybindings (merged with platform-specific keys)
-local global_keys = {
-  {
-    key = "Enter",
-    mods = "SHIFT",
-    action = wezterm.action { SendString = "\x1b[13;2u" },
-  },
-}
-for _, k in ipairs(global_keys) do
-  table.insert(platform_config.keys, k)
-end
 
 return {
   default_prog = platform_config.default_prog,
