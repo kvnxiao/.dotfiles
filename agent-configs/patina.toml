@@ -15,6 +15,12 @@ source = "shared/output-styles"
 target = "~/.claude/output-styles"
 mode = "symlink"
 
+# pi themes
+[[directory]]
+source = "pi/themes"
+target = "~/.pi/agent/themes"
+mode = "symlink"
+
 # audit-prose
 [[directory]]
 source = "shared/skills/audit-prose"
