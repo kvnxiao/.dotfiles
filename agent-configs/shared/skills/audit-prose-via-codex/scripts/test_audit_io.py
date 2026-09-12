@@ -62,6 +62,9 @@ class AuditIoTests(unittest.TestCase):
             "target": None,
             "line_range": None,
             "target_kind": None,
+            "note": None,
+            "wrap_width": None,
+            "allow_headings": None,
             "max_input_chars": audit_io.DEFAULT_MAX_INPUT_CHARS,
             "batch": None,
         }
@@ -75,10 +78,38 @@ class AuditIoTests(unittest.TestCase):
     def target_id(self, path: str) -> int:
         return next(target["id"] for target in self.targets if target["path"] == path)
 
-    def expect_rejection(self, edits: list[dict], code: int = 1) -> None:
+    def target_for(self, path: str) -> dict:
+        return next(target for target in self.targets if target["path"] == path)
+
+    def spans(self, path: str) -> list[list[int]]:
+        return [
+            [block["start"], block["end"]] for block in self.target_for(path)["blocks"]
+        ]
+
+    def edit(self, path: str, block_id: int, replacement: str) -> dict:
+        return {
+            "target_id": self.target_id(path),
+            "block_id": block_id,
+            "replacement": replacement,
+        }
+
+    def expect_rejection(self, edits: list[dict]) -> None:
         with self.assertRaises(SystemExit) as raised:
             self.validate(self.write_result(edits=edits), self.write_events())
-        self.assertEqual(raised.exception.code, code)
+        self.assertEqual(raised.exception.code, 1)
+
+    def run_validate(self, **result_overrides) -> str:
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            self.validate(self.write_result(**result_overrides), self.write_events())
+        return printed.getvalue()
+
+    def added_lines(self, patch: Path) -> list[str]:
+        return [
+            line[1:]
+            for line in patch.read_text(encoding="utf-8").splitlines()
+            if line.startswith("+") and not line.startswith("+++")
+        ]
 
     def write_events(
         self, item_type: str = "agent_message", message: str | None = None
@@ -106,21 +137,12 @@ class AuditIoTests(unittest.TestCase):
         reviewed_target_ids: list[int] | None = None,
         reason: str = "",
         edits: list[dict] | None = None,
+        out_of_scope_notes: list[dict] | None = None,
     ) -> Path:
         if reviewed_target_ids is None:
             reviewed_target_ids = [target["id"] for target in self.targets]
         if edits is None and status == "patch":
-            target_id = next(
-                target["id"] for target in self.targets if target["path"] == "doc.md"
-            )
-            edits = [
-                {
-                    "target_id": target_id,
-                    "start_line": 1,
-                    "end_line": 1,
-                    "replacement_lines": ["A direct process."],
-                }
-            ]
+            edits = [self.edit("doc.md", 1, "A direct process.")]
         result = self.run_dir / "result.json"
         result.write_text(
             json.dumps(
@@ -132,6 +154,7 @@ class AuditIoTests(unittest.TestCase):
                     "reviewed_target_ids": reviewed_target_ids,
                     "reason": reason,
                     "edits": edits or [],
+                    "out_of_scope_notes": out_of_scope_notes or [],
                 }
             ),
             encoding="utf-8",
@@ -217,7 +240,7 @@ class AuditIoTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, 1)
 
     def test_malformed_edit_is_rejected(self) -> None:
-        edits = [{"target_id": self.targets[0]["id"], "start_line": 1}]
+        edits = [{"target_id": self.targets[0]["id"], "block_id": 1}]
         with self.assertRaises(SystemExit) as raised:
             self.validate(self.write_result(edits=edits), self.write_events())
         self.assertEqual(raised.exception.code, 1)
@@ -234,65 +257,27 @@ class AuditIoTests(unittest.TestCase):
             audit_io.check_state(self.run_dir)
         self.assertEqual(raised.exception.code, 1)
 
-    def test_out_of_scope_edit_is_rejected(self) -> None:
-        target_id = self.targets[0]["id"]
-        self.targets[0]["editable"] = [[2, 2]]
-        snapshot_path = self.run_dir / "snapshot.json"
-        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
-        snapshot["targets"] = self.targets
-        snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
-        edits = [
-            {
-                "target_id": target_id,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["Changed."],
-            }
-        ]
-        with self.assertRaises(SystemExit) as raised:
-            self.validate(self.write_result(edits=edits), self.write_events())
-        self.assertEqual(raised.exception.code, 1)
+    def test_only_unknown_block_edit_rejects_the_run(self) -> None:
+        self.expect_rejection([self.edit("doc.md", 9, "Changed.")])
 
-    def test_overlapping_edits_are_rejected(self) -> None:
-        target_id = self.targets[0]["id"]
-        edits = [
-            {
-                "target_id": target_id,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["First."],
-            },
-            {
-                "target_id": target_id,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["Second."],
-            },
-        ]
-        with self.assertRaises(SystemExit) as raised:
-            self.validate(self.write_result(edits=edits), self.write_events())
-        self.assertEqual(raised.exception.code, 1)
+    def test_repeated_block_id_drops_the_second_edit(self) -> None:
+        printed = self.run_validate(
+            edits=[
+                self.edit("doc.md", 1, "A direct process."),
+                self.edit("doc.md", 1, "Another direct process."),
+            ]
+        )
+        self.assertIn("PARTIAL", printed)
+        self.assertIn("repeated block id", printed)
+        self.assertEqual(
+            self.added_lines(self.run_dir / "result.patch"), ["A direct process."]
+        )
 
     def test_untracked_binary_is_classified_and_skipped(self) -> None:
         (self.root / "asset.bin").write_bytes(b"text\0binary")
         run_dir = self.base / "binary-run"
-        run_dir.mkdir()
-        audit_io.prepare(
-            argparse.Namespace(
-                patch_root=str(self.root),
-                run_dir=str(run_dir),
-                mode="change-set",
-                scope_kind="repository-change-set",
-                diction=str(self.diction),
-                prompt_template=str(self.template),
-                target=None,
-                line_range=None,
-            )
-        )
-        snapshot = json.loads(
-            (run_dir / "snapshot.json").read_text(encoding="utf-8")
-        )
-        self.assertNotIn("asset.bin", [target["path"] for target in snapshot["targets"]])
+        self.prepare(run_dir=str(run_dir))
+        self.assertNotIn("asset.bin", [target["path"] for target in self.targets])
         self.assertEqual(
             json.loads(
                 (run_dir / "skipped-targets.json").read_text(encoding="utf-8")
@@ -310,24 +295,12 @@ class AuditIoTests(unittest.TestCase):
         self.run_git("commit", "--quiet", "-m", "Add binary fixture")
         (self.root / "tracked.bin").write_bytes(b"changed\0binary")
         run_dir = self.base / "candidate-run"
-        run_dir.mkdir()
-        audit_io.prepare(
-            argparse.Namespace(
-                patch_root=str(self.root),
-                run_dir=str(run_dir),
-                mode="change-set",
-                scope_kind="repository-change-set",
-                diction=str(self.diction),
-                prompt_template=str(self.template),
-                target=None,
-                line_range=None,
-            )
-        )
+        self.prepare(run_dir=str(run_dir))
         snapshot = json.loads(
             (run_dir / "snapshot.json").read_text(encoding="utf-8")
         )
         self.assertNotIn(
-            "tracked.bin", [target["path"] for target in snapshot["targets"]]
+            "tracked.bin", [target["path"] for target in self.targets]
         )
         self.assertIn(
             "tracked.bin",
@@ -344,32 +317,15 @@ class AuditIoTests(unittest.TestCase):
         draft_root.mkdir()
         draft_run.mkdir()
         (draft_root / "pr-body.md").write_bytes(b"A seamless update.\n")
-        audit_io.prepare(
-            argparse.Namespace(
-                patch_root=str(draft_root),
-                run_dir=str(draft_run),
-                mode="quick",
-                scope_kind="transient",
-                diction=str(self.diction),
-                prompt_template=str(self.template),
-                target=["pr-body.md"],
-                line_range=None,
-            )
-        )
-        snapshot = json.loads(
-            (draft_run / "snapshot.json").read_text(encoding="utf-8")
+        self.prepare(
+            run_dir=str(draft_run),
+            patch_root=str(draft_root),
+            scope_kind="transient",
+            mode="quick",
+            target=["pr-body.md"],
         )
         self.root = draft_root
-        self.run_dir = draft_run
-        self.targets = snapshot["targets"]
-        edits = [
-            {
-                "target_id": self.targets[0]["id"],
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["A direct update."],
-            }
-        ]
+        edits = [self.edit("pr-body.md", 1, "A direct update.")]
         self.validate(self.write_result(edits=edits), self.write_events())
         patch = draft_run / "result.patch"
         self.run_git("apply", "--check", "--no-index", "--unidiff-zero", str(patch))
@@ -384,17 +340,21 @@ class AuditIoTests(unittest.TestCase):
             "id": 1,
             "path": "subject.txt",
             "kind": "draft-prose",
-            "editable": None,
+            "blocks": [
+                {
+                    "id": 1,
+                    "start": 1,
+                    "end": 1,
+                    "first_prefix": "",
+                    "prefix": "",
+                    "single": False,
+                }
+            ],
+            "wrap_mode": "hard-wrap",
+            "wrap_width": 72,
             "line_ending": "lf",
         }
-        edits = [
-            {
-                "target_id": 1,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["A direct subject"],
-            }
-        ]
+        edits = [{"target_id": 1, "block_id": 1, "replacement": "A direct subject"}]
         patch_text = "\n".join(
             section
             for _, section in audit_io.render_patch(edits, [target], draft_root)[0]
@@ -405,25 +365,29 @@ class AuditIoTests(unittest.TestCase):
         self.run_git("apply", "--no-index", "--unidiff-zero", str(patch))
         self.assertEqual((draft_root / "subject.txt").read_bytes(), b"A direct subject")
 
-    def test_patch_deletes_unterminated_final_line(self) -> None:
+    def test_deleting_the_final_block_keeps_the_preceding_newline(self) -> None:
         draft_root = self.base / "delete-final-line"
         draft_root.mkdir()
-        (draft_root / "body.txt").write_bytes(b"Keep.\nDelete.")
+        (draft_root / "body.sql").write_bytes(b"SELECT 1;\n-- Delete.")
         target = {
             "id": 1,
-            "path": "body.txt",
-            "kind": "draft-prose",
-            "editable": None,
+            "path": "body.sql",
+            "kind": "code-comment",
+            "blocks": [
+                {
+                    "id": 1,
+                    "start": 2,
+                    "end": 2,
+                    "first_prefix": "-- ",
+                    "prefix": "-- ",
+                    "single": False,
+                }
+            ],
+            "wrap_mode": "hard-wrap",
+            "wrap_width": 72,
             "line_ending": "lf",
         }
-        edits = [
-            {
-                "target_id": 1,
-                "start_line": 2,
-                "end_line": 2,
-                "replacement_lines": [],
-            }
-        ]
+        edits = [{"target_id": 1, "block_id": 1, "replacement": ""}]
         patch_text = "\n".join(
             section
             for _, section in audit_io.render_patch(edits, [target], draft_root)[0]
@@ -432,14 +396,13 @@ class AuditIoTests(unittest.TestCase):
         audit_io.write_patch(patch, patch_text, [target])
         self.root = draft_root
         self.run_git("apply", "--no-index", "--unidiff-zero", str(patch))
-        self.assertEqual((draft_root / "body.txt").read_bytes(), b"Keep.")
+        self.assertEqual((draft_root / "body.sql").read_bytes(), b"SELECT 1;\n")
 
     def test_only_lf_separates_physical_lines(self) -> None:
         self.assertEqual(
-            audit_io.split_file_lines("one\vstill-one\fstill-one\u2028still-one\n"),
-            ["one\vstill-one\fstill-one\u2028still-one"],
+            audit_io.split_file_lines("one\vstill-one\fstill-one still-one\n"),
+            ["one\vstill-one\fstill-one still-one"],
         )
-
 
     def prepare_drafts(self, label: str, name: str, text: str, kind: str) -> None:
         drafts = self.base / f"drafts-{label}"
@@ -453,6 +416,7 @@ class AuditIoTests(unittest.TestCase):
             target=[name],
             target_kind=[[name, kind]],
         )
+        self.root = drafts
 
     def test_sql_code_lines_stay_out_of_editable_scope(self) -> None:
         change = self.root / "change.sql"
@@ -461,19 +425,9 @@ class AuditIoTests(unittest.TestCase):
         self.run_git("commit", "--quiet", "-m", "Add sql fixture")
         change.write_text("-- A seamless note.\nSELECT 2;\n", encoding="utf-8")
         self.prepare(run_dir=str(self.base / "sql-run"))
-        target = next(item for item in self.targets if item["path"] == "change.sql")
+        target = self.target_for("change.sql")
         self.assertEqual(target["kind"], "code-comment")
-        self.assertEqual(target["editable"], [[1, 1]])
-        self.expect_rejection(
-            [
-                {
-                    "target_id": target["id"],
-                    "start_line": 2,
-                    "end_line": 2,
-                    "replacement_lines": ["SELECT 3;"],
-                }
-            ]
-        )
+        self.assertEqual(self.spans("change.sql"), [[1, 1]])
 
     def test_code_file_without_changed_comments_is_skipped(self) -> None:
         change = self.root / "only-code.sql"
@@ -503,35 +457,19 @@ class AuditIoTests(unittest.TestCase):
         shared = "The backfill mints one singleton enterprise per soft-deleted workspace."
         (self.root / "NOTES.md").write_text(shared + "\n", encoding="utf-8")
         self.prepare(run_dir=str(self.base / "copy-run"))
-        self.expect_rejection(
-            [
-                {
-                    "target_id": self.target_id("doc.md"),
-                    "start_line": 1,
-                    "end_line": 1,
-                    "replacement_lines": [shared],
-                }
-            ]
-        )
+        self.expect_rejection([self.edit("doc.md", 1, shared)])
 
     def test_duplicate_line_is_rejected(self) -> None:
         repeated = "The coordinator retries the shadow write once before it gives up."
         guide = self.root / "guide.md"
-        guide.write_text(f"Old opening line.\n{repeated}\n", encoding="utf-8")
+        guide.write_text(f"Old opening line.\n\n{repeated}\n", encoding="utf-8")
         self.run_git("add", "guide.md")
         self.run_git("commit", "--quiet", "-m", "Add guide fixture")
-        guide.write_text(f"A seamless opening line.\n{repeated}\n", encoding="utf-8")
-        self.prepare(run_dir=str(self.base / "duplicate-run"))
-        self.expect_rejection(
-            [
-                {
-                    "target_id": self.target_id("guide.md"),
-                    "start_line": 1,
-                    "end_line": 1,
-                    "replacement_lines": [repeated],
-                }
-            ]
+        guide.write_text(
+            f"A seamless opening line.\n\n{repeated}\n", encoding="utf-8"
         )
+        self.prepare(run_dir=str(self.base / "duplicate-run"))
+        self.expect_rejection([self.edit("guide.md", 1, repeated)])
 
     def test_commit_trailer_and_blank_lines_are_protected(self) -> None:
         self.prepare_drafts(
@@ -546,35 +484,37 @@ class AuditIoTests(unittest.TestCase):
         )
         target = self.targets[0]
         self.assertEqual(target["kind"], "commit-message")
-        self.assertEqual(target["editable"], [[1, 1], [3, 3]])
+        self.assertEqual(self.spans("commit-message.txt"), [[1, 1], [3, 3]])
         self.expect_rejection(
-            [
-                {
-                    "target_id": target["id"],
-                    "start_line": 5,
-                    "end_line": 5,
-                    "replacement_lines": [],
-                }
-            ]
+            [self.edit("commit-message.txt", 3, "A trailer rewrite.")]
         )
 
-    def test_commit_body_rewrap_is_rejected(self) -> None:
+    def test_commit_body_is_rewrapped_to_the_commit_width(self) -> None:
         self.prepare_drafts(
             "rewrap",
             "commit-message.txt",
             "[COR-1] Add the thing\n\nA seamless body line worth rewriting.\n",
             "commit-message",
         )
-        target = self.targets[0]
-        self.expect_rejection(
-            [
-                {
-                    "target_id": target["id"],
-                    "start_line": 3,
-                    "end_line": 3,
-                    "replacement_lines": ["A direct body line worth rewriting " * 3],
-                }
+        self.run_validate(
+            edits=[
+                self.edit(
+                    "commit-message.txt",
+                    2,
+                    "A direct body line worth rewriting " * 4,
+                )
             ]
+        )
+        added = self.added_lines(self.run_dir / "result.patch")
+        self.assertGreater(len(added), 1)
+        self.assertLessEqual(max(len(line) for line in added), 72)
+
+    def test_over_width_subject_replacement_is_dropped(self) -> None:
+        self.prepare_drafts(
+            "subject", "subject.txt", "Add a seamless thing\n", "commit-subject"
+        )
+        self.expect_rejection(
+            [self.edit("subject.txt", 1, "Add a direct thing that keeps going " * 3)]
         )
 
     def test_retryable_transport_error_is_distinct(self) -> None:
@@ -597,7 +537,7 @@ class AuditIoTests(unittest.TestCase):
     def test_oversized_bundle_prepares_batches(self) -> None:
         for index in range(3):
             (self.root / f"extra{index}.md").write_text(
-                "A seamless body line.\n" * 40, encoding="utf-8"
+                "A seamless body line.\n\n" * 40, encoding="utf-8"
             )
         run_dir = self.base / "batch-run"
         with self.assertRaises(SystemExit) as raised:
@@ -616,7 +556,6 @@ class AuditIoTests(unittest.TestCase):
         self.assertTrue((self.run_dir / "result.patch").is_file())
         self.assertTrue((self.run_dir / f"result-{target_id}.patch").is_file())
 
-
     def test_changed_comment_line_expands_to_its_block(self) -> None:
         block = self.root / "block.sql"
         block.write_text(
@@ -630,8 +569,7 @@ class AuditIoTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.prepare(run_dir=str(self.base / "block-run"))
-        target = next(item for item in self.targets if item["path"] == "block.sql")
-        self.assertEqual(target["editable"], [[1, 2]])
+        self.assertEqual(self.spans("block.sql"), [[1, 2]])
 
     def test_changed_prose_line_expands_to_its_paragraph(self) -> None:
         page = self.root / "page.md"
@@ -642,39 +580,7 @@ class AuditIoTests(unittest.TestCase):
             "One.\nA seamless two.\nThree.\n\nApart.\n", encoding="utf-8"
         )
         self.prepare(run_dir=str(self.base / "paragraph-run"))
-        target = next(item for item in self.targets if item["path"] == "page.md")
-        self.assertEqual(target["editable"], [[1, 3]])
-
-    def test_out_of_scope_edit_drops_only_its_target(self) -> None:
-        doc_id = self.target_id("doc.md")
-        notes_id = self.target_id("NOTES.md")
-        snapshot_path = self.run_dir / "snapshot.json"
-        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
-        for target in snapshot["targets"]:
-            if target["path"] == "doc.md":
-                target["editable"] = [[2, 2]]
-        snapshot_path.write_text(json.dumps(snapshot), encoding="utf-8")
-        edits = [
-            {
-                "target_id": doc_id,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["A direct process."],
-            },
-            {
-                "target_id": notes_id,
-                "start_line": 1,
-                "end_line": 1,
-                "replacement_lines": ["This states the details."],
-            },
-        ]
-        printed = io.StringIO()
-        with contextlib.redirect_stdout(printed):
-            self.validate(self.write_result(edits=edits), self.write_events())
-        self.assertIn("DROPPED", printed.getvalue())
-        self.assertTrue((self.run_dir / f"result-{notes_id}.patch").is_file())
-        self.assertFalse((self.run_dir / f"result-{doc_id}.patch").is_file())
-
+        self.assertEqual(self.spans("page.md"), [[1, 3]])
 
     def test_list_items_are_separate_prose_blocks(self) -> None:
         page = self.root / "list.md"
@@ -690,8 +596,429 @@ class AuditIoTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.prepare(run_dir=str(self.base / "list-run"))
-        target = next(item for item in self.targets if item["path"] == "list.md")
-        self.assertEqual(target["editable"], [[2, 3]])
+        self.assertEqual(self.spans("list.md"), [[2, 3]])
+
+    def test_out_of_range_edit_keeps_its_targets_other_edits(self) -> None:
+        page = self.root / "two.md"
+        page.write_text("First paragraph.\n\nSecond paragraph.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "salvage-run"))
+        target = self.target_for("two.md")
+        self.assertEqual(self.spans("two.md"), [[1, 1], [3, 3]])
+        printed = self.run_validate(
+            edits=[
+                self.edit("two.md", 1, "A direct first paragraph."),
+                self.edit("two.md", 7, "An adjacent paragraph the model also fixed."),
+            ]
+        )
+        self.assertIn("PARTIAL", printed)
+        self.assertIn("unknown block id", printed)
+        self.assertTrue(
+            (self.run_dir / f"result-{target['id']}.patch").is_file()
+        )
+        self.assertEqual(
+            self.added_lines(self.run_dir / f"result-{target['id']}.patch"),
+            ["A direct first paragraph."],
+        )
+
+    def test_out_of_range_edit_leaves_other_targets_intact(self) -> None:
+        printed = self.run_validate(
+            edits=[
+                self.edit("doc.md", 9, "A direct process."),
+                self.edit("NOTES.md", 1, "This states the details."),
+            ]
+        )
+        self.assertIn("DROPPED", printed)
+        self.assertTrue(
+            (self.run_dir / f"result-{self.target_id('NOTES.md')}.patch").is_file()
+        )
+        self.assertFalse(
+            (self.run_dir / f"result-{self.target_id('doc.md')}.patch").is_file()
+        )
+
+    def test_replacement_dropping_a_protected_token_is_dropped(self) -> None:
+        page = self.root / "tokens.md"
+        page.write_text(
+            "The helper reads `--unidiff-zero` before it applies the patch.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "token-run"))
+        self.expect_rejection(
+            [
+                self.edit(
+                    "tokens.md",
+                    1,
+                    "The helper reads the flag before it applies the patch.",
+                )
+            ]
+        )
+
+    def test_replacement_that_splits_a_sentence_is_dropped(self) -> None:
+        page = self.root / "fragment.md"
+        page.write_text(
+            "Link every requirement to a conformance check with observable "
+            "expected results.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "fragment-run"))
+        self.expect_rejection(
+            [
+                self.edit(
+                    "fragment.md",
+                    1,
+                    "Names remain separate. requirement to a conformance check "
+                    "with observable expected results.",
+                )
+            ]
+        )
+
+    def test_replacement_rewraps_to_the_files_own_width(self) -> None:
+        page = self.root / "wrapped.md"
+        widest = "Column " * 13 + "ends here at one hundred."
+        self.assertEqual(len(widest), 116)
+        page.write_text(widest[:100] + "\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "wrap-run"))
+        target = self.target_for("wrapped.md")
+        self.assertEqual(target["wrap_mode"], "hard-wrap")
+        self.assertEqual(target["wrap_width"], 100)
+        self.run_validate(
+            edits=[
+                self.edit("wrapped.md", 1, "The rewritten column ends here. " * 12)
+            ]
+        )
+        added = self.added_lines(self.run_dir / f"result-{target['id']}.patch")
+        self.assertGreater(len(added), 1)
+        self.assertLessEqual(max(len(line) for line in added), 100)
+
+    def test_wrap_width_comes_from_the_whole_file_not_the_changed_block(self) -> None:
+        page = self.root / "mixed.md"
+        wide = ("Column " * 13 + "ends here.")[:100]
+        page.write_text(f"Short paragraph.\n\n{wide}\n", encoding="utf-8")
+        self.run_git("add", "mixed.md")
+        self.run_git("commit", "--quiet", "-m", "Add mixed-width fixture")
+        page.write_text(f"A seamless paragraph.\n\n{wide}\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "mixed-run"))
+        target = self.target_for("mixed.md")
+        self.assertEqual(self.spans("mixed.md"), [[1, 1]])
+        self.assertEqual(target["wrap_width"], 100)
+
+    def test_unwrapped_file_keeps_one_line_per_block(self) -> None:
+        page = self.root / "unwrapped.md"
+        page.write_text("A seamless sentence. " * 12 + "\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "unwrapped-run"))
+        target = self.target_for("unwrapped.md")
+        self.assertEqual(target["wrap_mode"], "single-line")
+        self.run_validate(
+            edits=[self.edit("unwrapped.md", 1, "A direct sentence. " * 12)]
+        )
+        self.assertEqual(
+            len(self.added_lines(self.run_dir / f"result-{target['id']}.patch")), 1
+        )
+
+    def test_caller_note_reaches_the_rendered_prompt(self) -> None:
+        note = "docs/ is formatter-managed; wrap it at 100 columns."
+        self.prepare(run_dir=str(self.base / "note-run"), note=[note])
+        prompt = (self.run_dir / "prompt.md").read_text(encoding="utf-8")
+        self.assertIn("<caller_constraints>", prompt)
+        self.assertIn(note, prompt)
+
+    def test_caller_wrap_width_overrides_the_derived_width(self) -> None:
+        page = self.root / "narrow.md"
+        page.write_text("Short line.\n", encoding="utf-8")
+        self.prepare(
+            run_dir=str(self.base / "override-run"),
+            wrap_width=[["narrow.md", "40"]],
+        )
+        self.assertEqual(self.target_for("narrow.md")["wrap_width"], 40)
+
+    def test_fenced_code_is_context_not_an_editable_block(self) -> None:
+        page = self.root / "fenced.md"
+        page.write_text(
+            "A seamless intro.\n\n```bash\nset -e\nrun_thing --flag\n```\n\nAfter.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "fence-run"))
+        self.assertEqual(self.spans("fenced.md"), [[1, 1], [8, 8]])
+
+    def test_table_and_frontmatter_lines_are_context(self) -> None:
+        page = self.root / "table.md"
+        page.write_text(
+            "---\nname: fixture\n---\n\n| Column | Other |\n| --- | --- |\n"
+            "| a | b |\n\nA seamless closing paragraph.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "table-run"))
+        self.assertEqual(self.spans("table.md"), [[9, 9]])
+
+    def test_heading_is_context_unless_the_caller_allows_it(self) -> None:
+        page = self.root / "headed.md"
+        page.write_text("## Mirrored heading\n\nA seamless body.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "heading-run"))
+        self.assertEqual(self.spans("headed.md"), [[3, 3]])
+        self.prepare(
+            run_dir=str(self.base / "heading-allowed-run"),
+            allow_headings=["headed.md"],
+        )
+        self.assertEqual(self.spans("headed.md"), [[1, 1], [3, 3]])
+
+    def test_context_lines_render_distinctly_from_editable_blocks(self) -> None:
+        page = self.root / "excerpt.md"
+        page.write_text("## Heading\n\nA seamless body.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "excerpt-run"))
+        audit_input = (self.run_dir / "audit-input.md").read_text(encoding="utf-8")
+        self.assertIn("ctx| ## Heading", audit_input)
+        self.assertIn("[[block 1]]\nA seamless body.\n[[/block 1]]", audit_input)
+
+    def test_context_never_repeats_an_editable_block_line(self) -> None:
+        page = self.root / "adjacent.md"
+        page.write_text(
+            "A seamless first paragraph.\n\nA seamless second paragraph.\n"
+            "\nA seamless third paragraph.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "adjacent-run"))
+        audit_input = (self.run_dir / "audit-input.md").read_text(encoding="utf-8")
+        for paragraph in ("first", "second", "third"):
+            self.assertNotIn(f"ctx| A seamless {paragraph} paragraph.", audit_input)
+
+    def test_out_of_scope_note_is_reported(self) -> None:
+        printed = self.run_validate(
+            out_of_scope_notes=[
+                {
+                    "target_id": self.target_id("NOTES.md"),
+                    "note": "The paragraph below the editable block repeats itself.",
+                }
+            ]
+        )
+        self.assertIn("NOTE\t", printed)
+        self.assertIn("repeats itself", printed)
+
+    def test_out_of_scope_note_for_an_unknown_target_is_rejected(self) -> None:
+        with self.assertRaises(SystemExit) as raised:
+            self.validate(
+                self.write_result(
+                    out_of_scope_notes=[{"target_id": 99, "note": "Elsewhere."}]
+                ),
+                self.write_events(),
+            )
+        self.assertEqual(raised.exception.code, 1)
+
+    def test_a_fence_closes_only_on_its_own_length(self) -> None:
+        page = self.root / "nested.md"
+        page.write_text(
+            "A seamless intro.\n\n````md\n```sh\necho build the artifact\n```\n"
+            "````\n\nAfter.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "nested-run"))
+        self.assertEqual(self.spans("nested.md"), [[1, 1], [9, 9]])
+
+    def test_a_leading_thematic_break_is_not_frontmatter(self) -> None:
+        page = self.root / "rule.md"
+        page.write_text(
+            "---\n\nA seamless first paragraph.\n\n---\n\nA second paragraph.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "rule-run"))
+        self.assertEqual(self.spans("rule.md"), [[3, 3], [7, 7]])
+
+    def test_setext_headings_and_their_underlines_are_context(self) -> None:
+        page = self.root / "setext.md"
+        page.write_text(
+            "Section Title\n=============\n\nA seamless body.\n\n"
+            "Other Title\n-----------\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "setext-run"))
+        self.assertEqual(self.spans("setext.md"), [[4, 4]])
+
+    def test_pipe_less_table_rows_are_context(self) -> None:
+        page = self.root / "bare-table.md"
+        page.write_text(
+            "A seamless intro.\n\nColumn A | Column B\n-------- | --------\n"
+            "first    | second\n\nAfter.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "bare-table-run"))
+        self.assertEqual(self.spans("bare-table.md"), [[1, 1], [7, 7]])
+
+    def test_indented_code_after_a_paragraph_line_is_context(self) -> None:
+        page = self.root / "indented.md"
+        page.write_text(
+            "Run the helper as shown:\n    uv run audit_io.py prepare\n"
+            "    uv run audit_io.py validate\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "indented-run"))
+        self.assertEqual(self.spans("indented.md"), [[1, 1]])
+
+    def test_spaced_thematic_break_is_not_a_list_item(self) -> None:
+        page = self.root / "spaced.md"
+        page.write_text("A seamless intro.\n\n- - -\n\nAfter.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "spaced-run"))
+        self.assertEqual(self.spans("spaced.md"), [[1, 1], [5, 5]])
+
+    def test_a_shebang_never_joins_a_comment_block(self) -> None:
+        script = self.root / "run.sh"
+        script.write_text(
+            "#!/usr/bin/env bash\n# A seamless setup of the run directory.\n"
+            "set -euo pipefail\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "shebang-run"))
+        self.assertEqual(self.spans("run.sh"), [[2, 2]])
+
+    def test_lint_pragmas_and_comment_lists_break_the_run(self) -> None:
+        script = self.root / "pragma.py"
+        script.write_text(
+            "# A seamless note about the helper.\n# noqa: E501\n"
+            "# Steps to run the audit:\n#   - prepare the bundle\n"
+            "#   - validate the result\n"
+            "value = 1\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "pragma-run"))
+        self.assertEqual(self.spans("pragma.py"), [[1, 1], [3, 3]])
+
+    def test_a_marker_is_stripped_only_when_a_space_follows(self) -> None:
+        page = self.root / "marker.md"
+        page.write_text("* The glob matches every file it walks.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "marker-run"))
+        target = self.target_for("marker.md")
+        self.run_validate(
+            edits=[
+                self.edit("marker.md", 1, "*.md sources are the ones the glob walks.")
+            ]
+        )
+        self.assertEqual(
+            self.added_lines(self.run_dir / f"result-{target['id']}.patch"),
+            ["* *.md sources are the ones the glob walks."],
+        )
+
+    def test_one_long_line_does_not_unwrap_a_wrapped_file(self) -> None:
+        page = self.root / "outlier.md"
+        wrapped = "A seamless first line of about seventy-eight columns in this file.\n"
+        page.write_text(
+            wrapped + "Its continuation line completes the paragraph.\n\n"
+            + "x" * 136 + "\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "outlier-run"))
+        self.assertEqual(self.target_for("outlier.md")["wrap_mode"], "hard-wrap")
+
+    def test_a_single_line_outlier_does_not_widen_the_derived_width(self) -> None:
+        page = self.root / "bullet.md"
+        page.write_text(
+            "A seamless paragraph line that runs to about seventy columns here.\n"
+            "Its continuation completes the paragraph.\n\n"
+            "- " + "y" * 109 + "\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "bullet-run"))
+        self.assertEqual(self.target_for("bullet.md")["wrap_width"], 72)
+
+    def test_adjacent_long_lines_do_not_read_as_a_wrap_column(self) -> None:
+        page = self.root / "sentences.md"
+        page.write_text(
+            "A seamless opening sentence that runs well past any wrap column "
+            + "and keeps going for a while. " * 4
+            + "\n"
+            + "A second sentence sharing the block on the next line, also long. "
+            + "It continues past the threshold too. " * 3
+            + "\n\nA closing paragraph.\n",
+            encoding="utf-8",
+        )
+        self.prepare(run_dir=str(self.base / "sentences-run"))
+        target = self.target_for("sentences.md")
+        self.assertEqual(target["wrap_mode"], "single-line")
+        self.assertEqual(target["wrap_width"], 0)
+
+    def test_wrap_width_override_keeps_a_subject_on_one_line(self) -> None:
+        self.prepare_drafts(
+            "override-subject", "subject.txt", "Add a seamless thing\n", "commit-subject"
+        )
+        self.prepare(
+            run_dir=str(self.base / "run-override-subject-again"),
+            patch_root=str(self.root),
+            scope_kind="transient",
+            mode="quick",
+            target=["subject.txt"],
+            target_kind=[["subject.txt", "commit-subject"]],
+            wrap_width=[["subject.txt", "20"]],
+        )
+        self.assertEqual(self.target_for("subject.txt")["wrap_mode"], "single-line")
+        self.expect_rejection([self.edit("subject.txt", 1, "Add a direct thing here")])
+
+    def test_wrap_width_rejects_a_nonnumeric_or_tiny_value(self) -> None:
+        for columns in ("abc", "0", "5"):
+            with self.assertRaises(SystemExit) as raised:
+                self.prepare(
+                    run_dir=str(self.base / f"bad-width-{columns}"),
+                    wrap_width=[["doc.md", columns]],
+                )
+            self.assertEqual(raised.exception.code, 1)
+
+    def test_an_override_naming_no_prepared_target_is_rejected(self) -> None:
+        with self.assertRaises(SystemExit) as raised:
+            self.prepare(
+                run_dir=str(self.base / "typo-run"),
+                wrap_width=[["typo.md", "100"]],
+            )
+        self.assertEqual(raised.exception.code, 1)
+
+    def test_spelling_a_number_out_keeps_the_edit(self) -> None:
+        page = self.root / "count.md"
+        page.write_text("The parser runs 2 passes over the buffer.\n", encoding="utf-8")
+        self.prepare(run_dir=str(self.base / "count-run"))
+        target = self.target_for("count.md")
+        self.run_validate(
+            edits=[
+                self.edit("count.md", 1, "The parser runs two passes over the buffer.")
+            ]
+        )
+        self.assertEqual(
+            self.added_lines(self.run_dir / f"result-{target['id']}.patch"),
+            ["The parser runs two passes over the buffer."],
+        )
+
+    def test_an_abbreviation_is_not_a_sentence_fragment(self) -> None:
+        page = self.root / "abbrev.md"
+        page.write_text(
+            "The helper wraps a seamless run of prose blocks.\n", encoding="utf-8"
+        )
+        self.prepare(run_dir=str(self.base / "abbrev-run"))
+        target = self.target_for("abbrev.md")
+        self.run_validate(
+            edits=[
+                self.edit(
+                    "abbrev.md", 1, "The helper wraps prose, e.g. paragraphs and items."
+                )
+            ]
+        )
+        self.assertEqual(
+            self.added_lines(self.run_dir / f"result-{target['id']}.patch"),
+            ["The helper wraps prose, e.g. paragraphs and items."],
+        )
+
+    def test_pascal_case_and_dotted_filenames_are_protected(self) -> None:
+        self.assertEqual(
+            audit_io.protected_tokens("The SystemExit path reads package.json at v1.2.3"),
+            {"SystemExit", "package.json", "v1.2.3"},
+        )
+
+    def test_a_commit_message_subject_stays_on_one_line(self) -> None:
+        self.prepare_drafts(
+            "subject-line",
+            "commit-message.txt",
+            "feat: add a seamless mode\n\nA body line worth keeping.\n",
+            "commit-message",
+        )
+        self.assertTrue(self.target_for("commit-message.txt")["blocks"][0]["single"])
+        subject = (
+            "feat: add the direct block addressing mode that finally replaces "
+            "every line range"
+        )
+        self.assertGreater(len(subject), 72)
+        self.expect_rejection([self.edit("commit-message.txt", 1, subject)])
 
 
 if __name__ == "__main__":
