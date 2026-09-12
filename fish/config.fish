@@ -5,7 +5,7 @@ fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
 if string match -q 'macos' "$FISH_OS"
   fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME
 else if string match -q 'linux' "$FISH_OS"
-  fish_add_path -g $PNPM_HOME
+  fish_add_path -g $PNPM_HOME/bin
 else if string match -q 'windows' "$FISH_OS"
   fish_add_path -g $PNPM_HOME/bin
 end
@@ -59,5 +59,4 @@ if status is-interactive
       end
     end
   end
-
 end
