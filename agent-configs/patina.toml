@@ -15,6 +15,11 @@ source = "shared/output-styles"
 target = "~/.claude/output-styles"
 mode = "symlink"
 
+# pi keybindings
+[[file]]
+source = "pi/keybindings.json"
+target = "~/.pi/agent/keybindings.json"
+
 # pi themes
 [[directory]]
 source = "pi/themes"
