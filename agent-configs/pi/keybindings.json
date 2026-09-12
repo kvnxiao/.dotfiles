@@ -1,3 +1,4 @@
 {
-  "app.thinking.cycle": "alt+t"
+  "app.thinking.cycle": "alt+t",
+  "tui.editor.deleteWordForward": ["ctrl+delete", "alt+d", "alt+delete"]
 }
