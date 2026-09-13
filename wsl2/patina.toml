@@ -2,3 +2,4 @@
 source = ".wslconfig"
 target = "~/.wslconfig"
 mode = "symlink"
+when = "patina.os == 'windows'"
