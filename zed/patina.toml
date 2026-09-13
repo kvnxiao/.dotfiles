@@ -1,0 +1,23 @@
+[[file]]
+source = "settings.json"
+target = "~/AppData/Roaming/Zed/settings.json"
+mode = "symlink"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "settings.json"
+target = "~/.config/zed/settings.json"
+mode = "symlink"
+when = "patina.os != 'windows'"
+
+[[file]]
+source = "keymap.json"
+target = "~/AppData/Roaming/Zed/keymap.json"
+mode = "symlink"
+when = "patina.os == 'windows'"
+
+[[file]]
+source = "keymap.json"
+target = "~/.config/zed/keymap.json"
+mode = "symlink"
+when = "patina.os != 'windows'"
