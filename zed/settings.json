@@ -38,6 +38,7 @@
     "dock": "left",
   },
   "agent": {
+    "sidebar_side": "right",
     "dock": "right",
     "favorite_models": [],
     "model_parameters": [],
