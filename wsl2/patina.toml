@@ -1,4 +1,4 @@
 [[file]]
-source = "wslconfig"
+source = ".wslconfig"
 target = "~/.wslconfig"
-mode = "copy"
+mode = "symlink"

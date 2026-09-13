@@ -8,6 +8,18 @@ vmIdleTimeout=-1
 # Cap resources so persistent background containers don't starve host RAM
 memory=32GB
 processors=8
+swap=0
+# Networking settings to bind directly to Windows host interfaces
+networkingMode=mirrored
+dnsTunneling=true
+autoProxy=true
+firewall=true
+# Nested virtualization (useful if running Podman/Docker or KVM inside WSL)
+nestedVirtualization=true
+
+[general]
+# Keep individual distro alive past interactive shell exit
+instanceIdleTimeout=-1
 
 [experimental]
 # Aggressively reclaims unneeded cached memory back to Windows
