@@ -1,5 +1,7 @@
 ## Shared config is loaded before platform specific configs
 
+export XDG_CONFIG_HOME="$HOME/.config"
+
 # pnpm
 export PNPM_HOME="${HOME}/.pnpm"
 case ":$PATH:" in
@@ -23,7 +25,6 @@ fi
 # Flutter version management
 export FVM_CACHE_PATH="$HOME/.fvm"
 export PATH="$PATH:$HOME/.fvm/default/bin"
-export XDG_CONFIG_HOME="$HOME/.config"
 
 ## FVM completions
 ## Completion scripts setup. Remove the following line to uninstall

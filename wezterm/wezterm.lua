@@ -1,5 +1,10 @@
 local wezterm = require "wezterm";
 
+local is_windows = wezterm.target_triple == "x86_64-pc-windows-msvc"
+    or wezterm.target_triple == "aarch64-pc-windows-msvc"
+local is_macos = wezterm.target_triple == "aarch64-apple-darwin"
+    or wezterm.target_triple == "x86_64-apple-darwin"
+
 local function scheme_for_appearance(appearance)
   if appearance:find "Dark" then
     return "Catppuccin Mocha"
@@ -12,7 +17,7 @@ end
 local function get_preferred_gpu()
   local gpus = wezterm.gui.enumerate_gpus()
 
-  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  if is_windows then
     for _, gpu in ipairs(gpus) do
       if gpu.backend == "Dx12" then
         return gpu
@@ -31,6 +36,7 @@ local function get_windows_config()
       MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "minimal",
       SHELL = "/usr/bin/fish",
+      XDG_CONFIG_HOME = "/c/Users/kvnxiao/.config",
     },
     default_prog = {
       "C:\\msys64\\usr\\bin\\fish.exe",
@@ -90,7 +96,9 @@ end
 local function get_macos_config()
   return {
     default_prog = { "/opt/homebrew/bin/fish", "-l" },
-    set_environment_variables = {},
+    set_environment_variables = {
+      XDG_CONFIG_HOME = wezterm.home_dir .. "/.config",
+    },
     font = wezterm.font_with_fallback({
       "FiraCode Nerd Font",
       "JetBrains Mono",
@@ -119,7 +127,9 @@ end
 local function get_linux_config()
   return {
     default_prog = { "/bin/zsh", "-l" },
-    set_environment_variables = {},
+    set_environment_variables = {
+      XDG_CONFIG_HOME = wezterm.home_dir .. "/.config",
+    },
     font = wezterm.font_with_fallback({
       "FiraCode Nerd Font",
       "JetBrains Mono",
@@ -137,11 +147,8 @@ local function get_linux_config()
   }
 end
 
-local is_macos = wezterm.target_triple == "aarch64-apple-darwin"
-    or wezterm.target_triple == "x86_64-apple-darwin"
-
 local platform_config
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+if is_windows then
   platform_config = get_windows_config()
 elseif is_macos then
   platform_config = get_macos_config()
