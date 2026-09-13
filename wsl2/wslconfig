@@ -1,0 +1,14 @@
+[wsl2]
+# Enable Virtiofs over 9p for quicker access to native Windows file system
+virtio=true
+virtiofs=true
+virtio9p=false
+# Prevents WSL2 from terminating the VM when idle
+vmIdleTimeout=-1
+# Cap resources so persistent background containers don't starve host RAM
+memory=32GB
+processors=8
+
+[experimental]
+# Aggressively reclaims unneeded cached memory back to Windows
+autoMemoryReclaim=gradual

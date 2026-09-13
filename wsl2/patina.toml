@@ -1,0 +1,4 @@
+[[file]]
+source = "wslconfig"
+target = "~/.wslconfig"
+mode = "copy"
