@@ -8,9 +8,23 @@ local function scheme_for_appearance(appearance)
   end
 end
 
+-- Pick DirectX 12 on Windows, otherwise fallback to the first GPU
+local function get_preferred_gpu()
+  local gpus = wezterm.gui.enumerate_gpus()
+
+  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+    for _, gpu in ipairs(gpus) do
+      if gpu.backend == "Dx12" then
+        return gpu
+      end
+    end
+  end
+
+  return gpus[1]
+end
+
 local function get_windows_config()
   return {
-    audible_bell = "Disabled",
     set_environment_variables = {
       MSYS = "enable_pcon winsymlinks:nativestrict",
       CHERE_INVOKING = "1",
@@ -138,6 +152,9 @@ end
 local link_mod = is_macos and "SUPER" or "CTRL"
 
 return {
+  webgpu_preferred_adapter = get_preferred_gpu(),
+  front_end = 'WebGpu',
+  audible_bell = "Disabled",
   default_prog = platform_config.default_prog,
   set_environment_variables = platform_config.set_environment_variables,
   initial_cols = 88,
@@ -150,8 +167,9 @@ return {
   enable_scroll_bar = true,
   font = platform_config.font,
   font_size = platform_config.font_size,
-  freetype_load_target = "Light",
-  freetype_render_target = "HorizontalLcd",
+  freetype_load_target = "Normal",
+  freetype_render_target = "Normal",
+  freetype_load_flags = "NO_HINTING",
   window_decorations = platform_config.window_decorations,
   window_close_confirmation = "NeverPrompt",
   color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
