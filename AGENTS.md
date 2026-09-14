@@ -15,6 +15,8 @@ new kind of file as in scope.
   sources. `patina.lock` pins them.
 - `justfile` wraps the deploy and per-platform setup steps.
 - `setup/` holds the platform bootstrap scripts the justfile calls.
+- `containers/` contains rootless Podman config plus the Quadlet `.container` and
+  `.network` units that `systemctl --user` runs. See its README for the model stack.
 
 Patina renders a source that ends in `.tmpl` through MiniJinja instead of linking it.
 
@@ -35,7 +37,9 @@ included, it prints the plan and exits without writing. Read the plan, then re-r
 
 `just deploy` runs `patina apply` plus the Windows-only extras. It passes no `--yes`.
 
-A new file needs an entry in that directory's `patina.toml` before it can deploy.
+A new file needs an entry in that directory's `patina.toml` before it can deploy,
+unless the entry covering it is a `[[directory]]` with `mode = "symlink-tree"`,
+which deploys every file under its source.
 
 ## Formatting
 

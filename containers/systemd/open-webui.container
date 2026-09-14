@@ -1,0 +1,15 @@
+[Unit]
+Description=Open WebUI
+
+[Container]
+ContainerName=open-webui
+Image=ghcr.io/open-webui/open-webui:main
+Network=ai-net.network
+PublishPort=8080:8080
+Volume=open-webui-data:/app/backend/data:U
+Environment="OPENAI_API_BASE_URLS=http://vllm:8000/v1;http://ninfer:8080/v1"
+Environment="OPENAI_API_KEYS=sk-local;sk-local"
+Environment=WEBUI_AUTH=false
+
+[Service]
+Restart=on-failure

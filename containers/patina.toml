@@ -1,0 +1,29 @@
+[[file]]
+source = "registries.conf"
+target = "~/.config/containers/registries.conf"
+when = "patina.os == 'linux'"
+
+# Because the source ends in `.tmpl`, patina renders it via MiniJinja.
+# `cdi_spec_dirs` expands neither `~` nor `$HOME`, so the home path is
+# inserted at render time.
+[[file]]
+source = "containers.conf.tmpl"
+target = "~/.config/containers/containers.conf"
+when = "patina.os == 'linux'"
+
+[[file]]
+source = "ninfer/Containerfile"
+target = "~/.config/lmserve/ninfer/Containerfile"
+when = "patina.os == 'linux'"
+
+[[directory]]
+source = "systemd"
+target = "~/.config/containers/systemd"
+mode = "symlink-tree"
+when = "patina.os == 'linux'"
+
+[[directory]]
+source = "vllm"
+target = "~/.config/lmserve/vllm"
+mode = "symlink-tree"
+when = "patina.os == 'linux'"

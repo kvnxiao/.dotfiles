@@ -1,0 +1,32 @@
+[Unit]
+Description=vLLM Qwen3.8-27B AWQ-INT4
+Wants=open-webui.service
+Conflicts=ninfer-qwen3.8.service vllm-gemma4.service
+# One edge per pair orders the incumbent's stop before this start; a
+# matching After= on the other unit would cycle through the stop jobs.
+After=ninfer-qwen3.8.service
+
+[Container]
+ContainerName=vllm-qwen3.8
+Image=docker.io/vllm/vllm-openai:latest
+Network=ai-net.network
+NetworkAlias=vllm
+AddDevice=nvidia.com/gpu=all
+PublishPort=8000:8000
+PodmanArgs=--ipc=host
+Volume=%h/.cache/huggingface:/root/.cache/huggingface
+Volume=%h/.cache/vllm:/root/.cache/vllm
+Volume=%h/.config/lmserve/vllm/qwen3.8.yaml:/etc/vllm/config.yaml:ro
+Environment=VLLM_CACHE_ROOT=/root/.cache/vllm
+Environment=HF_HUB_OFFLINE=1
+Environment=TRANSFORMERS_OFFLINE=1
+Environment=VLLM_NO_USAGE_STATS=1
+HealthCmd=curl -fsS http://127.0.0.1:8000/health
+HealthStartPeriod=600s
+HealthInterval=30s
+HealthRetries=3
+Exec=--config /etc/vllm/config.yaml
+
+[Service]
+Restart=no
+TimeoutStartSec=900

@@ -105,20 +105,13 @@ source = "functions/hooks/_cached_eval_replace_line.fish"
 target = "~/.config/fish/functions/hooks/_cached_eval_replace_line.fish"
 
 [[file]]
+source = "functions/lmserve.fish"
+target = "~/.config/fish/functions/lmserve.fish"
+when = "patina.os == 'linux'"
+
+[[file]]
 source = "functions/unzip.fish"
 target = "~/.config/fish/functions/unzip.fish"
-
-[[file]]
-source = "functions/vllm.fish"
-target = "~/.config/fish/functions/vllm.fish"
-
-[[file]]
-source = "vllm/profiles/qwen3.8.yaml"
-target = "~/.config/fish/vllm/profiles/qwen3.8.yaml"
-
-[[file]]
-source = "vllm/profiles/gemma4.yaml"
-target = "~/.config/fish/vllm/profiles/gemma4.yaml"
 
 [[file]]
 source = "conf.d/os-detect.windows.fish"
