@@ -6,9 +6,9 @@ This file is the sole authority for the skill's lexical tokens. `SKILL.md` carri
 
 ## Never generate
 
-These expressions have no legitimate technical use. Never write one into new prose. Encountering one in existing prose is a tripwire like any other: correct it where it carries no verified sense, and record a keep-reason where the surrounding artifact demands it.
+These expressions have no legitimate technical use. Never write one into new prose. Treat an occurrence in existing prose as a review signal: correct it when it carries no verified sense, and record a keep-reason when the surrounding artifact demands it.
 
-`delve` · `load-bearing` · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · false-dichotomy formulas such as `it is not just X, it is Y` or `less about X than about Y`
+`delve` · `load-bearing` · `seam` / `seams` · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · false-dichotomy formulas such as `it is not just X, it is Y` or `less about X than about Y`
 
 ## Review categories
 

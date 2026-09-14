@@ -37,6 +37,7 @@ Each target declares an `artifact-kind`. Apply the matching convention.
 - `pr-title`: as `commit-subject`.
 - `pr-body`: third-person indicative; state what the change does. A block is one paragraph or one list item, so a rewrite never spans two of them.
 - `documentation`: third-person indicative, naming concrete technical actors.
+- `instruction-file`: an agent instruction file, skill, output style, command, or prompt. Write each rule as a direct imperative or infinitive instruction addressed to the writer. A factual premise or a definition that introduces a rule stays indicative. Keep a bold lead-in at the start of a list item verbatim, keep every quoted example verbatim, and keep worked examples executable outside their source.
 - `code-comment`: only line-comment runs form blocks. State the invariant, hazard, or ordering requirement; never restate the adjacent code, and never write text that would parse as code.
 - `draft-prose`: house voice with no artifact-specific constraint.
 
@@ -47,7 +48,7 @@ Each target's `content-lines` carries two line classes. A line starting with `ct
 
 Address each rewrite by its block. Return the block's `block_id` and one `replacement` string holding the rewritten block as a single run of prose: no newline, no leading list marker or comment marker, and no manual wrapping. The helper rewraps to the target's declared `wrap` width, reapplies the declared prefix, computes the line span, and builds the unified diff.
 
-Return at most one edit per block. Carry every code span, path, filename, version, flag, number, and identifier from the source block into its replacement, because the helper drops an edit that loses one; spelling a small number as a word counts as carrying it. A `code-comment` block accepts an empty `replacement` to delete it; every other kind requires prose.
+Return at most one edit per block. An edit whose replacement equals its source block is not an edit: when no block needs a change, return `no_changes` with an empty `edits` array. Include every code span, bold span, path, filename, version, flag, number, and identifier from the source block in its replacement, because the helper drops an edit that omits any required item; spelling a small number as a word counts as including it. A `code-comment` block accepts an empty `replacement` to delete it; every other kind requires prose.
 
 A defect outside every editable block belongs in `out_of_scope_notes`, never in an edit. Naming a block that does not exist drops that edit and keeps the target's other edits.
 If block replacements cannot express the rewrite, return `blocked` after reviewing every target.

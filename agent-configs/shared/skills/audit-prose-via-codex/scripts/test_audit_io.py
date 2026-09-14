@@ -204,6 +204,62 @@ class AuditIoTests(unittest.TestCase):
             self.validate(result, self.write_events())
         self.assertEqual(raised.exception.code, 4)
 
+    def test_identity_edits_validate_as_no_changes(self) -> None:
+        printed = io.StringIO()
+        with self.assertRaises(SystemExit) as raised, contextlib.redirect_stdout(printed):
+            self.validate(
+                self.write_result(edits=[self.edit("doc.md", 1, "A seamless process.")]),
+                self.write_events(),
+            )
+        self.assertEqual(raised.exception.code, 4)
+        lines = printed.getvalue().splitlines()
+        self.assertEqual(lines[0], "NO_CHANGES")
+        self.assertIn(f"UNCHANGED\t{self.target_id('doc.md')}\tdoc.md", lines)
+        self.assertFalse((self.run_dir / "result.patch").exists())
+
+    def test_identity_edit_beside_a_real_edit_is_reported_unchanged(self) -> None:
+        output = self.run_validate(
+            edits=[
+                self.edit("doc.md", 1, "A direct process."),
+                self.edit("NOTES.md", 1, "This delves into details."),
+            ]
+        )
+        lines = output.splitlines()
+        self.assertEqual(lines[0], "PATCH")
+        self.assertIn(f"UNCHANGED\t{self.target_id('NOTES.md')}\tNOTES.md", lines)
+        self.assertTrue((self.run_dir / f"result-{self.target_id('doc.md')}.patch").exists())
+        self.assertFalse((self.run_dir / f"result-{self.target_id('NOTES.md')}.patch").exists())
+
+    def test_identity_edit_beside_a_dropped_edit_labels_the_target_partial(self) -> None:
+        output = self.run_validate(
+            edits=[
+                self.edit("doc.md", 1, "A direct process."),
+                self.edit("NOTES.md", 1, "This delves into details."),
+                self.edit("NOTES.md", 99, "Unknown block."),
+            ]
+        )
+        lines = output.splitlines()
+        notes_id = self.target_id("NOTES.md")
+        self.assertIn(f"PARTIAL\t{notes_id}\tNOTES.md\tblock 99: unknown block id", lines)
+        self.assertIn(f"UNCHANGED\t{notes_id}\tNOTES.md", lines)
+        self.assertNotIn(f"DROPPED\t{notes_id}\tNOTES.md\tblock 99: unknown block id", lines)
+
+    def test_identity_edit_beside_a_dropped_only_target_names_both(self) -> None:
+        errors = io.StringIO()
+        with self.assertRaises(SystemExit) as raised, contextlib.redirect_stderr(errors):
+            self.validate(
+                self.write_result(
+                    edits=[
+                        self.edit("doc.md", 1, "A seamless process."),
+                        self.edit("NOTES.md", 99, "Unknown block."),
+                    ]
+                ),
+                self.write_events(),
+            )
+        self.assertEqual(raised.exception.code, 1)
+        self.assertIn("unchanged: doc.md", errors.getvalue())
+        self.assertIn("dropped: NOTES.md block 99 (unknown block id)", errors.getvalue())
+
     def test_missing_target_acknowledgment_is_rejected(self) -> None:
         result = self.write_result(
             status="no_changes",
@@ -651,6 +707,53 @@ class AuditIoTests(unittest.TestCase):
                 )
             ]
         )
+
+    def test_bold_span_is_a_protected_token(self) -> None:
+        self.assertEqual(
+            audit_io.protected_tokens("**Fact First:** Open on the verdict, never on setup."),
+            {"**Fact First:**"},
+        )
+        bold = {
+            token
+            for token in audit_io.protected_tokens("`**kwargs` and **Note:** foo")
+            if token.startswith("**")
+        }
+        self.assertEqual(bold, {"**Note:**"})
+        self.assertEqual(
+            audit_io.protected_tokens("**bold *italic* bold** rest"),
+            {"**bold *italic* bold**"},
+        )
+        self.assertEqual(audit_io.protected_tokens("2 ** 3 and 4 ** 5"), {"2", "3", "4", "5"})
+
+    def test_instruction_files_are_classified_by_path(self) -> None:
+        for relative in (
+            "AGENTS.md",
+            "CLAUDE",
+            "CLAUDE.local.md",
+            "skills/audit/SKILL.md",
+            "skills/audit/references/diction.md",
+            "agent-configs/shared/output-styles/linear-prose.md",
+            ".claude/commands/review.md",
+            "skill/prompts/task.md",
+        ):
+            self.assertEqual(
+                audit_io.target_kind(relative), "instruction-file", relative
+            )
+        for relative in ("README.md", "docs/guide.md", "agents.md", "notes/SKILLS.md"):
+            self.assertEqual(
+                audit_io.target_kind(relative), "documentation", relative
+            )
+        self.assertEqual(audit_io.target_kind("src/main.py"), "code-comment")
+        self.assertIsNone(audit_io.target_kind("data.json"))
+
+    def test_instruction_kind_reaches_the_rendered_prompt(self) -> None:
+        (self.root / "AGENTS.md").write_text(
+            "Open on the verdict.\n", encoding="utf-8"
+        )
+        self.prepare(run_dir=str(self.base / "kind-run"))
+        prompt = (self.run_dir / "prompt.md").read_text(encoding="utf-8")
+        self.assertIn("artifact-kind: instruction-file", prompt)
+        self.assertIn("artifact-kind: documentation", prompt)
 
     def test_replacement_that_splits_a_sentence_is_dropped(self) -> None:
         page = self.root / "fragment.md"

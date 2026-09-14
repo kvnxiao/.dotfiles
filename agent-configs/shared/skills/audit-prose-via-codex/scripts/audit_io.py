@@ -33,6 +33,8 @@ TRAILER_RE = re.compile(
 GENERATED_LINE_RE = re.compile(r"^\s*(?:\U0001F916|Generated with)\s")
 PROSE_SUFFIXES = {".md", ".markdown", ".txt", ".rst", ".adoc", ".mdx"}
 PROSE_NAMES = {"README", "CHANGELOG", "LICENSE", "NOTICE", "AGENTS", "CLAUDE"}
+INSTRUCTION_NAMES = {"AGENTS", "CLAUDE", "SKILL"}
+INSTRUCTION_DIRS = {"skills", "output-styles", "commands", "prompts"}
 COMMENT_SYNTAX = {
     ".sql": (("--",), (("/*", "*/"),)),
     ".ts": (("//",), (("/*", "*/"),)),
@@ -109,6 +111,7 @@ ABBREVIATION_RE = re.compile(
 )
 LOWERCASE_SENTENCE_RE = re.compile(r"[.!?][)\"'`\]]*\s+[a-z]")
 CODE_SPAN_RE = re.compile(r"`[^`\n]+`")
+BOLD_SPAN_RE = re.compile(r"\*\*(?=\S)(?:[^*\n]|\*(?!\*))+(?<=\S)\*\*")
 URL_RE = re.compile(r"https?://[^\s<>()\[\]]+")
 FLAG_RE = re.compile(r"(?<![\w-])--?[A-Za-z][\w-]*")
 PATH_RE = re.compile(r"(?<![\w./-])[\w.-]*/[\w./-]+")
@@ -279,13 +282,16 @@ def comment_syntax(relative: str) -> tuple[tuple[str, ...], tuple[tuple[str, str
     return COMMENT_SYNTAX.get(path.suffix.lower())
 
 
-def classify_path(relative: str) -> str:
+def target_kind(relative: str) -> str | None:
     path = Path(relative)
     if path.suffix.lower() in PROSE_SUFFIXES or path.name in PROSE_NAMES:
-        return "prose"
+        first_name = path.name.split(".", 1)[0]
+        if first_name in INSTRUCTION_NAMES or INSTRUCTION_DIRS & set(path.parts[:-1]):
+            return "instruction-file"
+        return "documentation"
     if comment_syntax(relative) is not None:
-        return "code"
-    return "excluded"
+        return "code-comment"
+    return None
 
 
 def leading_indent(line: str) -> str:
@@ -567,6 +573,7 @@ def protected_tokens(text: str) -> set[str]:
         IDENTIFIER_RE,
     ):
         tokens.update(pattern.findall(text))
+    tokens.update(BOLD_SPAN_RE.findall(CODE_SPAN_RE.sub(" ", text)))
     for candidate in PATH_RE.findall(text):
         if "." in candidate or "-" in candidate or candidate.count("/") > 1:
             tokens.add(candidate)
@@ -824,8 +831,8 @@ def prepare(args: argparse.Namespace) -> None:
         if inventory_hash(root, args.scope_kind) != inventory_before:
             fail("The repository change inventory changed during discovery")
         for relative in tracked:
-            file_kind = classify_path(relative)
-            if file_kind == "excluded":
+            kind = target_kind(relative)
+            if kind is None:
                 skipped.append(
                     {
                         "path": relative,
@@ -845,9 +852,7 @@ def prepare(args: argparse.Namespace) -> None:
                 continue
             paths.append(relative)
             changed_map[relative] = ranges
-            kind_map[relative] = (
-                "code-comment" if file_kind == "code" else "documentation"
-            )
+            kind_map[relative] = kind
         for relative in untracked:
             if relative in paths:
                 continue
@@ -861,8 +866,8 @@ def prepare(args: argparse.Namespace) -> None:
                     }
                 )
                 continue
-            file_kind = classify_path(relative)
-            if file_kind == "excluded":
+            kind = target_kind(relative)
+            if kind is None:
                 skipped.append(
                     {
                         "path": relative,
@@ -873,9 +878,7 @@ def prepare(args: argparse.Namespace) -> None:
                 continue
             paths.append(relative)
             changed_map[relative] = None
-            kind_map[relative] = (
-                "code-comment" if file_kind == "code" else "documentation"
-            )
+            kind_map[relative] = kind
     else:
         paths = list(args.target or [])
         for relative, start, end in args.line_range or []:
@@ -926,10 +929,9 @@ def prepare(args: argparse.Namespace) -> None:
             kind = kind or "draft-prose"
             excluded = draft_excluded(lines)
         elif args.scope_kind == "named":
-            file_kind = classify_path(relative)
-            if file_kind == "excluded":
+            kind = target_kind(relative)
+            if kind is None:
                 fail(f"Named target is not auditable prose: {relative}")
-            kind = "code-comment" if file_kind == "code" else "documentation"
         kind = kind or "documentation"
         allow_headings = relative in heading_targets
         every_block = target_blocks(
@@ -1217,7 +1219,7 @@ def render_diff_lines(lines: list[str]) -> list[str]:
 
 def render_patch(
     edits: list, targets: list[dict], root: Path
-) -> tuple[list[tuple[dict, str]], list[tuple[dict, int, str]]]:
+) -> tuple[list[tuple[dict, str]], list[tuple[dict, int, str]], list[dict]]:
     target_by_id = {target["id"]: target for target in targets}
     sources: dict[int, list[str]] = {}
     final_newlines: dict[int, bool] = {}
@@ -1246,7 +1248,7 @@ def render_patch(
 
     sections: list[tuple[dict, str]] = []
     dropped: list[tuple[dict, int, str]] = []
-    accepted_any = False
+    unchanged: list[dict] = []
     for target_id, target_edits in grouped.items():
         target = target_by_id[target_id]
         source_lines = sources[target_id]
@@ -1274,7 +1276,6 @@ def render_patch(
 
         if not accepted:
             continue
-        accepted_any = True
         updated_lines = list(source_lines)
         for block_id in sorted(
             accepted, key=lambda value: blocks[value]["start"], reverse=True
@@ -1282,6 +1283,7 @@ def render_patch(
             block = blocks[block_id]
             updated_lines[block["start"] - 1 : block["end"]] = accepted[block_id]
         if updated_lines == source_lines:
+            unchanged.append(target)
             continue
         final_newline = final_newlines[target_id]
         last_line_deleted = any(
@@ -1311,17 +1313,19 @@ def render_patch(
                 ),
             )
         )
-    if not sections:
-        if dropped:
-            detail = "; ".join(
-                f"{target['path']} block {block_id} ({reason})"
-                for target, block_id, reason in dropped
+    if not sections and dropped:
+        detail = "; ".join(
+            f"{target['path']} block {block_id} ({reason})"
+            for target, block_id, reason in dropped
+        )
+        if unchanged:
+            unchanged_paths = ", ".join(target["path"] for target in unchanged)
+            fail(
+                f"Surviving edits change nothing; unchanged: {unchanged_paths}; "
+                f"dropped: {detail}"
             )
-            if accepted_any:
-                fail(f"Surviving edits change nothing; dropped: {detail}")
-            fail(f"Every proposed edit was dropped: {detail}")
-        fail("Patch edits produce no changes")
-    return sections, dropped
+        fail(f"Every proposed edit was dropped: {detail}")
+    return sections, dropped, unchanged
 
 
 def write_patch(path: Path, patch: str, targets: list[dict]) -> None:
@@ -1413,14 +1417,23 @@ def validate(args: argparse.Namespace) -> None:
     if status == "no_changes":
         if reason or edits:
             fail("No-changes result must contain no reason or edits")
+        sections, dropped, unchanged = [], [], []
+    else:
+        if status != "patch" or reason or not edits:
+            fail(f"Invalid result status: {status}")
+        sections, dropped, unchanged = render_patch(
+            edits, snapshot["targets"], Path(snapshot["patch_root"])
+        )
+
+    def print_unchanged() -> None:
+        for target in unchanged:
+            print(f"UNCHANGED\t{target['id']}\t{target['path']}")
+
+    if not sections:
         print("NO_CHANGES")
+        print_unchanged()
         print_notes()
         raise SystemExit(4)
-    if status != "patch" or reason or not edits:
-        fail(f"Invalid result status: {status}")
-    sections, dropped = render_patch(
-        edits, snapshot["targets"], Path(snapshot["patch_root"])
-    )
     patch = "\n".join(section for _, section in sections) + "\n"
     write_patch(run_dir / "result.patch", patch, snapshot["targets"])
     for target, section in sections:
@@ -1428,7 +1441,9 @@ def validate(args: argparse.Namespace) -> None:
             run_dir / f"result-{target['id']}.patch", section + "\n", snapshot["targets"]
         )
     print("PATCH")
-    patched_ids = {target["id"] for target, _ in sections}
+    retained_ids = {target["id"] for target, _ in sections} | {
+        target["id"] for target in unchanged
+    }
     drops_by_target: dict[int, list[str]] = {}
     for target, block_id, drop_reason in dropped:
         drops_by_target.setdefault(target["id"], []).append(
@@ -1436,8 +1451,9 @@ def validate(args: argparse.Namespace) -> None:
         )
     for target_id, reasons in drops_by_target.items():
         target = target_by_id[target_id]
-        label = "PARTIAL" if target_id in patched_ids else "DROPPED"
+        label = "PARTIAL" if target_id in retained_ids else "DROPPED"
         print(f"{label}\t{target_id}\t{target['path']}\t{'; '.join(reasons)}")
+    print_unchanged()
     print_notes()
     for target, _ in sections:
         print(f"{target['id']}\t{target['kind']}\t{target['path']}\tresult-{target['id']}.patch")
