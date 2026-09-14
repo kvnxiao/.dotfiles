@@ -58,7 +58,11 @@
     "light": "Catppuccin Latte",
     "dark": "VSCode Icons for Zed (Dark)",
   },
-  "theme": "Catppuccin Mocha",
+  "theme": {
+    "mode": "dark",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha",
+  },
   // UI font
   "ui_font_family": "Inter",
   "ui_font_size": 16.0,
@@ -72,6 +76,22 @@
   },
   // Default tab size
   "tab_size": 2,
+  "ensure_final_newline_on_save": true,
+  "wrap_guides": [88],
+  "file_types": {
+    "dotenv": [".env*"],
+  },
+  "macos": {
+    "terminal": {
+      "font_size": 14,
+      "shell": {
+        "with_arguments": {
+          "program": "/opt/homebrew/bin/fish",
+          "args": ["--login", "--interactive"],
+        },
+      },
+    },
+  },
   // Windows specific settings override
   "windows": {
     "terminal": {
