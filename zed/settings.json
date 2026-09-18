@@ -7,6 +7,24 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "wsl_connections": [
+    {
+      "distro_name": "archlinux",
+      "user": null,
+      "projects": [
+        {
+          "paths": [
+            "/home/kvnxiao"
+          ]
+        },
+        {
+          "paths": [
+            "/home/kvnxiao/.dotfiles"
+          ]
+        }
+      ]
+    }
+  ],
   "terminal": {
     "font_size": 16.0,
     "font_weight": 400.0,
@@ -96,7 +114,6 @@
   "windows": {
     "terminal": {
       "env": {
-        "XDG_CONFIG_HOME": "/c/Users/kvnxiao/.config",
         "CHERE_INVOKING": "1",
         "MSYS": "enable_pcon winsymlinks:nativestrict",
         "MSYS2_PATH_TYPE": "minimal",

@@ -36,7 +36,6 @@ local function get_windows_config()
       MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "minimal",
       SHELL = "/usr/bin/fish",
-      XDG_CONFIG_HOME = "/c/Users/kvnxiao/.config",
     },
     default_prog = {
       "C:\\msys64\\usr\\bin\\fish.exe",

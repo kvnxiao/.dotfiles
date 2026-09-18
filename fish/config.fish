@@ -1,6 +1,5 @@
 # Set up PATH
 set -gx PNPM_HOME "$HOME/.pnpm"
-set -gx XDG_CONFIG_HOME "$HOME/.config"
 fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
 if string match -q 'macos' "$FISH_OS"
   fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME

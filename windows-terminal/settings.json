@@ -49,8 +49,7 @@
           "CHERE_INVOKING": "1",
           "MSYSTEM": "MSYS",
           "MSYS2_PATH_TYPE": "minimal",
-          "SHELL": "/usr/bin/fish",
-          "XDG_CONFIG_HOME": "/c/Users/kvnxiao/.config"
+          "SHELL": "/usr/bin/fish"
         },
         "startingDirectory": "%USERPROFILE%"
       },
@@ -64,8 +63,7 @@
           "CHERE_INVOKING": "1",
           "MSYSTEM": "MSYS",
           "MSYS2_PATH_TYPE": "minimal",
-          "SHELL": "/usr/bin/zsh",
-          "XDG_CONFIG_HOME": "/c/Users/kvnxiao/.config"
+          "SHELL": "/usr/bin/zsh"
         },
         "startingDirectory": "%USERPROFILE%"
       },
