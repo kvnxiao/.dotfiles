@@ -40,6 +40,14 @@ defender-exclusions:
 setup-hooks:
     git config --local --replace-all include.path ../.githooks/config '^\.\./\.githooks/config$'
 
+# Apply repository fixes
+fix:
+    dprint fmt
+
+# Run repository checks
+check:
+    dprint check
+
 # Full setup: deploy + platform-specific setup
 [windows]
 setup: deploy defender-exclusions setup-msys2-zsh setup-msys2-fish setup-hooks

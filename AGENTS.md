@@ -1,50 +1,50 @@
 # Dotfiles guidelines
 
-This repository holds the user's dotfiles. [patina](https://github.com/kvnxiao/patina),
-a cross-platform dotfile manager, deploys them.
+This repository holds the user's dotfiles. [patina](https://github.com/kvnxiao/patina), a
+cross-platform dotfile manager, deploys them.
 
-"Dotfiles" here is wider than tool config: shell rc files, app settings, agent skills and
-prompts, scripts, keymaps, and anything else the user wants on their machines. Treat a
-new kind of file as in scope.
+Treat shell rc files, app settings, agent skills and prompts, scripts, keymaps, and any new
+kind of machine configuration as dotfiles.
 
 ## Layout
 
-- One directory per tool (`git/`, `zsh/`, `fish/`, `wezterm/`, `agent-configs/`, …). Each
-  holds the files and a `patina.toml` that says where they deploy.
-- Root `patina.toml` marks the repo root and declares third-party `[[remote]]` git
-  sources. `patina.lock` pins them.
-- `justfile` wraps the deploy and per-platform setup steps.
-- `setup/` holds the platform bootstrap scripts the justfile calls.
-- `containers/` contains rootless Podman config plus the Quadlet `.container` and
-  `.network` units that `systemctl --user` runs. See its README for the model stack.
+- Keep each tool in its own directory (`git/`, `zsh/`, `fish/`, `wezterm/`, `agent-configs/`,
+  …), with a `patina.toml` that declares its deployment targets.
+- Use the root `patina.toml` for the repository marker and third-party `[[remote]]` sources;
+  `patina.lock` pins those sources.
+- Use `justfile` for deployment and platform setup recipes.
+- Keep platform bootstrap scripts in `setup/`.
+- Keep rootless Podman configuration and the Quadlet `.container` and `.network` units for
+  `systemctl --user` in `containers/`; its README documents the model stack.
 
-Patina renders a source that ends in `.tmpl` through MiniJinja instead of linking it.
+Patina renders sources ending in `.tmpl` through MiniJinja instead of linking them.
 
 ## Deploying
 
-Every entry but `git/.gitconfig.tmpl` deploys as a symlink, so an edit to a deployed file
-is live at once. Run `patina apply` when the deployment itself changes: an edited
-`patina.toml`, or an edit to that template.
+Deploy every entry except `git/.gitconfig.tmpl` as a symlink, so edits to deployed files
+take effect immediately. Run `patina apply` when a `patina.toml` or that template changes.
 
 ```shell
 patina apply        # prints the plan, changes nothing
 patina apply --yes  # applies it
 ```
 
-In a TTY, plain `apply` shows the diff and prompts. Anywhere else, an agent session
-included, it prints the plan and exits without writing. Read the plan, then re-run with
-`--yes`.
+In a TTY, plain `apply` shows the diff and prompts. Otherwise, including agent sessions, it
+prints the plan and exits without writing. Read the plan, then rerun with `--yes`.
 
-`just deploy` runs `patina apply` plus the Windows-only extras. It passes no `--yes`.
+`just deploy` runs `patina apply` and the Windows-only extras without `--yes`.
 
-A new file needs an entry in that directory's `patina.toml` before it can deploy,
-unless the entry covering it is a `[[directory]]` with `mode = "symlink-tree"`,
-which deploys every file under its source.
+Add each new file to its directory's `patina.toml` before deploying it, unless a covering
+`[[directory]]` uses `mode = "symlink-tree"`; that mode deploys every file under its source.
 
 ## Formatting
 
-`dprint` formats JSON, Markdown, TOML, CSS, HTML, and YAML. The `pre-commit` hook runs it
-over staged files once `just setup-hooks` has wired the hooks in.
+`dprint` formats JSON, Markdown, TOML, Malva, markup, YAML, and Dockerfiles. After
+`just setup-hooks` wires the hooks in, `pre-commit` runs it over staged files.
+
+## Post-completion checks
+
+After completing a task, run `just check`. Run `just fix` to format every supported file.
 
 ## This file
 
@@ -52,18 +52,18 @@ over staged files once `just setup-hooks` has wired the hooks in.
 
 ## Benchmarking
 
-Changes made to a shell's dotfiles (bash, fish, zsh, powershell) must run the appropriate `just benchmark-*` task to benchmark the time-to-interactive shell startup and ensure it is not significantly increased.
+After changing bash, fish, zsh, or PowerShell dotfiles, run the corresponding `just
+benchmark-*` task and verify that interactive startup time did not increase significantly.
 
 ## Ad hoc shell scripts on Windows
 
-A native Windows binary ignores the MSYS signal that `timeout` sends, so
-`timeout N script -q -c '…'` bounds nothing that `script` starts. Driving `sk` or an
-interactive shell through a pty that way leaves the wrapper and its children spinning on
-CPU long after the timeout expires, and they accumulate across a session. End them with
-`Stop-Process -Id <pid> -Force` from PowerShell; matching on process name alone would also
-kill the interactive shells the user is working in.
+A native Windows program ignores the MSYS signal sent by `timeout`. As a result,
+`timeout N script -q -c '…'` does not stop a process started by `script`. Running `sk` or an
+interactive shell through that pty can leave the wrapper and its child processes running.
+Stop them from PowerShell with `Stop-Process -Id <pid> -Force`. Do not select processes by
+name; that can kill the user's other interactive shells.
 
-MSYS2's zsh and the Git-for-Windows bash that an agent runs are separate Cygwin runtimes,
-so `env VAR=x zsh …` reaches zsh with `VAR` unset. A harness that sets `ZDOTDIR` this way
-silently tests the real config instead of the fixture. Write test configuration to a file
-and source it as the first line of the session.
+MSYS2 zsh and the Git-for-Windows bash used by agents run in separate Cygwin runtimes.
+Because of that, `env VAR=x zsh …` leaves `VAR` unset in zsh. Put the test configuration in
+a file and source it as the session's first command. Setting `ZDOTDIR` with `env` otherwise
+tests the real configuration instead of the fixture.
