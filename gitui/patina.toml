@@ -1,0 +1,11 @@
+[[file]]
+source = "theme.ron"
+target = "~/.config/gitui/theme.ron"
+mode = "symlink"
+when = "patina.os != 'windows'"
+
+[[file]]
+source = "theme.ron"
+target = "~/AppData/Roaming/gitui/theme.ron"
+mode = "symlink"
+when = "patina.os == 'windows'"
