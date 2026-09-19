@@ -1,0 +1,4 @@
+[[file]]
+source = "lumen.config.json"
+target = "~/.config/lumen/lumen.config.json"
+mode = "symlink"
