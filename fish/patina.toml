@@ -105,11 +105,6 @@ source = "functions/hooks/_cached_eval_replace_line.fish"
 target = "~/.config/fish/functions/hooks/_cached_eval_replace_line.fish"
 
 [[file]]
-source = "functions/lmserve.fish"
-target = "~/.config/fish/functions/lmserve.fish"
-when = "patina.os == 'linux'"
-
-[[file]]
 source = "functions/unzip.fish"
 target = "~/.config/fish/functions/unzip.fish"
 

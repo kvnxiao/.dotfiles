@@ -14,8 +14,8 @@ kind of machine configuration as dotfiles.
   `patina.lock` pins those sources.
 - Use `justfile` for deployment and platform setup recipes.
 - Keep platform bootstrap scripts in `setup/`.
-- Keep rootless Podman configuration and the Quadlet `.container` and `.network` units for
-  `systemctl --user` in `containers/`; its README documents the model stack.
+- Keep rootless Podman configuration, the `lmserve` Compose file, and model tuning files
+  in `lmserve/`; its README documents the model stack.
 
 Patina renders sources ending in `.tmpl` through MiniJinja instead of linking them.
 

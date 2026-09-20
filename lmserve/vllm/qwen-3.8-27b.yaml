@@ -1,4 +1,5 @@
 model: cyankiwi/Qwen3.8-27B-AWQ-INT4
+served-model-name: qwen-3.8-27b
 tensor-parallel-size: 1
 dtype: bfloat16
 kv-cache-dtype: fp8

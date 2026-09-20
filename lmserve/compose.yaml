@@ -1,0 +1,130 @@
+name: lmserve
+
+x-lmserve:
+  version: 1
+
+x-vllm: &vllm
+  image: docker.io/vllm/vllm-openai:latest
+  command: [--config, /etc/vllm/config.yaml]
+  devices:
+    - nvidia.com/gpu=all
+  ipc: host
+  ports:
+    - "8000:8000"
+  environment:
+    VLLM_CACHE_ROOT: /root/.cache/vllm
+    VLLM_NO_USAGE_STATS: "1"
+    VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
+  networks:
+    default:
+      aliases: [vllm]
+  healthcheck:
+    test: [CMD, curl, -fsS, http://127.0.0.1:8000/health]
+    start_period: 600s
+    interval: 30s
+    retries: 3
+
+x-vllm-model: &vllm-model
+  companions: [open-webui]
+  readiness:
+    url: http://127.0.0.1:8000/health
+    timeout: 900s
+
+services:
+  qwen-3.8-27b:
+    <<: *vllm
+    volumes:
+      - ./vllm/qwen-3.8-27b.yaml:/etc/vllm/config.yaml:ro
+      - ${HOME}/.cache/vllm:/root/.cache/vllm
+    x-lmserve:
+      <<: *vllm-model
+      huggingface:
+        repo: cyankiwi/Qwen3.8-27B-AWQ-INT4
+
+  gemma-4-31b:
+    <<: *vllm
+    volumes:
+      - ./vllm/gemma-4-31b.yaml:/etc/vllm/config.yaml:ro
+      - ${HOME}/.cache/vllm:/root/.cache/vllm
+    x-lmserve:
+      <<: *vllm-model
+      huggingface:
+        repo: LilaRest/gemma-4-31B-it-NVFP4-turbo
+
+  gemma-4-31b-abliterated:
+    <<: *vllm
+    volumes:
+      - ./vllm/gemma-4-31b-abliterated.yaml:/etc/vllm/config.yaml:ro
+      - ${HOME}/.cache/vllm:/root/.cache/vllm
+    x-lmserve:
+      <<: *vllm-model
+      huggingface:
+        repo: NeuralNet-Hub/gemma-4-31B-it-abliterated-uncensored-NVFP4
+
+  qwen-3.8-27b-ninfer:
+    image: localhost/ninfer:local
+    build:
+      context: https://github.com/Neroued/ninfer.git#master
+      dockerfile: Dockerfile
+    command:
+      - ninfer-serve
+      - /models/artifact.ninfer
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --model-id
+      - qwen-3.8-27b
+      - --max-context
+      - "131072"
+      - --kv-capacity
+      - auto
+      - --kv-dtype
+      - fp8
+      - --max-concurrency
+      - "1"
+      - --spec
+      - mtp
+      - --draft-tokens
+      - "3"
+      - --lm-head-draft
+      - --preserve-thinking
+      - --host-kv-mib
+      - "4096"
+    devices:
+      - nvidia.com/gpu=all
+    ports:
+      - "8001:8080"
+    volumes:
+      - ${LMSERVE_MODEL_QWEN_3_8_27B_NINFER_PATH}:/models/artifact.ninfer:ro
+    networks:
+      default:
+        aliases: [ninfer]
+    x-lmserve:
+      huggingface:
+        repo: neroued/Qwen3.8-27B-nvfp4-NInfer
+        file: qwen3_8_27b_nvfp4.ninfer
+      companions: [open-webui]
+      readiness:
+        url: http://127.0.0.1:8001/health
+        timeout: 900s
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "8080:8080"
+    volumes:
+      - open-webui-data:/app/backend/data:U
+    environment:
+      OPENAI_API_BASE_URLS: http://vllm:8000/v1;http://ninfer:8080/v1
+      OPENAI_API_KEYS: sk-local;sk-local
+      WEBUI_AUTH: "false"
+    restart: on-failure
+
+volumes:
+  open-webui-data:
+    name: open-webui-data
+
+networks:
+  default:
+    name: ai-net
