@@ -10,7 +10,7 @@ Each example below is written to transfer: no framework, package manager, langua
 - **Test intent header:** Flag a comment above a test that names what the test function name already says. Delete it. Where the name is vague, rename the test and still delete the comment. Keep a skip or ignore precondition, a fixture requirement invisible in the body, or the regression the test exists to catch.
 - **Linter over-compliance:** Flag a docstring that runs to multiple paragraphs on a private helper, or past one line on a public item whose signature already carries the contract. Compress to the single line the documentation lint requires, or delete it where no lint applies.
 - **Negative or grievance rationale:** Flag a sentence explaining why a dependency's default is inadequate, why a feature is unsupported, or why an absent thing cannot appear. Delete it and keep the positive behavior. Retain external behavior only where the reader cannot act on the local rule without it.
-- **Causal depth:** Count the causal links in one sentence: trigger, action, downstream dispatch, test or CI benefit. Past one link, cut to the immediate invariant. The downstream consumer documents itself.
+- **Causal clarity:** Flag a causal chain when its actors, conditions, or dependencies become difficult to follow. Split at the unclear dependency while preserving the relationship. Keep a clear constraint, operation, and consequence together regardless of the number of links, and verify the causal relationship as well as the individual claims.
 - **Trailing modifier:** Verify that `, which ...`, `, where ...`, or comma plus `-ing` has an immediate subject and a clear logical relation. If its scope or causal force is ambiguous, split it.
 - **Condition placement:** If a trailing temporal or conditional clause frames a long or multi-branch main clause, move it before the main clause. If a short trailing condition is restrictive or focal, preserve it.
 - **Signature restatement:** Delete internal documentation that synonyms for the name, parameters, and return type reproduce without adding a constraint. Preserve documentation required for public discovery or ecosystem completeness.
@@ -69,7 +69,7 @@ Read each prose item once with its surrounding code or document. Rewrite an ambi
 
 ### Paragraph flow
 
-Read each touched paragraph as one argument after the sentence-level edits. Identify how each sentence relates to the paragraph topic or an adjacent sentence. Parallel sentences may share one topic-level relation without connectives between them. Where sentences share neither relation and can be reordered without loss, state the missing relation or convert the run to a list. Where a new subject lacks a clear tie to the paragraph, state the tie. The one-link cap applies per sentence; the paragraph may carry a longer chain one link at a time.
+Read each touched paragraph as one argument after the sentence-level edits. For explanatory sections, check whether the paragraph advances the answer to a concrete reader question; a shared topic alone is insufficient. Identify how each sentence relates to the paragraph topic or an adjacent sentence. Parallel sentences may share one topic-level relation without connectives between them. Where sentences share neither relation and can be reordered without loss, state a supported relation or convert the run to a list. Where a new subject lacks a clear tie to the paragraph, state the tie. Once the explanation works, evaluate sentence boundaries for clarity and emphasis without targeting sentence lengths or a fixed number of causal links.
 
 ### Bidirectional fidelity
 
@@ -77,6 +77,7 @@ Compare the result against both the original prose and the authority. Treat ever
 
 - Restore a verified invariant, number, term of art, boundary, or hazard that the rewrite dropped.
 - Delete an assertion the rewrite introduced without support.
+- Verify explanatory relationships separately from their component facts; a smaller artifact and a different precision do not by themselves establish the cause of the size difference or measured VRAM savings.
 - Flag a contradiction between prose and implementation instead of preserving the old claim in smoother words.
 - Follow a claim to the file that settles it, including files that the prose never names. A claim about a sanctioned lint carve-out is settled by the lint config, a claim about what CI runs by the workflow, a claim about what enables a build feature by the build recipe. A claim whose authority you could not locate is reported as unverified, never as accepted.
 
