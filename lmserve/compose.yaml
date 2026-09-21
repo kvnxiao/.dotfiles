@@ -31,37 +31,27 @@ x-vllm-model: &vllm-model
     timeout: 900s
 
 services:
-  qwen-3.8-27b:
+  gemma4-31b:
     <<: *vllm
     volumes:
-      - ./vllm/qwen-3.8-27b.yaml:/etc/vllm/config.yaml:ro
-      - ${HOME}/.cache/vllm:/root/.cache/vllm
-    x-lmserve:
-      <<: *vllm-model
-      huggingface:
-        repo: cyankiwi/Qwen3.8-27B-AWQ-INT4
-
-  gemma-4-31b:
-    <<: *vllm
-    volumes:
-      - ./vllm/gemma-4-31b.yaml:/etc/vllm/config.yaml:ro
+      - ./vllm/gemma4-31b.yaml:/etc/vllm/config.yaml:ro
       - ${HOME}/.cache/vllm:/root/.cache/vllm
     x-lmserve:
       <<: *vllm-model
       huggingface:
         repo: LilaRest/gemma-4-31B-it-NVFP4-turbo
 
-  gemma-4-31b-abliterated:
+  gemma4-31b-abliterated:
     <<: *vllm
     volumes:
-      - ./vllm/gemma-4-31b-abliterated.yaml:/etc/vllm/config.yaml:ro
+      - ./vllm/gemma4-31b-abliterated.yaml:/etc/vllm/config.yaml:ro
       - ${HOME}/.cache/vllm:/root/.cache/vllm
     x-lmserve:
       <<: *vllm-model
       huggingface:
         repo: NeuralNet-Hub/gemma-4-31B-it-abliterated-uncensored-NVFP4
 
-  qwen-3.8-27b-ninfer:
+  qwen3.8-27b-ninfer:
     image: localhost/ninfer:local
     build:
       context: https://github.com/Neroued/ninfer.git#master
@@ -74,7 +64,7 @@ services:
       - --port
       - "8080"
       - --model-id
-      - qwen-3.8-27b
+      - qwen3.8-27b
       - --max-context
       - "131072"
       - --kv-capacity
@@ -96,7 +86,7 @@ services:
     ports:
       - "8001:8080"
     volumes:
-      - ${LMSERVE_MODEL_QWEN_3_8_27B_NINFER_PATH}:/models/artifact.ninfer:ro
+      - ${LMSERVE_MODEL_QWEN3_8_27B_NINFER_PATH}:/models/artifact.ninfer:ro
     networks:
       default:
         aliases: [ninfer]

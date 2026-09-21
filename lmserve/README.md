@@ -71,13 +71,13 @@ directory to select the local Compose file.
 Prepare only the selected entry, including its WebUI image:
 
 ```shell
-lmserve plan update-images qwen-3.8-27b
-lmserve update-images qwen-3.8-27b
-lmserve update-models qwen-3.8-27b
-lmserve plan start qwen-3.8-27b
-lmserve start qwen-3.8-27b
-lmserve status qwen-3.8-27b
-lmserve health qwen-3.8-27b
+lmserve plan update-images gemma4-31b
+lmserve update-images gemma4-31b
+lmserve update-models gemma4-31b
+lmserve plan start gemma4-31b
+lmserve start gemma4-31b
+lmserve status gemma4-31b
+lmserve health gemma4-31b
 ```
 
 `start` returns after accepting the operation. `status` reports startup progress;
@@ -85,9 +85,9 @@ lmserve health qwen-3.8-27b
 Use `lmserve logs ENTRY --follow` for the engine logs and
 `lmserve logs ENTRY --service open-webui --follow` for WebUI logs.
 
-For the original NInfer entry, `update-images qwen-3.8-27b-ninfer` builds the
+For the original NInfer entry, `update-images qwen3.8-27b-ninfer` builds the
 upstream `master` Dockerfile directly as `localhost/ninfer:local`. The
-[Swift entry](docs/models/swift-qwen-3.8-27b.md) uses `ninfer/Dockerfile` to build
+[Swift entry](docs/models/swift-qwen3.8-27b.md) uses `ninfer/Dockerfile` to build
 `localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2` from a pinned NInfer
 commit and CUDA 13.1.2, with two compilation workers. `lmserve` checks each
 entry's `/health` endpoint from the host.
@@ -131,12 +131,12 @@ prepare it.
 Prepare a different entry before switching to it:
 
 ```shell
-lmserve update-images qwen-3.8-27b-ninfer
-lmserve update-models qwen-3.8-27b-ninfer
-lmserve switch qwen-3.8-27b-ninfer
-lmserve status qwen-3.8-27b-ninfer
-lmserve health qwen-3.8-27b-ninfer
-lmserve stop qwen-3.8-27b-ninfer
+lmserve update-images qwen3.8-27b-ninfer
+lmserve update-models qwen3.8-27b-ninfer
+lmserve switch qwen3.8-27b-ninfer
+lmserve status qwen3.8-27b-ninfer
+lmserve health qwen3.8-27b-ninfer
+lmserve stop qwen3.8-27b-ninfer
 ```
 
 `switch` stops the active model before starting its replacement. An unchanged

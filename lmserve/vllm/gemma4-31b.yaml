@@ -1,5 +1,5 @@
 model: LilaRest/gemma-4-31B-it-NVFP4-turbo
-served-model-name: LilaRest/gemma-4-31B-it-NVFP4-turbo
+served-model-name: gemma4-31b
 quantization: modelopt
 max-model-len: 16384
 max-num-seqs: 2

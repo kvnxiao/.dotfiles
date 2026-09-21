@@ -27,7 +27,7 @@ The image is `localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2`.
 The local image was validated with the artifact at 32K. `ninfer/Dockerfile`
 builds NInfer commit
 `9e163eee4b8acec21ab0ac765107b6a3f287b217` with CUDA 13.1.2 and two compilation
-workers. The original `qwen-3.8-27b-ninfer` entry retains its separate image
+workers. The original `qwen3.8-27b-ninfer` entry retains its separate image
 and mutable upstream build.
 
 ## Prepare and start

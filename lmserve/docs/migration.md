@@ -34,31 +34,34 @@ addressable for shutdown after their names are removed from Compose:
 
 ```shell
 lmserve validate
-lmserve stop vllm-qwen-3.8-27b
-lmserve status vllm-qwen-3.8-27b
+lmserve stop gemma-4-31b
+lmserve status gemma-4-31b
 ```
 
 Stop is asynchronous. Repeat `status` until the stop operation reports `stopped`;
 do not prepare models while it is still stopping. Then prepare and start under the new name:
 
 ```shell
-lmserve update-images qwen-3.8-27b
-lmserve update-models qwen-3.8-27b
-lmserve start qwen-3.8-27b
-lmserve status qwen-3.8-27b
-lmserve health qwen-3.8-27b
+lmserve update-images gemma4-31b
+lmserve update-models gemma4-31b
+lmserve start gemma4-31b
+lmserve status gemma4-31b
+lmserve health gemma4-31b
 ```
 
 Repeat `status` and `health` until startup reports `ready` and health succeeds.
 Use the corresponding old name for shutdown and new name for preparation and
 startup:
 
-| Old entry                      | New entry                 |
-| ------------------------------ | ------------------------- |
-| `vllm-qwen-3.8-27b`            | `qwen-3.8-27b`            |
-| `vllm-gemma-4-31b`             | `gemma-4-31b`             |
-| `vllm-gemma-4-31b-abliterated` | `gemma-4-31b-abliterated` |
-| `ninfer-qwen-3.8-27b`          | `qwen-3.8-27b-ninfer`     |
+| Old entry                 | New entry                |
+| ------------------------- | ------------------------ |
+| `gemma-4-31b`             | `gemma4-31b`             |
+| `gemma-4-31b-abliterated` | `gemma4-31b-abliterated` |
+| `qwen-3.8-27b-ninfer`     | `qwen3.8-27b-ninfer`     |
+
+The `qwen-3.8-27b` vLLM entry is removed. If it is active, stop it with
+`lmserve stop qwen-3.8-27b` and wait for `lmserve status qwen-3.8-27b` to report
+`stopped` before preparing another entry. The NInfer Qwen entries remain available.
 
 An already stopped entry needs preparation under its new name before its next
 start; only one model can run at a time. NInfer retains its single-file artifact
@@ -131,12 +134,12 @@ Choose an entry from the [model guides](models/README.md). For example:
 ```shell
 lmserve cdi
 lmserve validate
-lmserve update-images qwen-3.8-27b
-lmserve update-models qwen-3.8-27b
-lmserve plan start qwen-3.8-27b
-lmserve start qwen-3.8-27b
-lmserve status qwen-3.8-27b
-lmserve health qwen-3.8-27b
+lmserve update-images gemma4-31b
+lmserve update-models gemma4-31b
+lmserve plan start gemma4-31b
+lmserve start gemma4-31b
+lmserve status gemma4-31b
+lmserve health gemma4-31b
 ```
 
 Wait for readiness, then check `http://localhost:8080` for existing chat history
