@@ -41,15 +41,15 @@ services:
       huggingface:
         repo: LilaRest/gemma-4-31B-it-NVFP4-turbo
 
-  gemma4-31b-abliterated:
+  gemma4-31b-ortenzya-uncensored:
     <<: *vllm
     volumes:
-      - ./vllm/gemma4-31b-abliterated.yaml:/etc/vllm/config.yaml:ro
+      - ./vllm/gemma4-31b-ortenzya-uncensored.yaml:/etc/vllm/config.yaml:ro
       - ${HOME}/.cache/vllm:/root/.cache/vllm
     x-lmserve:
       <<: *vllm-model
       huggingface:
-        repo: NeuralNet-Hub/gemma-4-31B-it-abliterated-uncensored-NVFP4
+        repo: llmfan46/gemma-4-Ortenzya-The-Creative-Wordsmith-31B-it-uncensored-heretic-NVFP4
 
   qwen3.8-27b-ninfer:
     image: localhost/ninfer:local

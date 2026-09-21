@@ -1,5 +1,5 @@
-model: NeuralNet-Hub/gemma-4-31B-it-abliterated-uncensored-NVFP4
-served-model-name: gemma4-31b-abliterated
+model: llmfan46/gemma-4-Ortenzya-The-Creative-Wordsmith-31B-it-uncensored-heretic-NVFP4
+served-model-name: gemma4-31b-ortenzya-uncensored
 dtype: bfloat16
 kv-cache-dtype: fp8
 max-model-len: 32768
