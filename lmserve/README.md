@@ -2,7 +2,8 @@
 
 `lmserve` runs one model server and its Open WebUI companion through rootless
 Podman. [compose.yaml](compose.yaml) defines all vLLM and NInfer entries. Shared
-vLLM container settings use YAML anchors; `vllm/` contains the engine tuning files.
+vLLM container settings use YAML anchors; `vllm/` contains the engine tuning files,
+and `ninfer/` contains the Swift entry's pinned runtime build.
 [Model guides](docs/models/README.md) describe each entry.
 
 ## Requirements
@@ -34,8 +35,9 @@ patina apply
 patina apply --yes
 ```
 
-Patina links `compose.yaml` to `~/.config/lmserve/compose.yaml` and the tuning
-files to `~/.config/lmserve/vllm/`. With a CLI that includes configuration
+Patina links `compose.yaml` to `~/.config/lmserve/compose.yaml`, the tuning
+files to `~/.config/lmserve/vllm/`, and the NInfer build files to
+`~/.config/lmserve/ninfer/`. With a CLI that includes configuration
 discovery (commit `cd00c3c` or newer), run commands from any directory without a
 local `compose.yaml`:
 
@@ -57,9 +59,9 @@ A nonempty `XDG_CONFIG_HOME` must be absolute. This repository deploys to
 Compose symlink under that directory's `lmserve/` subdirectory.
 
 `lmserve` canonicalizes the selected file before resolving relative mounts and
-`.env`. The deployed symlink therefore resolves `./vllm/` from this repository's
-`lmserve/` directory. Keep any project `.env` beside the actual Compose file,
-not beside its deployed symlink. No `.env` is currently required.
+`.env`. The deployed symlink therefore resolves `./vllm/` and `./ninfer/` from
+this repository's `lmserve/` directory. Keep any project `.env` beside the actual
+Compose file, not beside its deployed symlink. No `.env` is currently required.
 
 Before deployment, run `lmserve validate` from this repository's `lmserve/`
 directory to select the local Compose file.
@@ -83,15 +85,19 @@ lmserve health qwen-3.8-27b
 Use `lmserve logs ENTRY --follow` for the engine logs and
 `lmserve logs ENTRY --service open-webui --follow` for WebUI logs.
 
-For NInfer, `update-images qwen-3.8-27b-ninfer` builds the upstream `master`
-Dockerfile directly as `localhost/ninfer:local`. `lmserve` checks NInfer's
-`/health` endpoint from the host.
+For the original NInfer entry, `update-images qwen-3.8-27b-ninfer` builds the
+upstream `master` Dockerfile directly as `localhost/ninfer:local`. The
+[Swift entry](docs/models/swift-qwen-3.8-27b.md) uses `ninfer/Dockerfile` to build
+`localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2` from a pinned NInfer
+commit and CUDA 13.1.2, with two compilation workers. `lmserve` checks each
+entry's `/health` endpoint from the host.
 
-Model repositories and the NInfer artifact filename are declared in Compose.
+Model repositories and NInfer artifact filenames are declared in Compose.
 With no `huggingface.revision`, each explicit `update-models` selects the current
-remote `main` commit. Image tags and the NInfer source branch remain mutable; preparation
-records the resolved image and artifact identities. Lifecycle commands do not
-pull images, build sources, or download models.
+remote `main` commit. Swift pins both its model revision and NInfer source commit;
+the original NInfer entry follows the mutable source branch. Image tags remain
+mutable, and preparation records the resolved image and artifact identities.
+Lifecycle commands do not pull images, build sources, or download models.
 
 `update-models` publishes artifacts under
 `${XDG_CACHE_HOME:-~/.cache}/lmserve/models`, separate from the existing Hugging

@@ -19,3 +19,9 @@ source = "vllm"
 target = "~/.config/lmserve/vllm"
 mode = "symlink-tree"
 when = "patina.os == 'linux'"
+
+[[directory]]
+source = "ninfer"
+target = "~/.config/lmserve/ninfer"
+mode = "symlink-tree"
+when = "patina.os == 'linux'"

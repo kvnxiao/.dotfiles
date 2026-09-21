@@ -109,6 +109,55 @@ services:
         url: http://127.0.0.1:8001/health
         timeout: 900s
 
+  qwen3.8-27b-swift-orcarouter:
+    image: localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2
+    build:
+      context: ./ninfer
+      dockerfile: Dockerfile
+    command:
+      - ninfer-serve
+      - /models/artifact.ninfer
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --model-id
+      - qwen3.8-27b-swift-orcarouter
+      - --max-context
+      - "131072"
+      - --kv-capacity
+      - "131072"
+      - --kv-dtype
+      - fp8
+      - --max-concurrency
+      - "1"
+      - --spec
+      - dflash2
+      - --draft-tokens
+      - "7"
+      - --vision
+      - --preserve-thinking
+      - --host-kv-mib
+      - "4096"
+    devices:
+      - nvidia.com/gpu=all
+    ports:
+      - "8001:8080"
+    volumes:
+      - ${LMSERVE_MODEL_QWEN3_8_27B_SWIFT_ORCAROUTER_PATH}:/models/artifact.ninfer:ro
+    networks:
+      default:
+        aliases: [ninfer]
+    x-lmserve:
+      huggingface:
+        repo: kvnxiao/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer
+        revision: b1ec30022cf61aece82b41d849c4b181f7ddd4c4
+        file: swift-qwen3.8-27b-orcarouter-dflash2-nvfp4.ninfer
+      companions: [open-webui]
+      readiness:
+        url: http://127.0.0.1:8001/health
+        timeout: 900s
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     ports:
