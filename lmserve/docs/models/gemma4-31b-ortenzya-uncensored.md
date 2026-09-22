@@ -12,7 +12,6 @@ lmserve start gemma4-31b-ortenzya-uncensored
 lmserve status gemma4-31b-ortenzya-uncensored
 ```
 
-The service reads `vllm/gemma4-31b-ortenzya-uncensored.yaml`, uses a 32K context and
-FP8 KV cache, and publishes port `8000`. Its API model name is
-`gemma4-31b-ortenzya-uncensored`. If another entry is active, use
-`lmserve switch gemma4-31b-ortenzya-uncensored`.
+The service reads `vllm/gemma4-31b-ortenzya-uncensored.yaml`, uses a 32K context and FP8 KV cache,
+and publishes port `8000`. Its API model name is `gemma4-31b-ortenzya-uncensored`. If another entry
+is active, use `lmserve switch gemma4-31b-ortenzya-uncensored`.

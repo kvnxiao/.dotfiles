@@ -8,7 +8,8 @@ allowed-tools: Read, Bash, Grep, Glob, Task
 
 Autonomous Linear ticket completion: fetch issue → create worktree → plan → review → implement → PR.
 
-**CRITICAL**: Create git worktree BEFORE implementation. Use ticket ID as worktree folder/branch name.
+**CRITICAL**: Create git worktree BEFORE implementation. Use ticket ID as worktree folder/branch
+name.
 
 ## Usage
 
@@ -27,11 +28,18 @@ Follow 6 steps (see `./references/workflow.md` for full details):
    - Fetch issue comments: `linear-cli cm list <id> --output json`
    - Check for uploaded files/attachments in both issue description AND comments
    - Use `/linear-uploads` skill to download any attachments (images, screenshots, files)
-2. **Create Worktree** - Use `/git-worktree` skill to create isolated worktree, cd into it, install deps
-3. **Plan** - Task tool with `subagent_type=Plan`, read `./references/planner-prompt.md` for template
-4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, read `./references/reviewer-prompt.md` for template
-5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`, read `./references/code-reviewer-prompt.md`. Visual validation (opt-in): runs `subagent_type=squint:playwright-visual-validator` in parallel if enabled via `--visual` flag, `visual-test` label, or `[visual-test]` marker in ticket
-6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. Read `./references/workflow.md` Step 6 for PR body format
+2. **Create Worktree** - Use `/git-worktree` skill to create isolated worktree, cd into it, install
+   deps
+3. **Plan** - Task tool with `subagent_type=Plan`, read `./references/planner-prompt.md` for
+   template
+4. **Review** - Task tool with `subagent_type=feature-dev:code-architect`, read
+   `./references/reviewer-prompt.md` for template
+5. **Implement & Review** - Execute approved plan, then `subagent_type=feature-dev:code-reviewer`,
+   read `./references/code-reviewer-prompt.md`. Visual validation (opt-in): runs
+   `subagent_type=squint:playwright-visual-validator` in parallel if enabled via `--visual` flag,
+   `visual-test` label, or `[visual-test]` marker in ticket
+6. **Create PR** - Commit, prepare PR body (fill template if exists), create PR. Read
+   `./references/workflow.md` Step 6 for PR body format
 
 ## Autonomous Loops
 
@@ -50,4 +58,5 @@ Follow 6 steps (see `./references/workflow.md` for full details):
 **PR Body Requirements** (see workflow.md for details):
 
 1. Extract variables from Step 4 "Extract from approved review" section
-2. **Always append** the "🤖 Autonomous Planning Reasoning" collapsible section from Step 6b — use the EXACT template format
+2. **Always append** the "🤖 Autonomous Planning Reasoning" collapsible section from Step 6b — use
+   the EXACT template format

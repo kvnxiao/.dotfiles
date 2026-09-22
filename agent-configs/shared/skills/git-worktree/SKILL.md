@@ -36,7 +36,8 @@ WORKTREE_PATH="$HOME/.claude-worktrees/my-repo/my-branch" ./scripts/remove-workt
 
 ## .worktreeinclude
 
-Create a `.worktreeinclude` file in your repo root to specify files that should be copied to new worktrees:
+Create a `.worktreeinclude` file in your repo root to specify files that should be copied to new
+worktrees:
 
 ```
 # Environment files

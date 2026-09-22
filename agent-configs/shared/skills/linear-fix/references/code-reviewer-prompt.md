@@ -2,11 +2,9 @@
 
 You are reviewing the implementation for Linear ticket $TICKET_ID.
 
-TICKET REQUIREMENTS:
-$TICKET_JSON
+TICKET REQUIREMENTS: $TICKET_JSON
 
-APPROVED PLAN:
-$SELECTED_APPROACH
+APPROVED PLAN: $SELECTED_APPROACH
 
 Review the uncommitted changes (git diff) for:
 
@@ -16,7 +14,8 @@ Review the uncommitted changes (git diff) for:
 4. Alignment with the approved plan
 5. Edge cases from the plan that may not be handled
 
-**IMPORTANT**: Check if the repo has documented coding standards in `docs/`, `docs/standards/`, or similar. If so, ensure changes adhere to those standards.
+**IMPORTANT**: Check if the repo has documented coding standards in `docs/`, `docs/standards/`, or
+similar. If so, ensure changes adhere to those standards.
 
 Report only high-confidence issues. Do NOT nitpick style or suggest refactors beyond scope.
 

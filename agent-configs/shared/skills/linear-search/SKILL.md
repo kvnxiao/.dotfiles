@@ -33,7 +33,8 @@ linear-cli s projects "api" --limit 10
 
 ## After Searching
 
-For detailed issue operations (get details, add comments, update status), use the `linear-issues` skill.
+For detailed issue operations (get details, add comments, update status), use the `linear-issues`
+skill.
 
 ## Tips
 

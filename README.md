@@ -31,11 +31,10 @@ With a Rust toolchain, install patina with
 | [MSYS2](https://www.msys2.org/) | fish, zsh, and Unix tools |
 | [scoop](https://scoop.sh/)      | package manager           |
 
-Patina creates symbolic links. On Windows those require Developer Mode or an
-elevated session. When `patina apply` needs the privilege, it offers a one-time
-UAC prompt that turns Developer Mode on through the bundled `patina-elevate`
-helper. After that, `patina apply` runs without elevation. To turn it on ahead
-of time, run `patina doctor --fix`.
+Patina creates symbolic links. On Windows those require Developer Mode or an elevated session. When
+`patina apply` needs the privilege, it offers a one-time UAC prompt that turns Developer Mode on
+through the bundled `patina-elevate` helper. After that, `patina apply` runs without elevation. To
+turn it on ahead of time, run `patina doctor --fix`.
 
 ## Setup
 
@@ -46,6 +45,5 @@ cd ~/.dotfiles
 just setup
 ```
 
-`just setup` deploys the dotfiles through patina and wires the repo's git hooks.
-On Windows it also applies the Defender exclusions and sets up the MSYS2 zsh and
-fish environments.
+`just setup` deploys the dotfiles through patina and wires the repo's git hooks. On Windows it also
+applies the Defender exclusions and sets up the MSYS2 zsh and fish environments.

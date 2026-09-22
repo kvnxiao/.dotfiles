@@ -2,6 +2,8 @@
   "json": {
   },
   "markdown": {
+    "lineWidth": 100,
+    "textWrap": "always"
   },
   "toml": {
   },

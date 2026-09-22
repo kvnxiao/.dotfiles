@@ -1,9 +1,8 @@
 # Model profiles
 
-One [Compose file](../../compose.yaml) defines both engines and their shared
-Open WebUI companion. Each key under Compose `services` with `x-lmserve`
-metadata is an `lmserve` entry name; filenames do not determine it. The
-service image and command select the engine.
+One [Compose file](../../compose.yaml) defines both engines and their shared Open WebUI companion.
+Each key under Compose `services` with `x-lmserve` metadata is an `lmserve` entry name; filenames do
+not determine it. The service image and command select the engine.
 
 Use these names in `lmserve start ENTRY` and other lifecycle commands:
 
@@ -14,8 +13,7 @@ Use these names in `lmserve start ENTRY` and other lifecycle commands:
 | [Gemma 4 31B](gemma4-31b.md)                                         | `gemma4-31b`                     | `vllm/gemma4-31b.yaml`                     |
 | [Gemma 4 31B Ortenzya uncensored](gemma4-31b-ortenzya-uncensored.md) | `gemma4-31b-ortenzya-uncensored` | `vllm/gemma4-31b-ortenzya-uncensored.yaml` |
 
-After deployment, run guide commands from a directory without a local
-`compose.yaml` to use the default user configuration. Before deployment, run
-from the repository's `lmserve/` directory. Use `lmserve switch ENTRY`
-when another entry is active. Shared setup and lifecycle instructions are in the
-[lmserve README](../../README.md).
+After deployment, run guide commands from a directory without a local `compose.yaml` to use the
+default user configuration. Before deployment, run from the repository's `lmserve/` directory. Use
+`lmserve switch ENTRY` when another entry is active. Shared setup and lifecycle instructions are in
+the [lmserve README](../../README.md).

@@ -2,10 +2,12 @@
 
 ## Contents
 
-1. [Gather Context](#step-1-gather-context) - Fetch ticket details, download attachments, prepare visual baselines (if `[visual-test]` marker present)
+1. [Gather Context](#step-1-gather-context) - Fetch ticket details, download attachments, prepare
+   visual baselines (if `[visual-test]` marker present)
 2. [Create Git Worktree](#step-2-create-git-worktree) - Isolated workspace for implementation
 3. [Autonomous Planning](#step-3-autonomous-planning) - Generate implementation approaches
-4. [Autonomous Plan Review](#step-4-autonomous-plan-review) - Architect approval loop, extract variables
+4. [Autonomous Plan Review](#step-4-autonomous-plan-review) - Architect approval loop, extract
+   variables
 5. [Implement and Review](#step-5-implement-and-review) - Code implementation and review loop
 6. [Commit, Push, and Create PR](#step-6-commit-push-and-create-pr) - PR with planning reasoning
 
@@ -23,9 +25,12 @@ TICKET_COMMENTS=$(linear-cli cm list "$TICKET_ID" --output json)
 
 **Always use `--output json`** for all Linear CLI commands.
 
-Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`, `TICKET_URL` (the `url` field)
+Extract from TICKET_JSON: `TITLE`, `DESCRIPTION`, `STATE`, `PRIORITY`, `TICKET_URL` (the `url`
+field)
 
-**IMPORTANT**: Check BOTH `TICKET_JSON` (issue description) AND `TICKET_COMMENTS` for uploaded files/attachments. If any uploads exist (images, screenshots, files), ALWAYS download them via `/linear-uploads` skill for additional context before planning.
+**IMPORTANT**: Check BOTH `TICKET_JSON` (issue description) AND `TICKET_COMMENTS` for uploaded
+files/attachments. If any uploads exist (images, screenshots, files), ALWAYS download them via
+`/linear-uploads` skill for additional context before planning.
 
 **Visual Testing Baseline Preparation (opt-in):**
 
@@ -68,7 +73,8 @@ Infer URL and viewport from image filename/context when possible.
 
 ## Step 2: Create Git Worktree
 
-Use the `/git-worktree` skill to create an isolated worktree. First generate branch name from ticket URL:
+Use the `/git-worktree` skill to create an isolated worktree. First generate branch name from ticket
+URL:
 
 ```bash
 OS_USER=$(whoami)
@@ -76,19 +82,22 @@ BRANCH_SUFFIX=$(echo "$TICKET_URL" | sed -n 's|.*/issue/||p' | tr '[:upper:]' '[
 BRANCH_NAME="${OS_USER}/${BRANCH_SUFFIX}"
 ```
 
-Pass `BRANCH_NAME` to the `/git-worktree` skill. The skill outputs `WORKTREE_PATH` and `DEFAULT_BRANCH`. After creation, cd into `$WORKTREE_PATH` and install dependencies.
+Pass `BRANCH_NAME` to the `/git-worktree` skill. The skill outputs `WORKTREE_PATH` and
+`DEFAULT_BRANCH`. After creation, cd into `$WORKTREE_PATH` and install dependencies.
 
 ## Step 3: Autonomous Planning
 
 Use Task tool with `subagent_type=Plan`.
 
-Read `./planner-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$TICKET_COMMENTS`.
+Read `./planner-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`,
+`$TICKET_COMMENTS`.
 
 ## Step 4: Autonomous Plan Review
 
 Use Task tool with `subagent_type=feature-dev:code-architect`.
 
-Read `./reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$PLANNER_OUTPUT`.
+Read `./reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`,
+`$PLANNER_OUTPUT`.
 
 **Multi-Round Loop:**
 
@@ -118,7 +127,8 @@ Run code review and visual validation **in parallel** when design assets exist.
 
 Use Task tool with `subagent_type=feature-dev:code-reviewer`.
 
-Read `./code-reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`, `$SELECTED_APPROACH`.
+Read `./code-reviewer-prompt.md` for prompt template. Substitute `$TICKET_ID`, `$TICKET_JSON`,
+`$SELECTED_APPROACH`.
 
 **Visual Validation** (conditional):
 
@@ -155,11 +165,14 @@ Spawn BOTH agents in the same Task tool message:
 **Review Loop:**
 
 - Code review: `## Code Review: CHANGES REQUESTED` → fix issues (5a) and re-review
-- Visual validation: Overall verdict `FAIL` or `WARNING` → address differences, re-capture, re-validate
-- Both must pass: Code review `APPROVED` AND visual validation `PASS` (or `WARNING` with documented justification)
+- Visual validation: Overall verdict `FAIL` or `WARNING` → address differences, re-capture,
+  re-validate
+- Both must pass: Code review `APPROVED` AND visual validation `PASS` (or `WARNING` with documented
+  justification)
 - Max 2 iterations; then proceed with documented caveats
 
-**IMPORTANT**: Do NOT proceed to Step 6 until code review is APPROVED (or max iterations reached with caveats documented).
+**IMPORTANT**: Do NOT proceed to Step 6 until code review is APPROVED (or max iterations reached
+with caveats documented).
 
 ## Step 6: Commit, Push, and Create PR
 
@@ -174,7 +187,8 @@ Check for PR template and fill it out:
 
 1. Look for `.github/pull_request_template.md` or `.github/PULL_REQUEST_TEMPLATE.md`
 2. **If template exists**: Read it and fill each section with ticket details and implementation info
-3. **If no template**: Create body with: Overview (link to Linear ticket), Description, Changes summary
+3. **If no template**: Create body with: Overview (link to Linear ticket), Description, Changes
+   summary
 
 **IMPORTANT**: ALWAYS APPEND collapsible planning section to PR body:
 
