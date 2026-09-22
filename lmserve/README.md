@@ -18,14 +18,11 @@ before serving, and regenerate it after an NVIDIA driver update:
 lmserve cdi
 ```
 
-The vLLM services retain `VLLM_WSL2_ENABLE_PIN_MEMORY=1`.
+The vLLM services set `VLLM_WSL2_ENABLE_PIN_MEMORY=1`.
 
 ## Deploy configuration
 
-When replacing the Quadlet setup, follow [the cutover guide](docs/migration.md) before deploying.
-For existing `lmserve` standalone model preparations, follow
-[the cache and entry-name migration](docs/migration.md#upgrade-lmserve-repository-caches-and-entry-names).
-For a fresh setup, preview and apply the dotfiles:
+Preview and apply the dotfiles:
 
 ```shell
 patina apply
@@ -81,20 +78,25 @@ when the model endpoint is ready. Readiness allows 900 seconds. Use `lmserve log
 for the engine logs and `lmserve logs ENTRY --service open-webui --follow` for WebUI logs.
 
 For the original NInfer entry, `update-images qwen3.8-27b-ninfer` builds the upstream `master`
-Dockerfile directly as `localhost/ninfer:local`. The [Swift entry](docs/models/swift-qwen3.8-27b.md)
-uses `ninfer/Dockerfile` to build `localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2` from a
-pinned NInfer commit and CUDA 13.1.2, with two compilation workers. `lmserve` checks each entry's
-`/health` endpoint from the host.
+Dockerfile directly as `localhost/ninfer:local`. The
+[Swift entry](docs/models/qwen3.8-27b-swift-orcarouter.md) uses `ninfer/Dockerfile` to build
+`localhost/swift-orcarouter-ninfer:9e163eee4b8a-cuda13.1.2` from a pinned NInfer commit and CUDA
+13.1.2, with two compilation workers. `lmserve` checks each entry's `/health` endpoint from the
+host.
 
-Model repositories and NInfer artifact filenames are declared in Compose. With no
-`huggingface.revision`, each explicit `update-models` selects the current remote `main` commit.
-Swift pins both its model revision and NInfer source commit; the original NInfer entry follows the
-mutable source branch. Image tags remain mutable, and preparation records the resolved image and
-artifact identities. Lifecycle commands do not pull images, build sources, or download models.
+Model repositories are declared in Compose. The original NInfer entry declares its artifact filename
+in `huggingface.file`; Swift declares its `.ninfer` filename in the snapshot path of its NInfer
+command. With no `huggingface.revision`, each explicit `update-models` selects the current remote
+`main` commit. Swift pins both its model revision and NInfer source commit; the original NInfer
+entry follows the mutable source branch. Image tags remain mutable, and preparation records the
+resolved image and artifact identities. Lifecycle commands do not pull images, build sources, or
+download models.
 
 `update-models` publishes artifacts under `${XDG_CACHE_HOME:-~/.cache}/lmserve/models`, separate
-from the existing Hugging Face cache. Allow space for staged downloads and published artifacts; the
-old cache is not migrated or deleted. NInfer mounts only its prepared `.ninfer` artifact.
+from the default Hugging Face cache. Allow space for staged downloads and published artifacts. The
+original NInfer entry mounts only its prepared `.ninfer` artifact. For Swift, `lmserve` downloads
+the full repository snapshot and mounts the prepared Hugging Face cache read-only at
+`/lmserve/huggingface/hub`, and NInfer loads the `.ninfer` file from the pinned snapshot path.
 
 Each vLLM tuning YAML uses the repository ID declared in `x-lmserve.huggingface.repo`. `lmserve`
 mounts its prepared Hugging Face cache read-only at `/lmserve/huggingface/hub` and supplies
@@ -107,7 +109,7 @@ Keep source revision selection in `x-lmserve.huggingface.revision`; leave vLLM's
 `tokenizer-revision`, and `code-revision` unset. Leave `download-dir` unset so download locks remain
 outside the read-only cache. Do not add model-path mounts or Hugging Face model-cache and offline
 variables to vLLM services or their environment files. Keep writable module and compiler caches
-outside the managed model cache; `~/.cache/vllm` remains mounted for compilation caches.
+outside the managed model cache; the vLLM services mount `~/.cache/vllm` for compilation caches.
 
 `lmserve` prepares only the declared model repository. These tuning files enable `trust-remote-code`
 but do not explicitly select separate tokenizer or code repositories. Flag any such dependency
@@ -145,27 +147,24 @@ shutdown. Start the chosen entry explicitly. `lmserve` stores ownership and oper
 | NInfer     | `http://localhost:8001/v1` | `http://ninfer:8080/v1`       |
 | Open WebUI | `http://localhost:8080`    | Both engine connections above |
 
-Ports retain their all-interface bindings. WebUI retains `WEBUI_AUTH=false` and `sk-local` for both
-connection keys. Only the selected engine endpoint is active.
+Compose publishes the host ports on all interfaces. The WebUI service sets `WEBUI_AUTH=false` and
+uses `sk-local` for both connection keys. Only the selected engine endpoint is active.
 
-Compose retains the `ai-net` network name and the exact `open-webui-data` volume name. The volume
-contains WebUI settings and chat history and remains after an entry stops. Persisted WebUI
-connection settings may override environment values; inspect its connections if a model is missing
-from the UI.
+Compose names the default network `ai-net` and the WebUI volume `open-webui-data`, without the
+`lmserve` project prefix. The volume contains WebUI settings and chat history and remains after an
+entry stops. Persisted WebUI connection settings may override environment values; inspect its
+connections if a model is missing from the UI.
 
-The Quadlet setup stores data in these host locations:
+Podman, `lmserve`, and vLLM store data in these host locations:
 
-| Data                                                        | Host location                                                     |
-| ----------------------------------------------------------- | ----------------------------------------------------------------- |
-| WebUI named volume                                          | `~/.local/share/containers/storage/volumes/open-webui-data/_data` |
-| Podman images and container storage                         | `~/.local/share/containers/storage`                               |
-| Hugging Face model downloads, including the NInfer artifact | `~/.cache/huggingface/hub`                                        |
-| vLLM compilation caches                                     | `~/.cache/vllm`                                                   |
+| Data                                             | Host location                                                     |
+| ------------------------------------------------ | ----------------------------------------------------------------- |
+| WebUI named volume                               | `~/.local/share/containers/storage/volumes/open-webui-data/_data` |
+| Podman images and container storage              | `~/.local/share/containers/storage`                               |
+| Prepared model artifacts and Hugging Face caches | `${XDG_CACHE_HOME:-~/.cache}/lmserve/models`                      |
+| vLLM compilation caches                          | `~/.cache/vllm`                                                   |
 
-The Compose setup reuses the WebUI volume and vLLM cache. The old NInfer `artifact.conf` drop-in
-mounts a blob from the Hugging Face cache; the Compose entry instead mounts its separately prepared
-`lmserve` artifact. Podman storage paths can vary by configuration; query the volume's actual
-mountpoint with:
+Podman storage paths can vary by configuration; query the volume's actual mountpoint with:
 
 ```shell
 podman volume inspect open-webui-data --format '{{.Mountpoint}}'

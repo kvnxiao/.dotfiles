@@ -64,7 +64,7 @@ services:
       - --port
       - "8080"
       - --model-id
-      - qwen3.8-27b
+      - qwen3.8-27b-ninfer
       - --max-context
       - "131072"
       - --kv-capacity
@@ -106,7 +106,7 @@ services:
       dockerfile: Dockerfile
     command:
       - ninfer-serve
-      - /models/artifact.ninfer
+      - /lmserve/huggingface/hub/models--kvnxiao--swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer/snapshots/b1ec30022cf61aece82b41d849c4b181f7ddd4c4/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4.ninfer
       - --host
       - 0.0.0.0
       - --port
@@ -133,8 +133,6 @@ services:
       - nvidia.com/gpu=all
     ports:
       - "8001:8080"
-    volumes:
-      - ${LMSERVE_MODEL_QWEN3_8_27B_SWIFT_ORCAROUTER_PATH}:/models/artifact.ninfer:ro
     networks:
       default:
         aliases: [ninfer]
@@ -142,7 +140,6 @@ services:
       huggingface:
         repo: kvnxiao/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer
         revision: b1ec30022cf61aece82b41d849c4b181f7ddd4c4
-        file: swift-qwen3.8-27b-orcarouter-dflash2-nvfp4.ninfer
       companions: [open-webui]
       readiness:
         url: http://127.0.0.1:8001/health

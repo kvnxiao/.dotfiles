@@ -2,10 +2,11 @@
 
 The `qwen3.8-27b-swift-orcarouter` entry serves
 [kvnxiao/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer](https://huggingface.co/kvnxiao/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer).
-Compose pins revision `b1ec30022cf61aece82b41d849c4b181f7ddd4c4` and downloads
-`swift-qwen3.8-27b-orcarouter-dflash2-nvfp4.ninfer`. The artifact is a conversion of ajgazin's
-OrcaRouter-direction Swift checkpoint and includes vision, MTP, DFlash2, and a proposal head.
-Attribution, license terms, conversion details, and
+Compose pins revision `b1ec30022cf61aece82b41d849c4b181f7ddd4c4`. `lmserve` downloads the full
+repository snapshot, and NInfer loads `swift-qwen3.8-27b-orcarouter-dflash2-nvfp4.ninfer` from that
+snapshot. The artifact is a conversion of ajgazin's OrcaRouter-direction Swift checkpoint and
+includes vision, MTP, DFlash2, and a proposal head. Attribution, license terms, conversion details,
+and
 [measured results](https://huggingface.co/kvnxiao/swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer/blob/b1ec30022cf61aece82b41d849c4b181f7ddd4c4/RESULTS.md)
 are in the model repository.
 
@@ -28,6 +29,14 @@ validated with the artifact at 32K. `ninfer/Dockerfile` builds NInfer commit
 original `qwen3.8-27b-ninfer` entry retains its separate image and mutable upstream build.
 
 ## Prepare and start
+
+`lmserve` mounts the prepared Hugging Face cache read-only at `/lmserve/huggingface/hub`. The NInfer
+command selects the model file under
+`models--kvnxiao--swift-qwen3.8-27b-orcarouter-dflash2-nvfp4-ninfer/snapshots/<commit>/`. In that
+path, `<commit>` is the full 40-character commit hash that `lmserve` resolves from
+`x-lmserve.huggingface.revision`, even when `revision` names a branch or tag. Because the hash is
+hardcoded in the command's model path, pin `revision` to that full commit hash and edit the path
+whenever `revision` changes.
 
 With the deployed configuration, prepare the image and model without loading the model onto the GPU:
 
