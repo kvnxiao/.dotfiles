@@ -188,5 +188,9 @@
   "tui": "default",
   "autoCompactEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "attribution": {
+    "commits": false,
+    "pullRequests": false
+  }
 }
