@@ -46,10 +46,6 @@ Add each new file to its directory's `patina.toml` before deploying it, unless a
 
 After completing a task, run `just check`. Run `just fix` to format every supported file.
 
-## This file
-
-`CLAUDE.md` is a symlink to `AGENTS.md`. Edit `AGENTS.md`.
-
 ## Benchmarking
 
 After changing bash, fish, zsh, or PowerShell dotfiles, run the corresponding `just
