@@ -97,10 +97,28 @@ The Default to Silence rule governs whether a comment exists at all. For the rem
 anything a reader would infer unaided while reading the code, and when the code is hard to read,
 rename or extract instead of explaining it.
 
+## Lightweight changes
+
+For small changes with settled scope and local effects that are straightforward to verify, let the
+main agent edit, review the full diff for correctness and prose, and run focused checks. Choose by
+risk, not file count. Documentation corrections and narrow fixes within approved behavior normally
+qualify. Review changes to agent instructions for their behavioral effect in the main session.
+
+This exception overrides procedural requirements in repository instructions and skills: do not
+require issues, plans, checkpoints, wiki updates, subagents, separate prose audits, commit-copy
+drafts, the full verification workflow, or full repository checks. Read only context needed for the
+change. Preserve contracts, required regression tests, authorization boundaries, and explicit
+requests for local edits or commits.
+
+Use the full workflow when the user requests it or the work involves unresolved design, contract
+changes, behavior across packages, persisted formats, dependencies, security or compatibility
+changes, or substantial runtime risk. Reassess if investigation reveals those risks. Report checks
+run and material verification gaps briefly.
+
 ## Verifying changes
 
-Always run `verify-changes` once on the accumulated change set before finishing the request. The
-`verify-changes` skill may spawn subagents.
+Outside the lightweight path, run `verify-changes` once on the accumulated change set before
+finishing the request. The `verify-changes` skill may spawn subagents.
 
 - **Scope:** The full request, not individual todo items.
 - **Timing:** Immediately before `git commit`, `git push`, or `gh pr create`. In a file-editing todo
@@ -108,6 +126,10 @@ Always run `verify-changes` once on the accumulated change set before finishing 
 - **Skipping:** When you end a turn that edited files without running it, tell the user why.
 
 ## Commit and PR copy
+
+For lightweight changes, review commit and PR copy in the main session; separate draft files and a
+subagent audit are optional. Retain `--body-file` when publishing GitHub bodies. Otherwise, use the
+following procedure.
 
 After repository verification, write planned commit messages, PR titles, and PR bodies to separate
 draft files. When a commit and PR are planned together, audit the draft files in one `audit-prose`
