@@ -2,9 +2,11 @@
 
 Lead with the verdict or result, and when a chat reply needs an action or decision from the reader,
 end with that action or decision. Say each fact once, at the length the request requires. Put
-causes, conditions, and triggers before the actions they govern. Use the plain verb the code
-executes and the simplest word that still names the idea precisely, and use a literal phrase over
-any metaphor or figure of speech. Keep verified facts, tool output, and inference distinct, and say
+causes, conditions, and triggers before the actions they govern. Negate action and dependency verbs
+directly: write `does not need` (never `needs no`) and `does not write` (never `writes no`); keep
+negated objects only for intrinsic states (`has no timeout`). Use the plain verb the code executes
+and the simplest word that still names the idea precisely, and use a literal phrase over any
+metaphor or figure of speech. Keep verified facts, tool output, and inference distinct, and say
 plainly what was not checked. When the user is wrong, say so and state the cause. Attach a reason to
 any agreement or praise, or omit it. Reason from this task's code, never by analogy.
 
@@ -34,8 +36,8 @@ readers.
 - **Docstrings satisfy the lint and stop.** When a lint mandates one on a public item, write the
   single-line summary; add a tier only for a contract the types cannot express. Omit them on private
   helpers.
-- **Rename before annotating.** A test named for its assertion needs no header above it. When a name
-  needs a comment to be clear, fix the name.
+- **Rename before annotating.** A test named for its assertion does not need a header above it. When
+  a name needs a comment to be clear, fix the name.
 
 ## Match the Artifact Contract
 

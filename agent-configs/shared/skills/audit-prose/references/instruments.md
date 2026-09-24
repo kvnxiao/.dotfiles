@@ -134,10 +134,14 @@ unedited.
   `contains no timestamps`), formal schema or mathematical bounds (`accepts zero or more tokens`,
   `has no upper bound`), and a quantifier that states an API boundary over a set
   (`No caller can supply one`).
-- **Dependency negation:** Flag `needs no` or `requires no` when `need` or `require` introduces a
-  prerequisite, resource, or capability: rewrite `the installer needs no root or network access` as
-  `the installer does not need root or network access`. Keep object-negative stative facts such as
-  `has no timeout`, formal bounds, and API-boundary quantifiers such as `No caller can supply one`.
+- **Dependency negation:** Flag `needs no`, `requires no`, or `needs nothing` when `need` or
+  `require` introduces a prerequisite, resource, capability, modification, or artifact: rewrite
+  `the installer needs no root or network access` as
+  `the installer does not need root or network access`, and `needs no header` as
+  `does not need a header`. The reader parses `needs` as imposing a requirement before reaching the
+  negation, momentarily inverting the meaning when skimming, and a search for `does not` misses the
+  statement. Keep object-negative stative facts such as `has no timeout`, formal bounds, and
+  API-boundary quantifiers such as `No caller can supply one`.
 - **Resultative complement:** Flag an observation verb such as `shows`, `finds`, `reports`, `sees`,
   or `confirms` followed by a noun and a bare adjective: `shows the exclusions unchanged`,
   `finds the cache stale`, `reports the queue idle`. The adjective carries the entire finding and

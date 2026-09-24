@@ -30,8 +30,8 @@ this file within that form.
 - **Action Last:** Because a reader scrolling back through a chat reply sees the end first, the
   closing line states the action or decision the reply needs from the reader, when there is one.
   Never close on a recap of the verdict, a sign-off (`Hope this helps!`), a summary
-  (`In summary...`), or a minor detail; when the reply needs nothing from the reader, stop after the
-  last fact.
+  (`In summary...`), or a minor detail; when the reply does not need anything from the reader, stop
+  after the last fact.
 - **Say Everything Once:** State each fact one time, at the length the request requires. If one
   sentence states a paragraph's substance, write that sentence. A recap, a second phrasing of the
   same point, a lead-in that restates the list it introduces, and a bullet that repeats its
@@ -88,8 +88,8 @@ reader to infer the links.
   takes its noun: write `end with that action`, not `end on it`.
 - **Consolidate, Do Not Chain:** Judge a coordinated chain by whether its members are of one kind,
   never by how many there are. `downloads, unpacks, and links the binary` lists like predicates for
-  one subject and needs no change. `needs no root and no network and can run unattended` mixes
-  requirements with a capability: write `needs no root or network access to run unattended`.
+  one subject and stands as written. `needs no root and no network and can run unattended` mixes
+  requirements with a capability: write `does not need root or network access to run unattended`.
 - **Purpose Infinitives Over Trailing `, so`:** Put design goals first, as purpose infinitives
   (`To apply updated port bindings, the daemon re-reads the config.`). Never use trailing
   `, so [goal]` or `so that it can`. Reserve `, so` strictly for immediate mechanical consequences
@@ -98,11 +98,14 @@ reader to infer the links.
   transient visual or secondary attribute. Reject `A distinct colour marks the confirmation prompt.`
   Apply `The confirmation prompt is marked with its own colours: a green y against a red default N.`
   Passive voice is correct here. Do not undo it.
-- **Direct Negation on Action Verbs:** Negate the verb, never the object or subject on action verbs:
-  write `does not write output`, not `writes no output`. Stative verbs keep negated objects
-  (`has no timeout`, `contains no timestamps`). A negative quantifier that states an API boundary
-  precisely stays (`No caller can supply one`). When a single plain verb means the same, use it
-  (`skips`, not `makes no change to`).
+- **Direct Negation on Action and Dependency Verbs:** Negate the verb, never the object or subject
+  on action verbs: write `does not write output`, not `writes no output`. Treat dependency verbs
+  (`need`, `require`) as verb-negation cases even though they describe prerequisites: write
+  `does not need`, never `needs no` (or `requires no`), so a fast reader does not assume a
+  requirement before reaching the negation. Stative verbs stating intrinsic properties keep negated
+  objects (`has no timeout`, `contains no timestamps`). A negative quantifier that states an API
+  boundary precisely stays (`No caller can supply one`). When a single plain verb means the same,
+  use it (`skips`, not `makes no change to`).
 - **No System State Deictics:** Never use `from there`, `at that point`, `in that case`, or
   `thereafter`. Name the concrete disk, buffer, file, or subsystem.
 

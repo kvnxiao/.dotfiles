@@ -271,10 +271,10 @@ Treat these as decisions, not phrase bans.
 - **Coordinate related facts.** When predicates share a subject, condition, or mechanism, keep them
   together. Split independent operational rules into separate sentences.
 - **Preserve negation scope.** If a positive verb states the same fact more directly, prefer it. For
-  prerequisite statements, prefer verb-side negation (`does not need`, `does not require`) over
-  `needs no` or `requires no`. Keep a negative quantifier such as `no`, `none`, or `neither` when it
-  expresses the contract precisely. Do not rewrite `No caller can supply one` merely to move the
-  negation.
+  requirement, prerequisite, or modification statements, prefer verb-side negation (`does not need`,
+  `does not require`) over `needs no`, `requires no`, or `needs nothing`. Keep a negative quantifier
+  such as `no`, `none`, or `neither` when it expresses the contract precisely. Do not rewrite
+  `No caller can supply one` merely to move the negation.
 - **Negate action and dependency verbs, not their objects.** An affirmative action verb carrying
   `no`, `none`, or `neither` on its object makes the reader parse the action as happening and cancel
   it one phrase later: `the spawn call hands the caller no process handle`,
@@ -282,9 +282,10 @@ Treat these as decisions, not phrase bans.
   `does not return a process handle`, `does not write cached entries`. Treat `need` and `require` as
   verb-negation cases even though they are stative: write
   `the installer does not need root or network access`, not
-  `the installer needs no root or network access`. Keep object-negative stative facts such as
-  `has no timeout` and `contains no timestamps`, formal bounds such as `has no upper bound`, and
-  API-boundary quantifiers such as `No caller can supply one`.
+  `the installer needs no root or network access`, and `does not need change`, not
+  `needs no change`. Keep object-negative stative facts such as `has no timeout` and
+  `contains no timestamps`, formal bounds such as `has no upper bound`, and API-boundary quantifiers
+  such as `No caller can supply one`.
 - **Give an observation its own predicate.** An observation verb followed by a noun and a bare
   adjective strands the finding on the adjective: `the re-read shows the exclusions unchanged`,
   `the probe finds the buffer empty`, `the sweep reports the queue idle`. The verb promises an
