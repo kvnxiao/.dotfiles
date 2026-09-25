@@ -2,6 +2,10 @@
   "env": {
     "MSYS2_PATH_TYPE": "inherit"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "AskUserQuestion",
@@ -188,9 +192,5 @@
   "tui": "default",
   "autoCompactEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "voiceEnabled": true
 }
