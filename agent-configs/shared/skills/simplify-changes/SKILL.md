@@ -1,12 +1,14 @@
 ---
 name: simplify-changes
-description: Review changed code for behavior-preserving simplification and reuse, including wasted work introduced by the change. Use for cleanup review or the simplification pass in verify-changes. Return concrete proposals without editing files.
+description: Review changed code for behavior-preserving simplification, reuse, and wasted work. Use for requested cleanup reviews or focused structural review delegated by verify-changes. Return concrete proposals without editing files.
 ---
 
 # Simplify changes
 
 Find changes that remove needless complexity or wasted work while preserving observable behavior.
-Every proposal must name the current cost and a specific replacement.
+Every proposal must name the current cost and a specific replacement. In `verify-changes`, this
+skill provides focused investigation when the general review's simplification assessment is
+insufficient; it is not a mandatory second reading of every diff.
 
 ## Scope and execution
 
@@ -79,23 +81,15 @@ Use these verdicts:
   evidence and the check needed to resolve it.
 - **Refuted:** The proposal lacks a benefit or changes behavior. Exclude it from cleanup proposals.
 
-Return scope, intent, whether the intent was supplied or inferred, confirmed proposals ranked by
-concrete benefit, unresolved concerns, and verification limits. Use this fixed record for every
-confirmed proposal and unresolved concern:
+Return confirmed proposals ranked by concrete benefit, separate unresolved concerns, and
+verification limits. Use a compact paragraph or bullet per proposal with its location, current cost,
+replacement, equivalence evidence, and any material trade-off. Distinguish measured costs from
+estimates and inspection from observed execution. For unresolved concerns, state the missing
+evidence and required check.
 
-- **File and line:** Repository-relative path and the relevant line.
-- **Summary:** One sentence stating the proposal.
-- **Verdict:** `Confirmed` or `Unresolved`.
-- **Cost:** State the complexity or wasted work the change introduces; distinguish measured costs
-  from estimates.
-- **Replacement:** The specific simpler form.
-- **Evidence:** Supporting code or contract and the equivalence argument; distinguish inspection
-  from observed execution. For unresolved concerns, include missing evidence and the required check.
-- **Trade-off:** What the replacement gives up, or `None`.
-
-The caller may extend the record or choose its serialization, but must preserve these fields. When
-the harness provides a findings-reporting tool, the caller may submit the same records through it
-without posting external comments.
+Omit empty sections and repeated scope summaries. For standalone reviews, briefly state scope and
+whether intent was supplied or inferred; when delegated, report only deviations or uncertainties in
+the supplied scope. Honor any caller-required output schema.
 
 Keep out-of-scope observations separate. When no worthwhile proposals remain, say so without
 implying that unrun checks passed. The caller decides which proposals to apply.

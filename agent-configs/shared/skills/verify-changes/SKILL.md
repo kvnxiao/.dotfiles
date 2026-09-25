@@ -1,92 +1,46 @@
 ---
 name: verify-changes
-description: Verify the working-tree change set before a commit or PR. Reviews the full diff for correctness, finds simplification candidates, checks repository rules, updates affected documentation, audits prose, and runs repository checks. Use when an implementation is finished, or when the user says "commit for me", "open a PR", "push this", "are we done".
+description: Verify changes before a commit or PR with review and checks proportional to risk. Use when an implementation is finished, or when the user says "commit for me", "open a PR", "push this", or "are we done".
 ---
 
 # Verify changes
 
-Consider the proportionality of the changes and run the following checklist over the working-tree
-change set.
+Resolve the review scope once. Honor caller-supplied revisions and paths; otherwise:
 
-Resolve the review scope once: staged and unstaged changes against `HEAD`, plus untracked files
-reported by Git status. In a repository without commits, inspect the index and working files as
-additions. When the working tree is clean, use the commits ahead of the upstream branch, or of the
-default branch without an upstream. When the caller supplies a different scope, use it without
-adding unrelated changes. Pass each reviewer the repository, base revision when present, file list,
-scope boundaries, and a one-paragraph statement of the intended change. Use the caller's stated
-intent; when it is absent, infer intent from relevant commit messages and the diff, and pass it
-labeled as inferred with any unknowns. Keep the reviewed files unchanged until the reports return.
+- Review staged and unstaged changes against `HEAD`, plus untracked files reported by
+  `git status --porcelain`.
+- In a repository without commits, inspect the index and working files as additions.
+- When the working tree is clean, review commits ahead of the upstream branch, or the default branch
+  when no upstream exists. If no commits are ahead, report an empty scope.
 
-The coordinator owns delegation. Review subagents review the assigned scope without spawning
-children or invoking another verification workflow. When delegation is unavailable, run every
-required delegated step below in the coordinator's context, including documentation updates and the
-prose audit. Run these steps sequentially and report that delegation was unavailable.
+Pass the resolved repository, base revision, file scope, and intended change to every downstream
+skill and reviewer. Keep unrelated changes outside that scope.
 
-1. [ ] Gather read-only review reports in parallel:
-   - [ ] 1a. Review the full diff as a skeptical second reader. Verify correctness and edge cases,
-         and confirm only intended lines changed. Use the `review-changes` skill in a read-only
-         subagent. When the subagent cannot load skills, read the sibling `review-changes/SKILL.md`
-         and include its full contents in the subagent prompt.
-   - [ ] 1b. Find dead code, needless indirection, incidental complexity, and reuse opportunities
-         that the change introduces or exposes. Limit efficiency proposals to costs introduced by
-         the change, and require every proposal to preserve behavior. Use the `simplify-changes`
-         skill in a read-only subagent. When the subagent cannot load skills, read the sibling
-         `simplify-changes/SKILL.md` and include its full contents in the subagent prompt.
-   - [ ] 1c. **Check compliance against repo-specific rules and standards:**
-     - Inspect available local skills with names matching `*-rules` (e.g., `python-rules`,
-       `react-rules`, `architecture-rules`).
-     - If matching rules exist for the languages, frameworks, or layers touched by the diff, invoke
-       them in a read-only subagent to verify adherence to local conventions.
-2. [ ] Merge the records from step 1 by file, line, and mechanism while preserving every field and
-       separating unresolved concerns from confirmed findings. When a correctness finding and a
-       cleanup proposal target the same code, the correctness finding governs. Apply accepted
-       changes in one edit pass. Review the resulting full diff.
-3. [ ] Update repository documentation for the accumulated change set. Use the `update-docs` skill
-       in a subagent with write access limited to documentation files. The subagent must determine
-       the change's documentation impact, search the full documentation corpus, apply required
-       documentation edits directly, and report any unresolved or out-of-scope findings. Review its
-       edits before continuing.
-4. [ ] Audit every comment, docstring, and documentation line the change set added or modified,
-       including prose written during steps 2 and 3. Use the `audit-prose` skill in a subagent.
-       Review its edits to confirm that they change only prose within the scoped paths and preserve
-       the original meaning; do not re-audit their style.
-5. [ ] Run the formatting, linting, type-checking, and test commands that are relevant and
-       proportionate to the change. Step 4 runs none of them.
+Choose the verification path by potential consequences and unresolved uncertainty, not file or line
+counts. Escalate when investigation reveals broader effects.
 
-Parallel subagents used for step 1's review coverage must be restricted to read-only repository
-access. Reviewers must report findings without editing, staging, committing, or posting comments.
-Review commands may write temporary outputs outside the repository, but must not write under the
-repository, including through symlinks, or mutate external services. The coordinator runs repository
-test and build commands in step 5. Only the coordinator, the `update-docs` subagent, and the
-`audit-prose` subagent may edit the working tree. After `update-docs` finishes, run the
-`audit-prose` subagent, and run repository checks only after it returns.
+## 1. Fast-Path (Lightweight & Trivial Edits)
 
-List anything you found but did not fix, with the reason. State what you could not verify.
+**Criteria:** Low-risk, localized edits with no architectural or runtime impact—such as fixing
+typos, editing comments or docstrings, updating isolated test assertions, narrow documentation
+fixes, or adding/removing an isolated configuration field.
 
-## Proportionality
+**Action:** Complete verification directly in the main session without subagents:
 
-Scale the review steps to the scope, risk, and runtime blast radius of the diff. Do not run full
-semantic or correctness reviews on changes that cannot alter execution behavior.
+1. **Review Diff:** Check the scoped diff directly for correctness, unintended edits, and clear
+   prose.
+2. **Focused Checks:** Run relevant formatters, linters, or the affected test in the main session.
+3. **Finish:** Report the result and material verification gaps, then continue the authorized task.
+   Do not spawn subagents or load full-review instructions unless the risk assessment changes.
 
-| Change Scope                      | Required Steps                                                 | Bypassed Steps                                | Bypass Criteria                                                                      |
-| :-------------------------------- | :------------------------------------------------------------- | :-------------------------------------------- | :----------------------------------------------------------------------------------- |
-| **Logic & Runtime Code**          | `1a`, `1b`, `1c` (if matching rules exist), `2`, `3`, `4`, `5` | None                                          | Edits modifying execution flow, state, schemas, APIs, or business logic.             |
-| **Prose & Documentation**         | `4` and formatter from `5`                                     | `1a`, `1b`, `1c`, `2`, `3`, type-check, tests | Markdown, text files, or standalone docs that do not affect build or execution.      |
-| **Cosmetic & Trivial Fixes**      | `4`, lint and format from `5`                                  | `1a`, `1b`, `1c`, `2`, `3`, tests             | Variable renames, comments, or typos with zero semantic or behavioral impact.        |
-| **Declarative Config & Dotfiles** | `3`, `4`, format and lint from `5`                             | `1a`, `1b`, `1c`, `2`, tests                  | Linter configs, `.gitignore`, or tooling presets that do not alter runtime behavior. |
-| **Behavioral Config & CI/CD**     | `1a`, `1c` (if applicable), `2`, `3`, `4`, `5`                 | `1b`                                          | Build pipelines, routing, infra manifests, or runtime environment configs.           |
-| **Dependency Updates**            | `3`, `5` (build, types, tests)                                 | `1a`, `1b`, `1c`, `2`, `4`                    | Package updates or lockfile changes without manual application logic edits.          |
+## 2. Full Review
 
-### Bypass Rules
+**Criteria:** Changes affecting behavioral contracts or requiring broader investigation, including:
 
-- **Silent Rule Skips:** If no local `*-rules` skills match the touched languages, frameworks, or
-  ideas, skip `1c` silently.
-- **Reporting Requirement:** If any non-silent step is bypassed based on the matrix above,
-  explicitly state which step was skipped and why in your final summary.
+- Execution flow, runtime state, or persisted data.
+- Public APIs, security, compatibility, or shared configuration.
+- Structural refactors or unresolved design choices.
 
-## Boundaries
-
-- Do not repair problems outside the change set. List them for the user instead.
-- Do not repeat a passed review or check when its inputs have not changed.
-- Commit the changes only if the original intent was to mark a task complete and commit / push to a
-  PR.
+**Action:** Read [references/full-review.md](references/full-review.md). Preserve coverage of
+correctness, simplification, repository rules, documentation, prose, and validation; scale
+delegation and investigation to the risk.

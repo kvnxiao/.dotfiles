@@ -1,12 +1,13 @@
 ---
 name: review-changes
-description: Review a diff, commit, branch, pull request, or selected files for correctness regressions. Use for code review or the correctness pass in verify-changes. Return evidence-backed findings without editing files.
+description: Review a diff, commit, branch, pull request, or selected files for correctness and applicable repository rules. Include simplification when assigned by verify-changes or the caller. Return evidence-backed findings without editing files.
 ---
 
 # Review changes
 
-Review for defects introduced or exposed by the selected changes. Every finding must identify a
-concrete input, state, or ordering that produces incorrect behavior.
+Review for defects introduced or exposed by the selected changes. Every correctness finding must
+identify a concrete input, state, or ordering that produces incorrect behavior; cite the conflicting
+instruction and artifact for a repository-rule violation.
 
 ## Scope and execution
 
@@ -54,10 +55,17 @@ for findings.
 - **Tests and contracts:** Check whether changed tests still exercise the intended behavior. Tie a
   missing regression test to a concrete failure mode; do not report generic requests for more
   coverage. For a rule violation, cite the applicable rule and the conflicting code.
+- **Repository rules:** Apply the repository instructions and relevant rule skills supplied by the
+  coordinator. Report gaps that require specialized investigation rather than assuming compliance.
+- **Assigned simplification:** When assigned, assess duplication, needless abstraction, and wasted
+  work in the changed code. Report only concrete proposals with a benefit and evidence that they
+  preserve behavior. Keep them separate from correctness findings. If structural choices require
+  deeper investigation, identify the question for the coordinator to assign to `simplify-changes`.
 
 Read unchanged code to establish reachability and existing guards. Separate pre-existing defects
 from change-induced findings; a touched function alone does not put all of its old defects in scope.
-Leave behavior-preserving cleanup to a `simplify-changes` review.
+When simplification or specialized rule checks are assigned to another reviewer, leave that
+assessment to them without excluding correctness defects in the same code from your review.
 
 ## Verify and report
 
@@ -81,23 +89,16 @@ Use this severity scale, independently of the verdict:
 - **P2:** Bounded functional or performance regression; correct in normal work.
 - **P3:** Minor impact or maintenance cost; low-priority correction or cleanup.
 
-Return scope, intent, whether the intent was supplied or inferred, confirmed findings ranked by
-severity, unresolved concerns, and verification limits. Use this fixed record for every confirmed
-finding and unresolved concern:
+Return confirmed findings ranked by severity, separate unresolved concerns, and verification limits.
+Use a compact paragraph or bullet per finding with its location, severity, concrete trigger or rule
+violation, evidence, and suggested correction. Distinguish inspection from observed execution. For
+unresolved concerns, state the missing evidence and required check; do not imply a confirmed defect.
 
-- **File and line:** Repository-relative path and the relevant line.
-- **Summary:** One sentence stating the defect.
-- **Verdict:** `Confirmed` or `Unresolved`.
-- **Severity:** `P0`, `P1`, `P2`, or `P3`, with the impact that justifies it.
-- **Trigger and incorrect result:** Concrete input, state, or ordering and the resulting contract
-  violation.
-- **Evidence:** Supporting code or contract; distinguish inspection from observed execution. For
-  unresolved concerns, include missing evidence and the required check.
-- **Suggested correction:** Specific correction, or `Not established`.
-
-The caller may extend the record or choose its serialization, but must preserve these fields. When
-the harness provides a findings-reporting tool, the caller may submit the same records through it
-without posting external comments.
+For assigned simplification, report the location, current cost, proposed replacement, equivalence
+evidence, and any material trade-off. State when an assigned assessment found no issues or remains
+incomplete. Omit empty sections and repeated scope summaries. For standalone reviews, briefly state
+scope and whether intent was supplied or inferred; when delegated, report only deviations or
+uncertainties in the supplied scope. Honor any caller-required output schema.
 
 Keep pre-existing observations separate and do not expand the investigation to fix them. When no
 findings survive, say so without implying that unrun checks passed.

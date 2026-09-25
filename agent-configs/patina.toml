@@ -11,6 +11,26 @@ source = "codex/shared.config.toml"
 target = "~/.codex/shared.config.toml"
 
 [[file]]
+source = "codex/agents/reviewer.toml"
+target = "~/.codex/agents/reviewer.toml"
+
+[[file]]
+source = "codex/agents/reviewer-deep.toml"
+target = "~/.codex/agents/reviewer-deep.toml"
+
+[[file]]
+source = "claude-code/agents/reviewer.md"
+target = "~/.claude/agents/reviewer.md"
+
+[[file]]
+source = "claude-code/agents/reviewer-deep.md"
+target = "~/.claude/agents/reviewer-deep.md"
+
+[[file]]
+source = "shared/agents/reviewer.md"
+target = "~/.agents/instructions/reviewer.md"
+
+[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 
@@ -38,14 +58,6 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/audit-prose"
 target = "~/.agents/skills/audit-prose"
-mode = "symlink"
-
-# audit-prose-via-codex
-# Deploy only to Claude Code. Do not add a ~/.agents/skills entry:
-# Codex would then invoke this skill and start a nested Codex run.
-[[directory]]
-source = "shared/skills/audit-prose-via-codex"
-target = "~/.claude/skills/audit-prose-via-codex"
 mode = "symlink"
 
 # brainstorm

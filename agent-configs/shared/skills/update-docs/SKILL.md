@@ -1,6 +1,6 @@
 ---
 name: update-docs
-description: Update repository documentation to match a code, configuration, architecture, or behavior change. Use for documentation maintenance delegated by `verify-changes`, and for requests to find and correct stale, missing, or contradictory documentation outside code comments and docstrings.
+description: Update repository documentation to match a code, configuration, architecture, or behavior change. Use during verify-changes or for requests to correct stale, missing, or contradictory documentation outside code comments and docstrings.
 ---
 
 # Update docs

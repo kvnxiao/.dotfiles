@@ -1,0 +1,6 @@
+name = "reviewer-deep"
+description = "Independent review at xhigh effort for difficult reasoning identified before the review starts."
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+sandbox_mode = "read-only"
+developer_instructions = "Read and follow ~/.agents/instructions/reviewer.md before reviewing. If it is unavailable, report the missing contract to the coordinator."
