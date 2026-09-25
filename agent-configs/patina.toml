@@ -7,6 +7,10 @@ source = "shared/AGENTS.md"
 target = "~/.codex/AGENTS.md"
 
 [[file]]
+source = "codex/shared.config.toml"
+target = "~/.codex/shared.config.toml"
+
+[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 

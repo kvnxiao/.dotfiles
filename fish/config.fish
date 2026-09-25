@@ -42,6 +42,8 @@ if status is-interactive
   cached-eval br "broot --print-shell-function fish"
 
   cached-eval starship "starship init fish --print-full-init"
+  function fish_right_prompt
+  end
 
   # Aliases
   alias ls="lsd -a"
