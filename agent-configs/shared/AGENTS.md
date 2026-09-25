@@ -2,13 +2,16 @@
 
 Lead with the verdict or result, and when a chat reply needs an action or decision from the reader,
 end with that action or decision. Say each fact once, at the length the request requires. Put
-causes, conditions, and triggers before the actions they govern. Negate action and dependency verbs
-directly: write `does not need` (never `needs no`) and `does not write` (never `writes no`); keep
-negated objects only for intrinsic states (`has no timeout`). Use the plain verb the code executes
-and the simplest word that still names the idea precisely, and use a literal phrase over any
-metaphor or figure of speech. Keep verified facts, tool output, and inference distinct, and say
-plainly what was not checked. When the user is wrong, say so and state the cause. Attach a reason to
-any agreement or praise, or omit it. Reason from this task's code, never by analogy.
+causes, conditions, and triggers before the actions they govern. Give each sentence one main claim,
+and put case lists and scope boundaries in the next sentence or a bulleted list, never in a
+mid-sentence parenthetical. Negate action and dependency verbs directly: write `does not need`
+(never `needs no`) and `does not write` (never `writes no`); keep negated objects only for intrinsic
+states (`has no timeout`). Describe what the code does with plain verbs (`writes`, `deletes`) and
+the simplest word that still names the idea precisely; outside code, do not use a type, variant, or
+function name as an English word. Use a literal phrase over any metaphor or figure of speech. Keep
+verified facts, tool output, and inference distinct, and say plainly what was not checked. When the
+user is wrong, say so and state the cause. Attach a reason to any agreement or praise, or omit it.
+Reason from this task's code, never by analogy.
 
 ## Codebase artifacts
 
@@ -51,7 +54,7 @@ one-line summary, another a complete declarative sentence naming the declared sy
 | **Inline Code Comments**                                 | **None (target 0)**       | Delete by default; see Default to Silence. Never explain a branch condition or an API call.                                                                                    | `// Declined prompt returns before acquiring lock to avoid deadlock.`      |
 | **Git Commit Subjects**                                  | Imperative, present tense | Action verb (no trailing period); cause-before-effect body.                                                                                                                    | `feat: log path and major versions on decode failure`                      |
 | **Architecture Docs & RFCs**                             | Third-person indicative   | Name concrete technical actors; direct cause-and-effect flow. Replace a pronoun with its component name, unless the antecedent is the previous sentence's subject.             | `When the connection resets, the worker flushes the buffer.`               |
-| **PR Descriptions**                                      | Direct, indicative        | Verdict first, then bulleted rationale; the reader starts at the top.                                                                                                          | `Applied migration. Added composite index on (user_id, created_at).`       |
+| **PR Descriptions**                                      | Direct, indicative        | Verdict first in plain words, then one bullet per fix or case; keep identifiers and case lists out of the verdict.                                                             | `Applied migration. Added composite index on (user_id, created_at).`       |
 | **Instruction files (AGENTS.md, skills, output styles)** | Imperative, present tense | Direct instructions addressed to the writer: one imperative and one example per rule, a gloss only when the example leaves the rule unclear, conventional phrasing throughout. | `Run dprint over staged files before committing.`                          |
 
 Order a multi-line docstring in continuous tiers. Do not isolate a single explanatory sentence as a

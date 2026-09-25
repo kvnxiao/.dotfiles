@@ -74,11 +74,11 @@ unedited.
 - **Coordinator chaining:** Flag repeated `and` or `or` that joins facts of unlike kind, especially
   where a participle was just removed. Test the members, not their number:
   `downloads, unpacks, and links the binary` coordinates three predicates of one kind over one
-  subject and is well-formed at any length, whereas
+  subject and is well-formed at any count, whereas
   `needs no root and no network and can run unattended` welds two requirements to a capability.
   Recast a heterogeneous chain as a compound object, a parallel list, or a purpose infinitive; write
-  `does not need root or network access to run unattended`. A serial list of like predicates is not
-  a defect.
+  `does not need root or network access to run unattended`. A serial list of short, like predicates
+  is not a defect. When a member needs its own clause, convert the chain into a bulleted list.
 - **Placeholder referent:** Flag a clause whose only content points back at a prior noun, such as
   `X is one of them`, `The launcher polls for that file`, or `it does this for that`. State the fact
   about the named component instead.
@@ -111,7 +111,12 @@ unedited.
   input branch and the action taken on it. Two or more clauses before the first verb describing the
   function's own work is the signal.
 - **Over-fragmentation:** Flag consecutive short sentences that share a subject and were produced by
-  splitting one clause. Recombine them unless each states an independent operational rule.
+  splitting one clause. Recombine them unless each states an independent operational rule or the
+  recombined sentence would fail the packed-sentence check.
+- **Packed sentence:** Flag a sentence past about 30 words, a mid-sentence parenthetical that lists
+  cases, and a sentence that states a claim together with its full scope boundary. Split at the
+  claim boundary and repeat the subject, or move the cases into a bulleted list after the claim.
+  Keep a long sentence that states one claim with one list of like items.
 - **Bundled rules:** If operational rules joined by `and`, a semicolon, or a colon are independent,
   split them. If the clauses share a subject, mechanism, or consequence, keep the coordination.
 - **Negation scope:** Verify a negative statement against its semantic scope and pragmatic context.
@@ -125,6 +130,12 @@ unedited.
   performs the verb. Restore the actor as subject. Keep the passive where the affected entity is the
   topic, where the actor is genuinely unknown, or where naming it adds nothing the reader can act
   on.
+- **Event as subject:** Flag an event noun such as `a crash`, `a kill`, or `a timeout` as the
+  subject of a verb that a component performs:
+  `A crash during import converges to the pre-import state on the next run`. Move the event into a
+  `when` or `after` clause and give the verb to the component that responds:
+  `After a crash during import, the next run restores the tables`. Keep an event subject with a verb
+  the event performs, such as `the timeout expires`.
 - **Displaced negation:** Flag an action verb left affirmative while `no`, `none`, or `neither` sits
   on its object or complement: `the spawn call hands the caller no process handle`,
   `the command writes no cached entries`, `the resolver reads neither lockfile`. The reader parses
@@ -151,7 +162,10 @@ unedited.
   `finds no change` moves the negation onto the object and `leaving the exclusions unmodified` keeps
   the resultative under a participle. Keep a causative subject that produces the state
   (`the rollback leaves the target absent`) and an `as`-marked status label
-  (`reports the entry as unchanged`).
+  (`reports the entry as unchanged`). Flag `leaves` or `left` when the state existed before the
+  subject and the subject only prevented its reversal: rewrite
+  `a crash after the purge left the purged rows deleted` as
+  `after a crash, recovery did not restore the purged rows`.
 - **Contact clause:** Flag a relative clause with no `that` or `which` whose embedded subject is a
   full noun phrase, especially one hanging off a prepositional object:
   `writes every outcome to the result file the launching CLI polls`,
@@ -161,6 +175,11 @@ unedited.
   the clause to an attributive participle: `the polled result file` drops the actor and trips the
   actor-dropping tripwire. Keep the contact clause where the embedded subject is a pronoun or one
   short noun and the clause ends the sentence.
+- **Object-first relative:** Flag a relative clause that places its object before a full-description
+  subject: `a row whose update the killed job never started`. The reader holds two noun phrases
+  before the verb resolves either. Rewrite it in subject-verb-object order
+  (`a row that the killed job had not started to update`), or state the fact in its own predicate.
+  Keep the form where the embedded subject is a pronoun or a name (`the file it wrote`).
 - **Provenance:** Flag a clause naming where a rule, value, or line came from: a dated observation,
   a named audit or incident, a ticket or PR number, `we added this after ...`, `originally ...`,
   `historically ...`. Delete it and keep the constraint; version control already records the origin.
@@ -198,7 +217,10 @@ unedited.
   `an expand release`, or `a non-excluded column`, that no glossary row or earlier sentence in the
   document set defines. Search the corpus for the definition before ruling. Define it at first use,
   add the glossary row, or replace the term with the mechanism. A definition later in the same
-  document is a forward reference, and the earlier site states the fact inline.
+  document is a forward reference, and the earlier site states the fact inline. A definition counts
+  only where this artifact's reader reads it first; a PR body or commit message is read on its own.
+  Apply the same test to a type, variant, or function name used as an English noun or verb outside
+  code (`ran inside dispatch`, `the reap`), and replace it with the behavior.
 - **Qualifier stack:** Flag stacked qualifiers when they obscure whether conditions are conjunctive
   or alternative: `a credentialed owner for a non-deleted profile whose role does not require SSO`.
   Restate the conditions as clauses or cases that preserve the logic. Keep a compact noun phrase

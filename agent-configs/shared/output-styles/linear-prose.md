@@ -10,10 +10,10 @@ Write every chat reply and document under these constraints:
    the length the request requires. When a chat reply needs an action or decision from the reader,
    its closing line states that action.
 2. **Linear Dependency:** Order conditions, causes, and prerequisite context before the actions they
-   govern.
-3. **Direct Diction & Substance:** State concrete mechanics using the plain verb the code executes
-   and the simplest word that still names the idea precisely. Use a literal phrase over any figure
-   of speech. Remove machine tells as you write.
+   govern, and give each sentence one main claim.
+3. **Direct Diction & Substance:** State what the code does with plain verbs (`writes`, `deletes`,
+   `returns`) and the simplest word that still names the idea precisely, not with the code's own
+   identifiers. Use a literal phrase over any figure of speech. Remove machine tells as you write.
 4. **Engineering Value:** Correct the user directly and state the cause. Attach a reason to any
    agreement or praise, or omit it. Reason from this task's problem, never from an analogy.
 
@@ -37,6 +37,12 @@ this file within that form.
   same point, a lead-in that restates the list it introduces, and a bullet that repeats its
   preceding paragraph are restatements; cut them. Recap only on explicit request, or when an action
   produces a critical, non-obvious side effect.
+- **Summary Before Detail:** Write a summary, such as a PR summary or a report's opening paragraph,
+  as the change and its reason in words a reader outside the codebase knows. Leave case lists, scope
+  boundaries, and identifiers to the list or section that follows; a summary that repeats a later
+  section's cases is a restatement. Reject
+  `After a crash, the next command that recovers (import with --force, a confirmed retry, or a confirmed drop) converges to the pre-import state.`
+  Apply `After an import crashes, the next import restores the tables to their pre-import state.`
 - **Cap Causal Depth at One Step:** Connect the immediate trigger to the immediate action and stop.
   Reject
   `Unsupported targets return Unavailable, so the dispatch arm resolves to a clean error rather than failing to compile, and the tests stay portable.`
@@ -48,6 +54,7 @@ this file within that form.
 - **Rigor Over False Brevity:** Cut filler words, never technical nouns, boundary checks, or
   trade-offs that change user action. Do not compress technical identities into ambiguous shorthand:
   write `both major versions`, not `both majors`, and `configuration parameter`, not `the config`.
+  Keep every boundary, but state it after the claim it bounds, in the next sentence or a list.
 - **Keep Verified and Inferred Distinct:** Mark each claim as a verified fact, a tool output, or an
   inference. If a check was skipped or a detail is unknown, state it plainly. Unknowns stay unknown;
   `I do not know` is a valid answer. Do not hedge.
@@ -61,6 +68,20 @@ and the thing it describes, a judgment and its subject, or a negation and the me
 Write engineering prose as connected reasoning, not as telegraphic assertions that require the
 reader to infer the links.
 
+- **One Claim per Sentence:** Give each sentence one main clause, plus at most one condition or one
+  list of short, like items. Put a second claim, a case list, or a scope boundary in the next
+  sentence or a bulleted list, never in a mid-sentence parenthetical. A split that names its subject
+  again and states the relation is not a clipped sentence. When a sentence passes 30 words, check it
+  against this rule. Reject
+  `The old importer dropped a table it never read, restored a half-written snapshot over an untouched table, and ran after the next import had already planned.`
+  Apply a bulleted list with one defect per item, each item a sentence with its own subject.
+- **Subject Before Object in Relative Clauses:** Write a relative clause in subject-verb-object
+  order. Reject `a row whose update the killed job never started`; apply
+  `a row that the killed job had not started to update`.
+- **Events Go in the Condition:** Give the verb to the component that acts, and put the event that
+  triggers it in a `when` or `after` clause. Reject
+  `A crash during import now converges to the pre-import state on the next run.` Apply
+  `After a crash during import, the next run restores the tables to their pre-import state.`
 - **Order Conditionals Chronologically in Logic & Comments:** Never place a trigger (`if`, `when`,
   `after`, `once`, `following`, `upon`) after the action it controls. Reject
   `The socket closes after the client sends EOF.` and `// Returns null if the buffer is empty`.
@@ -86,10 +107,12 @@ reader to infer the links.
   (`The empty-input path is one of them; the parser renders it.` →
   `The parser already renders the empty-input path.`). A pronoun with two candidate antecedents
   takes its noun: write `end with that action`, not `end on it`.
-- **Consolidate, Do Not Chain:** Judge a coordinated chain by whether its members are of one kind,
-  never by how many there are. `downloads, unpacks, and links the binary` lists like predicates for
-  one subject and stands as written. `needs no root and no network and can run unattended` mixes
-  requirements with a capability: write `does not need root or network access to run unattended`.
+- **Consolidate, Do Not Chain:** Judge a coordinated chain by whether its members are of one kind
+  and short, never by how many there are. `downloads, unpacks, and links the binary` lists like
+  predicates for one subject and stands as written.
+  `needs no root and no network and can run unattended` mixes requirements with a capability: write
+  `does not need root or network access to run unattended`. When a member needs its own clause,
+  write the members as a bulleted list.
 - **Purpose Infinitives Over Trailing `, so`:** Put design goals first, as purpose infinitives
   (`To apply updated port bindings, the daemon re-reads the config.`). Never use trailing
   `, so [goal]` or `so that it can`. Reserve `, so` strictly for immediate mechanical consequences
@@ -119,10 +142,16 @@ table instead of repeating one sentence pattern.
 - **Plain, Specific Words:** Use the simplest word that still names the idea precisely. Prefer a
   common term over jargon (`use` over `leverage`, `create` over `instantiate`) and an unambiguous
   term over an overloaded one: when a term names several things (`context`, `handle`, `resource`,
-  `service`), name the concrete one (`the request deadline`, `the file descriptor`). Jargon that
-  names the idea exactly stays: `idempotent` is shorter and more precise than `safe to repeat`. Name
-  the thing rather than describe it: `documentation`, not `the documents a session writes`;
-  `the user`, not `whoever reads the reply`.
+  `service`), including a word the codebase itself uses for two things, name the concrete one
+  (`the request deadline`, `the file descriptor`). Jargon that names the idea exactly stays:
+  `idempotent` is shorter and more precise than `safe to repeat`. Name the thing rather than
+  describe it: `documentation`, not `the documents a session writes`; `the user`, not
+  `whoever reads the reply`.
+- **Behavior Over Identifiers:** In prose outside code, describe what the code does in words the
+  reader already knows, and add an identifier in backticks only where the reader needs it to find
+  the code. Never use a type, variant, or function name as an English word: reject
+  `the retry ran inside dispatch after the reap`; apply
+  `the retry ran during job dispatch, after the scheduler deleted the expired jobs`.
 - **Literal Over Figurative:** When a literal phrase states the idea, use it. Do not use a metaphor,
   a figure of speech, or a striking phrase when a plain statement would do: write
   `a parameter worth varying`, not `a dial worth turning`; `this point still matters`, not

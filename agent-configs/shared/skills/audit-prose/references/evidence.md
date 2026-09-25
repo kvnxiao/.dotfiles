@@ -22,6 +22,23 @@ replicated tendency as a heuristic.
 Maintenance inference: prefer early framing context without banning short trailing conditions,
 temporal clauses, or causal clauses.
 
+## Sentence structure
+
+- Integration cost rises with the distance between an incoming word and the head it attaches to, and
+  maintenance cost rises with how long a predicted category stays open. The theory accounts for the
+  lower complexity of subject-extracted relative clauses than object-extracted ones, the overload of
+  multiply center-embedded structures, and heaviness effects, in which sentences are easier to
+  understand when larger phrases come later. Gibson, “Linguistic complexity: locality of syntactic
+  dependencies” (1998): <https://doi.org/10.1016/S0010-0277(98)00034-1>.
+- The comprehension penalty for object-extracted forms depends strongly on the mix of noun-phrase
+  types in the sentence: descriptions, indexical pronouns, and names. Gordon et al., “Memory
+  interference during language processing” (2001): <https://doi.org/10.1037/0278-7393.27.6.1411>.
+
+Maintenance inference: flag an object-first relative clause whose embedded subject is a full
+description, and keep one whose embedded subject is a pronoun or a name. Place a long case list or
+scope boundary after the claim it limits. No source here sets a word limit for sentences, so the
+30-word check is a review signal, not a measured threshold.
+
 ## Reader expertise
 
 - Instructional assistance helps low-knowledge readers and can hinder high-knowledge readers. The
@@ -30,7 +47,8 @@ temporal clauses, or causal clauses.
   effect” (2025): <https://doi.org/10.1016/j.learninstruc.2025.102142>.
 
 Maintenance inference: model the reader before pruning explanation. Do not equate shorter prose with
-clearer prose for every audience.
+clearer prose for every audience. A reviewer reading a PR body or commit message is a low-knowledge
+reader for the identifiers and internal terms of the module it changes.
 
 ## LLM style markers
 
