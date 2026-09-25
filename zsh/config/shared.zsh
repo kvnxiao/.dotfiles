@@ -1,5 +1,6 @@
 ## Shared config is loaded before platform specific configs
 
+export VISUAL=nvim
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # pnpm

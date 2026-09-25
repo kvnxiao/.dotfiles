@@ -1,4 +1,5 @@
 # Set up PATH
+set -gx VISUAL nvim
 set -gx PNPM_HOME "$HOME/.pnpm"
 fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
 if string match -q 'macos' "$FISH_OS"

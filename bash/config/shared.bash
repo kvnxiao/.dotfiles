@@ -1,6 +1,8 @@
 ## Shared environment, loaded before platform-specific config.
 ## Mirrors zsh/config/shared.zsh, minus interactive-only pieces.
 
+export VISUAL=nvim
+
 # pnpm
 export PNPM_HOME="${HOME}/.pnpm"
 case ":$PATH:" in
