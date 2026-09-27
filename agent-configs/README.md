@@ -1,5 +1,22 @@
 # Agent configuration
 
+## Codex configuration
+
+Patina symlinks [config.toml](codex/config.toml) to `~/.codex/config.toml` for shared preferences.
+Each machine keeps a regular, untracked `~/.codex/local.config.toml` for local state and overrides.
+Do not deploy or symlink the local profile.
+
+Interactive fish defines `codex` as `command codex --profile local`. The `astra`, `sol`, and `luna`
+abbreviations, including their effort variants, expand through that alias. Codex creates the local
+profile when it first saves a setting. Local profile values override shared preferences; remove a
+local override to use the shared value again.
+
+Use `codex --profile local` when launching outside interactive fish. Codex does not support a
+default profile selector in `config.toml`. Launches without the local profile can write local state
+into the shared base file. The fish alias does not configure the desktop app or IDE extension.
+
+## Reviewer agents
+
 The reviewer uses one [shared contract](shared/agents/reviewer.md) with two effort profiles per
 client:
 

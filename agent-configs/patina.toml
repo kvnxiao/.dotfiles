@@ -7,8 +7,8 @@ source = "shared/AGENTS.md"
 target = "~/.codex/AGENTS.md"
 
 [[file]]
-source = "codex/shared.config.toml"
-target = "~/.codex/shared.config.toml"
+source = "codex/config.toml"
+target = "~/.codex/config.toml"
 
 [[file]]
 source = "codex/agents/reviewer.toml"

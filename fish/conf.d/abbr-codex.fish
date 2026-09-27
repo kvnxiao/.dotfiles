@@ -1,5 +1,5 @@
 if status is-interactive
-  alias codex='command codex --profile shared'
+  alias codex='command codex --profile local'
 
   set -l ASTRA_MODEL gpt-6-astra
   set -l SOL_MODEL gpt-6-sol
