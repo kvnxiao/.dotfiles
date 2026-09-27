@@ -1,7 +1,8 @@
 if status is-interactive
-  abbr -a cllow 'claude --effort="low"'
-  abbr -a clmed 'claude --effort="medium"'
-  abbr -a cl 'claude --effort="xhigh"'
-  abbr -a clf 'claude --model="fable" --effort="xhigh"'
-  abbr -a clmax 'claude --effort="max"'
+  abbr -a cl 'claude --effort="high"'
+  abbr -a opuslow 'claude --model="opus" --effort="low"'
+  abbr -a opusmed 'claude --model="opus" --effort="medium"'
+  abbr -a opus 'claude --model="opus" --effort="high"'
+  abbr -a opusxhigh 'claude --model="opus" --effort="xhigh"'
+  abbr -a fablex 'claude --model="fable" --effort="xhigh"'
 end

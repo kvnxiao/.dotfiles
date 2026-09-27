@@ -18,8 +18,9 @@ abbr gl="git l"
 abbr gla="git la"
 
 # Claude Code abbreviations
-abbr cllow='claude --effort="low"'
-abbr clmed='claude --effort="medium"'
-abbr cl='claude --effort="xhigh"'
-abbr clf='claude --model="fable" --effort="xhigh"'
-abbr clmax='claude --effort="max"'
+abbr cl 'claude --effort="high"'
+abbr opuslow 'claude --model="opus" --effort="low"'
+abbr opusmed 'claude --model="opus" --effort="medium"'
+abbr opus 'claude --model="opus" --effort="high"'
+abbr opusxhigh 'claude --model="opus" --effort="xhigh"'
+abbr fablex 'claude --model="fable" --effort="xhigh"'
