@@ -26,3 +26,6 @@ status_line = [
 ]
 status_line_use_colors = true
 screen_reader_detection_done = true
+
+[windows]
+sandbox = "unelevated"
