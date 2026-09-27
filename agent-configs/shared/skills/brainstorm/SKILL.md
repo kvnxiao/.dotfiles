@@ -1,10 +1,19 @@
 ---
 name: brainstorm
-description: Brainstorm collaboratively with the user to develop an idea, plan, or design from scratch. Use when the user wants to explore options, ideate, or uses any 'brainstorm' trigger phrases (e.g. "let's brainstorm").
+description: Brainstorm collaboratively to develop ideas or settle open product and implementation decisions. Use when the user asks to brainstorm or explore options. Also use for explicitly open or deferred decisions, even when other decisions are settled or choices are reversible, and for materially different interpretations where the wrong choice is costly to reverse.
 ---
 
-Develop the idea with the user until you reach a shared understanding. Map it as a **design tree**:
-every decision branches into the decisions that hang off it.
+Develop the idea or settle open decisions with the user until you reach a shared understanding. Map
+the open decisions as a **design tree**: every decision branches into the decisions that depend on
+it.
+
+Before implementation, read the full request and relevant context, regardless of length. Include any
+referenced issue or plan and its relevant discussion. Keep settled decisions as constraints and ask
+only about unresolved details. Resolve factual unknowns through read-only investigation before
+asking the user to make decisions.
+
+If the initial investigation confirms that all decisions were already settled, continue the
+authorized work without inventing questions.
 
 Work the tree in **rounds**. The **frontier** is every decision you can present to the user now
 without guessing. A decision waiting on an open question stays off the frontier. Ask the whole
@@ -39,6 +48,6 @@ user. Always wait for the sub-agent to finish before asking the rest of the fron
 round, as the exploration may reveal information that affects the option space and recommendations.
 The _decisions_ are always the user's - put each to them and wait.
 
-The session is done when the frontier is empty with every branch of the design tree visited and
+The session is done when the frontier is empty with every open branch of the design tree visited and
 nothing left silently assumed. Close by writing up the settled tree as a concise summary the user
 can act on. Do not act on it until the user confirms you have reached a shared understanding.

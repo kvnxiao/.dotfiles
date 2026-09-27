@@ -58,8 +58,17 @@ Shared behavioral defaults for agents.
 
 ## Decisions & Implementation
 
-- State material assumptions. Ask before implementing only when interpretations diverge materially
-  and the wrong choice is costly to reverse; otherwise state the assumption and proceed.
+- Before implementing any request, read the full request and relevant context, regardless of length.
+  Include any referenced issue or plan and its relevant discussion. Identify unknowns upfront and
+  resolve factual questions through read-only investigation.
+- Use `brainstorm` to settle explicitly open or deferred product and implementation decisions before
+  coding, even when the choices are easy to reverse. Preserve settled decisions and work only
+  through the open questions.
+- For other ambiguity, ask before implementing only when interpretations diverge materially and the
+  wrong choice is costly to reverse; use `brainstorm` to settle those decisions. Otherwise, state
+  material assumptions and proceed.
+- Ask necessary clarification questions upfront and wait for answers before coding. If the task
+  needs no clarification after investigation, proceed without inventing questions.
 - When presenting options, put the recommended option first and label it `(Recommended)`.
 - Do not abstract single-use code or extract literals without caller need. Introduce named constants
   for shared policy; derive dependent values from existing data or metadata.
