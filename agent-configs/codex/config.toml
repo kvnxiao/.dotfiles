@@ -1,4 +1,4 @@
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
@@ -28,4 +28,4 @@ status_line_use_colors = true
 screen_reader_detection_done = true
 
 [windows]
-sandbox = "unelevated"
+sandbox = "elevated"

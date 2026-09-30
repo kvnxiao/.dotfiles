@@ -4,7 +4,7 @@ if status is-interactive
   end
 
   set -l ASTRA_MODEL gpt-6-astra
-  set -l SOL_MODEL gpt-6-sol
+  set -l SOL_MODEL gpt-6.1-sol
   set -l LUNA_MODEL gpt-6-luna
   set -l EFFORT_NAMES '' high med low
   set -l EFFORT_VALUES xhigh high medium low
