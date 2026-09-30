@@ -1,3 +1,9 @@
-# Support automatically reading from fish/functions/hooks directory
-# for function definitions that should be loaded before config.fish
-set -p fish_function_path $__fish_config_dir/functions/hooks
+# Fish probes every autoload directory on the first use of each command name;
+# under MSYS2 each directory adds ~3ms to startup. Drop directories that have
+# no functions.
+set -l _dirs
+for d in $fish_function_path
+  set -l f $d/*.fish
+  set -q f[1]; and set -a _dirs $d
+end
+set fish_function_path $_dirs

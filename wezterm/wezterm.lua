@@ -36,6 +36,9 @@ local function get_windows_config()
       MSYSTEM = "MSYS",
       MSYS2_PATH_TYPE = "minimal",
       SHELL = "/usr/bin/fish",
+      -- Without LANG, fish runs its locale fallback (~5ms) before any config;
+      -- _local-env.fish then sets the machine's locale.
+      LANG = "C.UTF-8",
     },
     default_prog = {
       "C:\\msys64\\usr\\bin\\fish.exe",

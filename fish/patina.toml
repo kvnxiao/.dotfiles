@@ -90,23 +90,23 @@ target = "~/.config/fish/functions/gh-raw.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_post_fnm.fish"
-target = "~/.config/fish/functions/hooks/_cached_eval_post_fnm.fish"
+target = "~/.config/fish/functions/_cached_eval_post_fnm.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_post_starship.fish"
-target = "~/.config/fish/functions/hooks/_cached_eval_post_starship.fish"
+target = "~/.config/fish/functions/_cached_eval_post_starship.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_post_vite-plus.fish"
-target = "~/.config/fish/functions/hooks/_cached_eval_post_vite-plus.fish"
+target = "~/.config/fish/functions/_cached_eval_post_vite-plus.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_post_zoxide.fish"
-target = "~/.config/fish/functions/hooks/_cached_eval_post_zoxide.fish"
+target = "~/.config/fish/functions/_cached_eval_post_zoxide.fish"
 
 [[file]]
 source = "functions/hooks/_cached_eval_replace_line.fish"
-target = "~/.config/fish/functions/hooks/_cached_eval_replace_line.fish"
+target = "~/.config/fish/functions/_cached_eval_replace_line.fish"
 
 [[file]]
 source = "functions/unzip.fish"
@@ -130,25 +130,25 @@ when = "patina.os == 'linux'"
 # Windows-only helper functions.
 [[file]]
 source = "functions/windows/pwd.fish"
-target = "~/.config/fish/functions/windows/pwd.fish"
+target = "~/.config/fish/functions/pwd.fish"
 when = "patina.os == 'windows'"
 
 [[file]]
 source = "functions/windows/open.fish"
-target = "~/.config/fish/functions/windows/open.fish"
+target = "~/.config/fish/functions/open.fish"
 when = "patina.os == 'windows'"
 
 [[file]]
 source = "functions/windows/mpv.fish"
-target = "~/.config/fish/functions/windows/mpv.fish"
+target = "~/.config/fish/functions/mpv.fish"
 when = "patina.os == 'windows'"
 
 [[file]]
 source = "functions/windows/pbcopy.fish"
-target = "~/.config/fish/functions/windows/pbcopy.fish"
+target = "~/.config/fish/functions/pbcopy.fish"
 when = "patina.os == 'windows'"
 
 [[file]]
 source = "functions/windows/pbpaste.fish"
-target = "~/.config/fish/functions/windows/pbpaste.fish"
+target = "~/.config/fish/functions/pbpaste.fish"
 when = "patina.os == 'windows'"
