@@ -3,20 +3,21 @@
 ## Codex configuration
 
 Patina symlinks [config.toml](codex/config.toml) to `~/.codex/config.toml` for shared preferences.
-Codex's `windows-msys2-read` permission profile extends read-only access to `C:\msys64\usr\bin`,
-`C:\Users\kvnxiao\.cargo\bin`, and `C:\Program Files\Git\cmd` so Windows sandboxed commands can
-access MSYS2, Cargo, and Git for Windows tools. Each machine keeps a regular, untracked
-`~/.codex/local.config.toml` for local state and overrides. Do not deploy or symlink the local
-profile.
+Codex uses the built-in `:read-only` permission profile by default. On Windows, the interactive fish
+`codex` function adds `windows-msys2-read`, which extends read access to MSYS2, Cargo, Git for
+Windows, pnpm's bin directory, and WinGet's portable package and command-link directories. This
+includes WinGet-installed pnpm. Each machine keeps a regular, untracked `~/.codex/local.config.toml`
+for local state and overrides. Do not deploy or symlink the local profile.
 
 Interactive fish defines `codex` as `command codex --profile local`. The `astra`, `sol`, and `luna`
-abbreviations, including their effort variants, expand through that alias. Codex creates the local
-profile when it first saves a setting. Local profile values override shared preferences; remove a
-local override to use the shared value again.
+abbreviations, including their effort variants, expand through that function. Codex creates the
+local profile when it first saves a setting. Local profile values override shared preferences;
+remove a local override to use the shared value again.
 
-Use `codex --profile local` when launching outside interactive fish. Codex does not support a
-default profile selector in `config.toml`. Launches without the local profile can write local state
-into the shared base file. The fish alias does not configure the desktop app or IDE extension.
+Use `codex --profile local` when launching outside interactive fish. The Windows-only filesystem
+grants are supplied by the fish function, so direct CLI launches, the desktop app, and the IDE
+extension do not receive them. Codex does not support a default profile selector in `config.toml`.
+Launches without the local profile can write local state into the shared base file.
 
 ## Reviewer agents
 
@@ -50,10 +51,10 @@ local policy. See
 [OpenAI reasoning guidance](https://developers.openai.com/api/docs/guides/reasoning) and
 [Anthropic effort guidance](https://platform.claude.com/docs/en/build-with-claude/effort).
 
-Codex selects `windows-msys2-read`, which extends the built-in `:read-only` permission profile.
-Claude Code excludes editing and delegation tools but retains Bash for diff inspection, so its
-read-only behavior also depends on the shared instructions. Parent runtime settings can override
-Codex permissions. Explicit Claude model overrides can override the definition's model.
+Codex uses the built-in `:read-only` profile by default. Claude Code excludes editing and delegation
+tools but retains Bash for diff inspection, so its read-only behavior also depends on the shared
+instructions. Parent runtime settings can override Codex permissions. Explicit Claude model
+overrides can override the definition's model.
 
 Run `patina apply` to inspect deployment, then `patina apply --yes` to apply it. Start a new client
 session after the first deployment so it discovers the agent definitions. Opus 5.5 requires Claude

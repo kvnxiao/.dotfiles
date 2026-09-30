@@ -1,6 +1,10 @@
 if status is-interactive
-  function codex --wraps='command codex --profile local' --description 'alias codex=command codex --profile local'
-    command codex --profile local $argv
+  function codex --wraps codex --description 'Run Codex with local settings and platform permissions'
+    set -l options --profile local
+    if test "$FISH_OS" = windows
+      set -a options --config 'default_permissions="windows-msys2-read"'
+    end
+    command codex $options $argv
   end
 
   set -l ASTRA_MODEL gpt-6-astra

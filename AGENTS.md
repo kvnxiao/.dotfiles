@@ -48,6 +48,37 @@ After completing a task, run `just check`. Run `just fix` to format every suppor
 
 ## Benchmarking
 
+Prefer fish builtins over external commands when modifying `.fish` files to avoid MSYS2 process
+startup latency. For example, replace a literal `sed` substitution with `string replace`.
+
+Choose the simplest behavior-preserving builtin approach. For example, iterate over a list with
+`for item in $items` instead of generating indices with `seq` or maintaining a counter with `math`.
+
+Use the following builtin replacements as a reference:
+
+| Operation                        | External tool          | Prefer in fish                                         |
+| -------------------------------- | ---------------------- | ------------------------------------------------------ |
+| Iterate over list elements       | `seq` for indices      | `for item in $items`                                   |
+| Replace literal text             | `sed`                  | `string replace -a -- old new "$value"`                |
+| Replace text with a regex        | `sed`                  | `string replace -ar -- '[0-9]+' NUMBER "$value"`       |
+| Check a regex match              | `grep -q`              | `string match -rq -- pattern "$value"`                 |
+| Extract a colon-delimited field  | `cut`, simple `awk`    | `string split -f2 -- : "$value"`                       |
+| Convert case                     | `tr`                   | `string lower -- "$value"`, `string upper -- "$value"` |
+| Trim whitespace                  | `sed`, `awk`           | `string trim -- "$value"`                              |
+| Extract a filename or directory  | `basename`, `dirname`  | `path basename -- "$file"`, `path dirname -- "$file"`  |
+| Resolve an absolute path         | `realpath`             | `path resolve -- "$file"`                              |
+| Count list elements              | `wc` over a pipeline   | `count $items`                                         |
+| Check list membership            | `grep` over a pipeline | `contains -- "$target" $items`                         |
+| Calculate a needed numeric value | `expr`, simple `bc`    | `math "$n + 1"`                                        |
+| Read text into one variable      | `cat`                  | `set -l text (string collect -aN < file)`              |
+
+Check behavior before replacing an external tool. For example, `count` counts list elements rather
+than file lines or bytes, and `string collect -aN` preserves empty input and trailing newlines.
+
+Keep external tools when a builtin replacement complicates the code or changes its behavior. For
+example, retain `awk` for substantial streaming transformations instead of building a long fish
+loop.
+
 After changing bash, fish, zsh, or PowerShell dotfiles, run the corresponding `just
 benchmark-*`
 task and verify that interactive startup time did not increase significantly.
