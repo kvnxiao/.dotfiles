@@ -1,14 +1,16 @@
 # Set up PATH
 set -gx VISUAL nvim
 set -gx PNPM_HOME "$HOME/.pnpm"
-fish_add_path -g /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
-if string match -q 'macos' "$FISH_OS"
-  fish_add_path -g /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME
-else if string match -q 'linux' "$FISH_OS"
-  fish_add_path -g $PNPM_HOME/bin
-else if string match -q 'windows' "$FISH_OS"
-  fish_add_path -g $PNPM_HOME/bin
+# Mirror fish_add_path -g in one assignment: each fish_user_paths change
+# rebuilds PATH.
+set -l _paths $PNPM_HOME/bin
+string match -q macos "$FISH_OS"; and set _paths /opt/homebrew/bin /opt/homebrew/sbin $PNPM_HOME
+set -a _paths /usr/local/bin /usr/bin ~/.local/bin ~/.cargo/bin
+set -l _new_paths
+for p in (path normalize -- $_paths | path filter -d)
+  contains -- $p $fish_user_paths; or set -a _new_paths $p
 end
+set -q _new_paths[1]; and set -g fish_user_paths $_new_paths $fish_user_paths
 
 # Vite+ (https://viteplus.dev): source a cached copy of env.fish — sourcing
 # the vendor file directly spawns vp at every startup (~70ms under MSYS2).
@@ -39,18 +41,17 @@ if status is-interactive
   # Set up init scripts from various tools required at prompt render time
   cached-eval fnm "fnm env --use-on-cd"
   cached-eval zoxide "zoxide init fish"
-  command -q zoxide; and alias cd="z"
   cached-eval br "broot --print-shell-function fish"
 
   cached-eval starship "starship init fish --print-full-init"
   function fish_right_prompt
   end
 
-  # Aliases
-  alias ls="lsd -a"
-  alias vi="nvim"
-  alias vim="nvim"
-  alias cd="z"
+  # Aliases as plain functions: each `alias` call costs 1-3ms under MSYS2
+  function ls --wraps='lsd -a' --description 'alias ls=lsd -a'; lsd -a $argv; end
+  function vi --wraps=nvim --description 'alias vi=nvim'; nvim $argv; end
+  function vim --wraps=nvim --description 'alias vim=nvim'; nvim $argv; end
+  function cd --wraps=z --description 'alias cd=z'; z $argv; end
   if test "$FISH_OS" = windows
     # Defer the powersession PATH scan (~7ms under MSYS2) to first call
     function asciinema --wraps powersession

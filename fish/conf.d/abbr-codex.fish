@@ -1,5 +1,7 @@
 if status is-interactive
-  alias codex='command codex --profile local'
+  function codex --wraps='command codex --profile local' --description 'alias codex=command codex --profile local'
+    command codex --profile local $argv
+  end
 
   set -l ASTRA_MODEL gpt-6-astra
   set -l SOL_MODEL gpt-6-sol
