@@ -3,6 +3,7 @@ model_reasoning_effort = "medium"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 plan_mode_reasoning_effort = "xhigh"
+default_permissions = "windows-msys2-read"
 
 [notice]
 fast_default_opt_out = true
@@ -29,3 +30,12 @@ screen_reader_detection_done = true
 
 [windows]
 sandbox = "elevated"
+
+[permissions.windows-msys2-read]
+extends = ":read-only"
+
+[permissions.windows-msys2-read.filesystem]
+'C:\msys64\usr\bin' = "read"
+'C:\Users\kvnxiao\.cargo\bin' = "read"
+'C:\Program Files\Git\cmd' = "read"
+'C:\Users\kvnxiao\.pnpm\bin' = "read"

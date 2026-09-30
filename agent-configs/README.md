@@ -3,8 +3,11 @@
 ## Codex configuration
 
 Patina symlinks [config.toml](codex/config.toml) to `~/.codex/config.toml` for shared preferences.
-Each machine keeps a regular, untracked `~/.codex/local.config.toml` for local state and overrides.
-Do not deploy or symlink the local profile.
+Codex's `windows-msys2-read` permission profile extends read-only access to `C:\msys64\usr\bin`,
+`C:\Users\kvnxiao\.cargo\bin`, and `C:\Program Files\Git\cmd` so Windows sandboxed commands can
+access MSYS2, Cargo, and Git for Windows tools. Each machine keeps a regular, untracked
+`~/.codex/local.config.toml` for local state and overrides. Do not deploy or symlink the local
+profile.
 
 Interactive fish defines `codex` as `command codex --profile local`. The `astra`, `sol`, and `luna`
 abbreviations, including their effort variants, expand through that alias. Codex creates the local
@@ -47,10 +50,10 @@ local policy. See
 [OpenAI reasoning guidance](https://developers.openai.com/api/docs/guides/reasoning) and
 [Anthropic effort guidance](https://platform.claude.com/docs/en/build-with-claude/effort).
 
-Codex sets a read-only sandbox default. Claude Code excludes editing and delegation tools but
-retains Bash for diff inspection, so its read-only behavior also depends on the shared instructions.
-Parent runtime settings can override Codex sandbox defaults. Explicit Claude model overrides can
-override the definition's model.
+Codex selects `windows-msys2-read`, which extends the built-in `:read-only` permission profile.
+Claude Code excludes editing and delegation tools but retains Bash for diff inspection, so its
+read-only behavior also depends on the shared instructions. Parent runtime settings can override
+Codex permissions. Explicit Claude model overrides can override the definition's model.
 
 Run `patina apply` to inspect deployment, then `patina apply --yes` to apply it. Start a new client
 session after the first deployment so it discovers the agent definitions. Opus 5.5 requires Claude
