@@ -17,35 +17,6 @@ and end chat replies with the required action or decision if one is needed.
 - **Rigor & Fidelity:** Distinguish verified facts, tool outputs, and inferences. Never sacrifice
   technical fidelity or caveats for style. Correct the user directly when needed, with the cause.
 
-## Codebase Artifacts & Commentary
-
-Code alone determines what runs; comments and docstrings that restate code become misleading noise.
-
-- **Comments and docstrings target zero:** Default to silence. Write one only for facts code cannot
-  express: hazards, ABI/OS quirks, race/lock constraints, or invariants the signature cannot convey.
-  Docstrings satisfy lint and stop on public items (summary line plus bulleted invariants/errors;
-  omit on private helpers). Delete anything a reader would infer unaided; rename or extract rather
-  than annotating.
-- **No provenance or grievance:** State current constraints directly. Never explain history,
-  tickets, outages, PRs, or why an external dependency is deficient.
-
-## Match the Artifact Contract
-
-Follow the ecosystem's required form before this table:
-
-| Artifact Layer                 | Mood & Tense              | Voice / Format                                                                                          | Example                                                                    |
-| :----------------------------- | :------------------------ | :------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------- |
-| **Docstrings & API Contracts** | Imperative, present tense | Bare compliance: single-line summary, plus bulleted invariants/errors when needed. No narrator framing. | `Parse incoming buffer and emit decode diagnostics.`                       |
-| **Test Comments & Harnesses**  | **None (target 0)**       | The test name is the contract. Keep only invisible fixture/skip preconditions.                          | `// Skipped without a live broker; a silent pass would hide a regression.` |
-| **Inline Code Comments**       | **None (target 0)**       | Delete by default. Explain only non-obvious hazards or lock constraints.                                | `// Declined prompt returns before acquiring lock to avoid deadlock.`      |
-| **Git Commit Subjects**        | Imperative, present tense | Action verb (no trailing period); cause-before-effect body.                                             | `feat: log path and major versions on decode failure`                      |
-| **Architecture Docs & RFCs**   | Third-person indicative   | Design intent and guarantees first, mechanics second. Concrete actors; plain verbs.                     | `When the connection resets, the worker flushes the buffer.`               |
-| **PR Descriptions**            | Direct, indicative        | Verdict first in plain words, then bulleted rationale/fixes; keep internal minutiae out of the summary. | `Applied migration. Added composite index on (user_id, created_at).`       |
-| **Instruction Files**          | Imperative, present tense | Direct instructions to the writer: one imperative and one example per rule.                             | `Run dprint over staged files before committing.`                          |
-
-Multi-line docstring tiers: (1) Operational summary, (2) Inputs/preconditions/invariants, (3)
-Bulleted failure paths and side effects.
-
 ## Kaomojis
 
 Add kaomojis only to chat replies, and add them often. Add one wherever you need to mark tone and at
@@ -76,6 +47,35 @@ Shared behavioral defaults for agents.
   validation changes, and re-run checks after refactoring.
 - Keep test assertions independent of the code under test; do not compute expected test output using
   the function being tested.
+
+## Codebase Artifacts & Commentary
+
+Code alone determines what runs; comments and docstrings that restate code become misleading noise.
+
+- **Comments and docstrings target zero:** Default to silence. Write one only for facts code cannot
+  express: hazards, ABI/OS quirks, race/lock constraints, or invariants the signature cannot convey.
+  Docstrings satisfy lint and stop on public items (summary line plus bulleted invariants/errors;
+  omit on private helpers). Delete anything a reader would infer unaided; rename or extract rather
+  than annotating.
+- **No provenance or grievance:** State current constraints directly. Never explain history,
+  tickets, outages, PRs, or why an external dependency is deficient.
+
+## Match the Artifact Contract
+
+Follow the ecosystem's required form before this table:
+
+| Artifact Layer                 | Mood & Tense              | Voice / Format                                                                                          | Example                                                                    |
+| :----------------------------- | :------------------------ | :------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------- |
+| **Docstrings & API Contracts** | Imperative, present tense | Bare compliance: single-line summary, plus bulleted invariants/errors when needed. No narrator framing. | `Parse incoming buffer and emit decode diagnostics.`                       |
+| **Test Comments & Harnesses**  | **None (target 0)**       | The test name is the contract. Keep only invisible fixture/skip preconditions.                          | `// Skipped without a live broker; a silent pass would hide a regression.` |
+| **Inline Code Comments**       | **None (target 0)**       | Delete by default. Explain only non-obvious hazards or lock constraints.                                | `// Declined prompt returns before acquiring lock to avoid deadlock.`      |
+| **Git Commit Subjects**        | Imperative, present tense | Action verb (no trailing period); cause-before-effect body.                                             | `feat: log path and major versions on decode failure`                      |
+| **Architecture Docs & RFCs**   | Third-person indicative   | Design intent and guarantees first, mechanics second. Concrete actors; plain verbs.                     | `When the connection resets, the worker flushes the buffer.`               |
+| **PR Descriptions**            | Direct, indicative        | Verdict first in plain words, then bulleted rationale/fixes; keep internal minutiae out of the summary. | `Applied migration. Added composite index on (user_id, created_at).`       |
+| **Instruction Files**          | Imperative, present tense | Direct instructions to the writer: one imperative and one example per rule.                             | `Run dprint over staged files before committing.`                          |
+
+Multi-line docstring tiers: (1) Operational summary, (2) Inputs/preconditions/invariants, (3)
+Bulleted failure paths and side effects.
 
 ## Verifying changes
 
