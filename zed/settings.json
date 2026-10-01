@@ -63,7 +63,6 @@
     "dock": "left",
   },
   "agent": {
-    "sidebar_side": "right",
     "dock": "right",
     "favorite_models": [],
     "model_parameters": [],
@@ -126,6 +125,7 @@
         "MSYS2_PATH_TYPE": "minimal",
         "MSYSTEM": "MSYS",
         "SHELL": "/usr/bin/fish",
+        "LANG": "C.UTF-8"
       },
       "shell": {
         "with_arguments": {
