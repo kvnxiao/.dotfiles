@@ -6,8 +6,6 @@ SETUVAR _fisher_jorgebucaran_2F_fisher_files:\x7e/\x2econfig/fish/functions/fish
 SETUVAR _fisher_kvnxiao_2F_skell_40_fish_2D_releases_files:\x7e/\x2econfig/fish/functions/_skell_escape\x2efish\x1e\x7e/\x2econfig/fish/functions/_skell_fit\x2efish\x1e\x7e/\x2econfig/fish/functions/_skell_history\x2efish\x1e\x7e/\x2econfig/fish/functions/_skell_msys_path\x2efish\x1e\x7e/\x2econfig/fish/functions/_skell_unescape\x2efish\x1e\x7e/\x2econfig/fish/functions/skell\x2dshare\x1e\x7e/\x2econfig/fish/conf\x2ed/skell\x2efish
 SETUVAR _fisher_plugins:jorgebucaran/fisher\x1ekvnxiao/skell\x40fish\x2dreleases
 SETUVAR _fisher_upgraded_to_4_4:\x1d
-SETUVAR fifc_keybinding:\x09
-SETUVAR fifc_open_keybinding:ctrl\x2do
 SETUVAR fish_color_autosuggestion:6c7086
 SETUVAR fish_color_cancel:f38ba8
 SETUVAR fish_color_command:89b4fa
@@ -34,16 +32,3 @@ SETUVAR fish_pager_color_completion:cdd6f4
 SETUVAR fish_pager_color_description:6c7086
 SETUVAR fish_pager_color_prefix:f5c2e7
 SETUVAR fish_pager_color_progress:6c7086
-SETUVAR fits_bat_opts:\x1d
-SETUVAR fits_builtin_search:false
-SETUVAR fits_eza_opts:\x1d
-SETUVAR fits_fd_opts:\x1d
-SETUVAR fits_fuzzy_cmd:fzf
-SETUVAR fits_fzf_binds:tab\x3adown\x1eshift\x2dtab\x3aup\x1eshift\x2ddown\x3aselect\x2bdown\x1eshift\x2dup\x3aselect\x2bup\x1ectrl\x2dspace\x3atoggle\x1ectrl\x2dd\x3adeselect\x2dall
-SETUVAR fits_fzf_opts:\x1d
-SETUVAR fits_height:40\x25
-SETUVAR fits_keybinding:\x09
-SETUVAR fits_lsd_opts:\x1d
-SETUVAR fits_preview_window:right\x2c50\x25\x2cborder\x2dleft\x2c\x3c80\x28up\x2c40\x25\x2cborder\x2dbottom\x29
-SETUVAR fits_sk_opts:\x1d
-SETUVAR fits_sk_preview_window:right\x3a50\x25
