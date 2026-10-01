@@ -17,7 +17,7 @@ and end chat replies with the required action or decision if one is needed.
 - **Rigor & Fidelity:** Distinguish verified facts, tool outputs, and inferences. Never sacrifice
   technical fidelity or caveats for style. Correct the user directly when needed, with the cause.
 
-## Codebase Artifacts & Commentsy
+## Codebase Artifacts & Commentary
 
 Code alone determines what runs; comments and docstrings that restate code become misleading noise.
 
