@@ -42,10 +42,12 @@ alias vcpkg="$HOME/github/vcpkg/vcpkg"
 # Stored in ~/.config/zsh-abbr/user-abbreviations
 ABBR_SET_EXPANSION_CURSOR=1
 
-export SKIM_DEFAULT_OPTIONS=" \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+# skim keeps only the last --color flag, so the theme must be one flag.
+export SKIM_DEFAULT_OPTIONS="--color=\
+bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8,\
+fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc,\
+marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8,\
+selected-bg:#45475a,border:#6c7086,label:#cdd6f4"
 
 # Shift+Enter inserts newline (for WezTerm CSI u sequence)
 insert-newline() { LBUFFER+=$'\n' }
