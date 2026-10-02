@@ -39,4 +39,10 @@ if status is-interactive
   # Backspace/Delete: kill selection if active, otherwise normal behavior
   bind \x7f __editor_backspace
   bind \e\[3~ __editor_delete
+
+  # execute only expands an abbreviation touching the cursor, but completion appends a space
+  # after it; expand-abbr checks one character before the cursor.
+  for key in enter ctrl-j ctrl-m ctrl-enter
+    bind $key expand-abbr execute
+  end
 end
