@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Independent review of assigned changes for correctness, repository rules, or simplification.
+description: Independent review of assigned changes for correctness, repository rules, and simplification.
 model: claude-opus-5-5
 effort: high
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch

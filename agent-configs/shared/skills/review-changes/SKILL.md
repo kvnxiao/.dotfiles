@@ -21,10 +21,11 @@ request; otherwise:
 The mode changes only each step's action and the final output. Choose the verification path the same
 way in both modes.
 
-Use [references/correctness-review.md](references/correctness-review.md) for reviews and
-verification, and [references/simplify-review.md](references/simplify-review.md) instead for a
-cleanup request. The full review assigns the selected contract to a reviewer; the fast path applies
-it through the diff review.
+Run [references/correctness-review.md](references/correctness-review.md) and
+[references/simplify-review.md](references/simplify-review.md) together for every review and
+verification; they check for different problems. Run only the simplification contract for a cleanup
+request. The full path assigns the contracts to reviewers; the fast path applies them through the
+diff review.
 
 ## Resolve the scope
 
@@ -50,7 +51,7 @@ Pass the resolved repository, base revision, file scope, mode, and intended chan
 downstream skill and reviewer. Keep unrelated changes outside that scope.
 
 Choose the verification path by potential consequences and unresolved uncertainty, not file or line
-counts. Escalate when investigation reveals broader effects. Use the full review when the user asks
+counts. Escalate when investigation reveals broader effects. Use the full path when the user asks
 for a full or comprehensive review. When the caller asks to review in-session or without subagents,
 perform the assigned checks in the main session and report the lack of an independent review.
 
@@ -63,8 +64,8 @@ also stays on this path, with the prose audit below.
 
 **Action:** Complete verification directly in the main session without subagents:
 
-1. **Review Diff:** Check the scoped diff directly for correctness, unintended edits, and clear
-   prose. For a cleanup request, check it against the simplification contract instead.
+1. **Review Diff:** Check the scoped diff directly for correctness, needless complexity, unintended
+   edits, and clear prose. For a cleanup request, check only for simplification.
 2. **Audit Prose When It Is the Deliverable:** Run `audit-prose` when the requested output is prose:
    the user asked to write, rewrite, or restructure a document, or the change adds a new document or
    section. Skip it when prose edits accompany a code change or are typo, wording, or
@@ -74,10 +75,10 @@ also stays on this path, with the prose audit below.
    In report mode, run only checks that do not modify tracked or source files, such as tests and
    formatters in check mode.
 4. **Finish:** Report the result and material verification gaps. In apply mode, continue the
-   authorized task. Do not spawn subagents or load full-review instructions unless the risk
-   assessment changes.
+   authorized task. Do not spawn subagents or load full-path instructions unless the risk assessment
+   changes.
 
-## 2. Full Review
+## 2. Full Path
 
 **Criteria:** Changes affecting behavioral contracts or requiring broader investigation, including:
 
@@ -85,7 +86,7 @@ also stays on this path, with the prose audit below.
 - Public APIs, security, compatibility, or shared configuration.
 - Structural refactors or unresolved design choices.
 
-**Action:** Read [references/full-review.md](references/full-review.md). Preserve coverage of
+**Action:** Read [references/full-path.md](references/full-path.md). Preserve coverage of
 correctness, simplification, repository rules, documentation, prose, and validation; scale
 delegation and investigation to the risk.
 

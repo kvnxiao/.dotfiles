@@ -1,5 +1,5 @@
 name = "reviewer"
-description = "Independent review of assigned changes for correctness, repository rules, or simplification."
+description = "Independent review of assigned changes for correctness, repository rules, and simplification."
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

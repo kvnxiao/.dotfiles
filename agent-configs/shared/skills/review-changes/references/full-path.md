@@ -1,9 +1,10 @@
-# Full Review Workflow
+# Full Path Workflow
 
-Keep one independent reviewer for the full path: a correctness reviewer, or a simplification
-reviewer for a cleanup request. Add reviewers for concrete uncertainty or specialized investigation,
-not diff size. For example, inspect an authorization change deeply even when it changes one line;
-check a mechanical rename across all references without requiring a separate design review.
+Cover both correctness and simplification on every full-path review, with one reviewer assigned both
+contracts or with parallel reviewers that split them. For a cleanup request, cover only
+simplification. Add reviewers for concrete uncertainty or specialized investigation, not diff size.
+For example, inspect an authorization change deeply even when it changes one line; check a
+mechanical rename across all references without requiring a separate design review.
 
 The coordinator owns delegation. Give each reviewer a focused task with the repository, revisions,
 file scope, intended behavior, applicable rules, constraints, and known uncertainties. Avoid copying
@@ -14,7 +15,7 @@ in-session and report the lack of an independent review.
 ## Select Review Effort
 
 Honor an explicit caller choice. Otherwise use `reviewer` at `high` on both clients. Select effort
-per assignment before spawning; full review and large diffs do not automatically require `xhigh`.
+per assignment before spawning; the full path and large diffs do not automatically require `xhigh`.
 Use the coordinator's scope assessment and targeted inspection of uncertain contracts to choose; do
 not perform a duplicate review just to route effort. Keep the same coverage and evidence standard at
 either effort.
@@ -62,15 +63,16 @@ Each step lists its apply-mode action first. In report mode, follow the same ste
 and record each result as a numbered finding.
 
 1. [ ] **Assign review coverage:** Select the effort profile above and assign
-       [correctness-review.md](correctness-review.md) for correctness, applicable repository rules,
-       and a simplification assessment. For a cleanup request, assign
-       [simplify-review.md](simplify-review.md) instead, and run steps 3–5 only on fixes applied in
-       apply mode. Inspect relevant local `*-rules` skills and supply them to that reviewer. Assign
-       each specialist a specific concern and tell the general reviewer which assessments are
-       assigned elsewhere. Run independent reviews in parallel. Delegate focused work separately
-       when:
-   - Structural changes or competing designs warrant a reviewer assigned
-     [simplify-review.md](simplify-review.md).
+       [correctness-review.md](correctness-review.md) for correctness and applicable repository
+       rules, and [simplify-review.md](simplify-review.md) for simplification. Assign both contracts
+       to one reviewer, or split them across parallel reviewers when structural changes or competing
+       designs warrant a dedicated simplification reviewer. For a cleanup request, assign only
+       [simplify-review.md](simplify-review.md), and run steps 3–5 only on fixes applied in apply
+       mode. Inspect relevant local `*-rules` skills and supply them to the reviewer assigned
+       [correctness-review.md](correctness-review.md), or to the simplification reviewer for a
+       cleanup request. Assign each specialist a specific concern and tell each reviewer which
+       assessments are assigned elsewhere. Run independent reviews in parallel. Delegate focused
+       work separately when:
    - Specialized rules require investigation beyond the general review.
    - An unresolved contract or unexpected dependency requires additional expertise.
 2. [ ] **Apply fixes:** Deduplicate findings by mechanism and location, keeping unresolved concerns
@@ -93,9 +95,8 @@ and record each result as a numbered finding.
 
 ## Operational Constraints
 
-- **Read-Only Reviewers:** Review subagents must not edit files, stage changes, mutate external
-  services, spawn children, or invoke `review-changes`. Keep reviewed files unchanged until their
-  reports return.
+- **Read-Only Reviewers:** Review subagents follow [review-execution.md](review-execution.md). Keep
+  reviewed files unchanged until their reports return.
 - **Tree Mutation Scope:** In apply mode, only the coordinator, `update-docs` subagent, and
   `audit-prose` subagent may edit the working tree. In report mode, nothing edits it.
 - **Boundaries:** Do not repair problems outside the scoped change set; list them for the user

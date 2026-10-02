@@ -37,11 +37,12 @@ contract to `~/.agents/instructions/reviewer.md`. Both clients read review proce
 
 Ask either client to use the `reviewer` agent for a diff or selected files. The full
 `review-changes` workflow defaults to `reviewer` and selects `reviewer-deep` when a specific
-reasoning difficulty warrants it. Both profiles support correctness and focused simplification
-review. The coordinator chooses effort before spawning and keeps it fixed for the assignment.
+reasoning difficulty warrants it. Every review covers both correctness and simplification, except a
+cleanup request, which covers only simplification; one reviewer handles both, or parallel reviewers
+split them. The coordinator chooses effort before spawning and keeps it fixed for the assignment.
 Follow-ups reuse the existing reviewer; unresolved questions do not trigger a replacement at higher
 effort. The coordinator supplies scope and, in apply mode, applies accepted fixes. See the
-[effort routing criteria](shared/skills/review-changes/references/full-review.md#select-review-effort).
+[effort routing criteria](shared/skills/review-changes/references/full-path.md#select-review-effort).
 
 The profiles set effort in client configuration; prompt text alone does not change it. The routing
 criteria are provisional and require evaluation on actual reviews. OpenAI recommends using `xhigh`
