@@ -23,14 +23,19 @@ counts. Escalate when investigation reveals broader effects.
 
 **Criteria:** Low-risk, localized edits with no architectural or runtime impact—such as fixing
 typos, editing comments or docstrings, updating isolated test assertions, narrow documentation
-fixes, or adding/removing an isolated configuration field.
+fixes, or adding/removing an isolated configuration field. A document rewrite with no runtime impact
+also stays on this path, with the prose audit below.
 
 **Action:** Complete verification directly in the main session without subagents:
 
 1. **Review Diff:** Check the scoped diff directly for correctness, unintended edits, and clear
    prose.
-2. **Focused Checks:** Run relevant formatters, linters, or the affected test in the main session.
-3. **Finish:** Report the result and material verification gaps, then continue the authorized task.
+2. **Audit Prose When It Is the Deliverable:** Run `audit-prose` when the requested output is prose:
+   the user asked to write, rewrite, or restructure a document, or the change adds a new document or
+   section. Skip it when prose edits accompany a code change or are typo, wording, or
+   single-sentence fixes; the diff review covers those.
+3. **Focused Checks:** Run relevant formatters, linters, or the affected test in the main session.
+4. **Finish:** Report the result and material verification gaps, then continue the authorized task.
    Do not spawn subagents or load full-review instructions unless the risk assessment changes.
 
 ## 2. Full Review
