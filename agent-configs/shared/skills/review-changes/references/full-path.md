@@ -1,106 +1,84 @@
-# Full Path Workflow
+# Full review workflow
 
-Cover both correctness and simplification on every full-path review, with one reviewer assigned both
-contracts or with parallel reviewers that split them. For a cleanup request, cover only
-simplification. Add reviewers for concrete uncertainty or specialized investigation, not diff size.
-For example, inspect an authorization change deeply even when it changes one line; check a
-mechanical rename across all references without requiring a separate design review.
+## Assign review coverage
 
-The coordinator owns delegation. Give each reviewer a focused task with the repository, revisions,
-file scope, intended behavior, applicable rules, constraints, and known uncertainties. Avoid copying
-the full conversation or supplying the author's conclusions as evidence. Require reviewers to read
-the actual diff and relevant code. When delegation is unavailable, perform the assigned checks
-in-session and report the lack of an independent review.
+Assign one reviewer both [correctness-review.md](correctness-review.md) and
+[simplify-review.md](simplify-review.md), or only simplification for a cleanup request. Add a
+specialist only for a distinct contract or repository rule requiring separate investigation; name
+that concern and its owner. Run independent assignments in parallel when available.
 
-## Select Review Effort
+Pass the resolved assignment from [SKILL.md](../SKILL.md#resolve-the-assignment), the selected
+profile, and the assigned contract paths. Include intended behavior and known uncertainties without
+copying the conversation or presenting the author's conclusions as evidence. Require inspection of
+the actual artifacts.
 
-Honor an explicit caller choice. Otherwise use `reviewer` at `high` on both clients. Select effort
-per assignment before spawning; the full path and large diffs do not automatically require `xhigh`.
-Use the coordinator's scope assessment and targeted inspection of uncertain contracts to choose; do
-not perform a duplicate review just to route effort. Keep the same coverage and evidence standard at
-either effort.
+Use `reviewer` by default. Use `reviewer-deep` upfront only when the caller explicitly requests it.
+Select named profiles; model IDs and effort settings belong in the client definitions. If a named
+profile is unavailable, read its definition and use explicit model/effort arguments when supported,
+with [review-execution.md](review-execution.md) as the contract. Otherwise use an available
+read-only reviewer and report the configuration limitation. If delegation is unavailable, review
+in-session and report the lack of independent review. Stop retrying an unavailable configuration
+after its fallback fails.
 
-Use `reviewer-deep` at `xhigh` when deeper reasoning has a concrete expected benefit, for example:
+Keep each running review at its selected effort. After reports return, allow at most one focused
+`reviewer-deep` follow-up per workflow for unresolved correctness concerns that:
 
-- Several interacting state transitions or concurrency orderings make a failure difficult to trace.
-- An authorization boundary or irreversible migration has a subtle invariant whose failure has
-  serious consequences.
-- Contracts across components support competing explanations that require a long chain of reasoning
-  to distinguish from the available evidence.
+- Are marked reasoning-limited and have the needed evidence available.
+- Have a concrete potential P0 or P1 consequence.
+- Have not already been reviewed at the deep profile.
 
-Treat these as judgment criteria, not keyword triggers. A straightforward authorization edit can
-remain at `high`; a small change with a difficult race can warrant `xhigh` immediately. Do not
-select `xhigh` solely for missing logs, unavailable tests, or unclear requirements. Obtain the
-missing evidence or report the verification gap.
+Pass the first reviewer's evidence and competing explanations; require an independent conclusion. Do
+not escalate missing requirements, tests, logs, or runtime observations. Reuse existing reviewers
+for ordinary clarifications. Report remaining uncertainty when a follow-up is unavailable or does
+not resolve it.
 
-Include the chosen effort and a short reason in the assignment. Use the client-specific profiles:
+## Reconcile and apply
 
-| Profile         | Codex         | Claude Code       | Effort  |
-| --------------- | ------------- | ----------------- | ------- |
-| `reviewer`      | `gpt-6-astra` | `claude-opus-5-5` | `high`  |
-| `reviewer-deep` | `gpt-6-astra` | `claude-opus-5-5` | `xhigh` |
+Wait for assigned reviews before changing reviewed files. Deduplicate findings by mechanism and
+location, keeping unresolved concerns separate. Verify each finding against the target and
+applicable contracts; a reviewer's verdict alone does not establish acceptance.
 
-Select the named profile rather than asking a pinned agent to change effort in its prompt. If named
-profiles are unavailable, use explicit model and effort arguments when the spawning tool supports
-them, and supply the shared reviewer contract. Otherwise use the available read-only reviewer and
-report that the requested configuration could not be enforced. Do not claim a model or effort was
-verified from the reviewer's self-description.
+In report mode, return verified findings without edits. In apply mode:
 
-Keep the effort choice fixed once the reviewer starts. Do not interrupt or replace a `high` reviewer
-with `reviewer-deep`, or spawn an `xhigh` follow-up for the same assignment. Reuse the existing
-reviewer at its selected effort for clarifications and corrections, preserving its context. Report
-unresolved questions with the evidence needed to decide them. Additional specialists must cover
-distinct concerns, not repeat an assignment at higher effort. Apply lessons from difficult reviews
-to future upfront choices.
+- Apply confirmed correctness corrections within the authorized scope.
+- Apply confirmed simplifications only within the scoped files, with equivalent behavior, unchanged
+  public interfaces, and settled design decisions.
+- Do not apply unresolved or refuted items. Record every confirmed item skipped and its reason.
 
-Treat this routing as provisional. When comparable reviews provide evidence, tune it using valid
-defects found, false positives, unresolved questions, latency, and token usage where available. Do
-not add comparison runs to every verification or claim an unmeasured quality or cost benefit.
+Correctness takes precedence over cleanup. Inspect fixes in-session with affected callers and
+contracts. Reassess changed behavior and invalidate stale evidence, including for edits to prompts
+or instructions. Do not repeat review of unchanged work or spawn another reviewer for routine fixes.
+If a correction requires an unsettled product or compatibility decision, report it and obtain that
+decision before applying the dependent change.
 
-## Review Pipeline
+## Documentation and prose
 
-Each step lists its apply-mode action first. In report mode, follow the same steps without editing
-and record each result as a numbered finding.
+Use `update-docs` with the selected mode to assess documented public behavior and internal design.
+Search the relevant documentation corpus; report the assessment even when no update is needed. Skip
+this assessment only for cleanup-only work that preserves documented behavior and design, and state
+that reason.
 
-1. [ ] **Assign review coverage:** Select the effort profile above and assign
-       [correctness-review.md](correctness-review.md) for correctness and applicable repository
-       rules, and [simplify-review.md](simplify-review.md) for simplification. Assign both contracts
-       to one reviewer, or split them across parallel reviewers when structural changes or competing
-       designs warrant a dedicated simplification reviewer. For a cleanup request, assign only
-       [simplify-review.md](simplify-review.md), and run steps 3–5 only on fixes applied in apply
-       mode. Inspect relevant local `*-rules` skills and supply them to the reviewer assigned
-       [correctness-review.md](correctness-review.md), or to the simplification reviewer for a
-       cleanup request. Assign each specialist a specific concern and tell each reviewer which
-       assessments are assigned elsewhere. Run independent reviews in parallel. Delegate focused
-       work separately when:
-   - Specialized rules require investigation beyond the general review.
-   - An unresolved contract or unexpected dependency requires additional expertise.
-2. [ ] **Apply fixes:** Deduplicate findings by mechanism and location, keeping unresolved concerns
-       distinct. Correctness governs over cleanup. Apply accepted fixes and inspect the corrections
-       with their affected callers and contracts. Broaden review when a fix changes shared behavior
-       or invalidates earlier evidence; do not restart unchanged review work.
-3. [ ] **Assess and update documentation:** Use `update-docs` in the main session to search the
-       documentation corpus and assess public behavior and documented internal design. Make small
-       edits in-session; delegate substantial writing or investigation with the relevant search
-       results. Report the assessment when no update is needed. In report mode, ask `update-docs`
-       for the documentation-impact assessment only and report the required edits.
-4. [ ] **Audit changed prose:** After documentation updates, use `audit-prose` on all added or
-       modified prose in the resolved change set, including comments and follow-up edits. Keep
-       modest audits in-session; delegate when writing is a substantial deliverable. Check that
-       prose edits preserve meaning and stay within scope.
-5. [ ] **Validate:** Run relevant formatting, linting, type-checking, and tests after the final
-       edits. Choose checks that establish the changed contracts; broaden them for shared behavior
-       or uncertain dependencies. Reuse passed results only while their inputs remain unchanged. In
-       report mode, run only checks that do not modify tracked or source files.
+Use `audit-prose` with the selected mode on added or modified prose and requested prose-cleanup
+targets. A cleanup request does not skip this step when prose is in scope. In snapshot reviews,
+audit the selected prose. Skip only when no prose is in scope. Finish documentation before auditing
+prose; preserve meaning. Recheck behavioral instructions after any prose correction.
 
-## Operational Constraints
+The coordinator applies edits. If documentation or prose investigation is delegated, require
+`mode=report` and apply accepted corrections in-session.
 
-- **Read-Only Reviewers:** Review subagents follow [review-execution.md](review-execution.md). Keep
-  reviewed files unchanged until their reports return.
-- **Tree Mutation Scope:** In apply mode, only the coordinator, `update-docs` subagent, and
-  `audit-prose` subagent may edit the working tree. In report mode, nothing edits it.
-- **Boundaries:** Do not repair problems outside the scoped change set; list them for the user
-  instead. Review delegated edits before continuing; finish documentation before auditing prose.
-- **Reporting:** Keep findings compact and evidence-based. Report remaining issues, checks run, and
-  verification gaps without repeating reviewer reports or adding empty sections. Do not claim
-  measured token savings or equivalent defect detection without comparative results.
+## Validate and finish
+
+Run relevant formatting, linting, type-checking, and tests after the final edits. Follow the mode's
+side-effect boundary in [SKILL.md](../SKILL.md). Reuse passed checks only while their inputs remain
+unchanged. For suggestion-only cleanup, run a check only when needed to establish a proposal.
+
+For a failure, establish its cause before changing code. Classify it as pre-existing only when a
+baseline run or other evidence establishes that; an untouched reported line is not proof. Fix
+in-scope causes in apply mode and rerun affected checks. Do not repeat an unchanged failing command
+without new evidence. After two attempts with no new evidence or progress, stop that retry loop,
+report the blocker and failing command, and continue independent work. Report mode records the
+failure without repairing it.
+
+Check that every assigned assessment returned or has a recorded limitation. Use the completion
+format in [SKILL.md](../SKILL.md); include remaining issues and verification gaps without repeating
+the reviewer reports.

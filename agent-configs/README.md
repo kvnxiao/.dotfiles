@@ -21,45 +21,33 @@ Launches without the local profile can write local state into the shared base fi
 
 ## Reviewer agents
 
-The reviewer uses one [shared contract](shared/agents/reviewer.md) with two effort profiles per
-client:
+Both clients use the
+[shared reviewer contract](shared/skills/review-changes/references/review-execution.md). The client
+definitions set the model, effort, and available permissions:
 
-| Client      | Definition                                              | Model             | Effort  |
-| ----------- | ------------------------------------------------------- | ----------------- | ------- |
-| Codex       | [reviewer.toml](codex/agents/reviewer.toml)             | `gpt-6-astra`     | `high`  |
-| Codex       | [reviewer-deep.toml](codex/agents/reviewer-deep.toml)   | `gpt-6-astra`     | `xhigh` |
-| Claude Code | [reviewer.md](claude-code/agents/reviewer.md)           | `claude-opus-5-5` | `high`  |
-| Claude Code | [reviewer-deep.md](claude-code/agents/reviewer-deep.md) | `claude-opus-5-5` | `xhigh` |
+| Client      | Standard profile                              | Deep profile                                            |
+| ----------- | --------------------------------------------- | ------------------------------------------------------- |
+| Codex       | [reviewer.toml](codex/agents/reviewer.toml)   | [reviewer-deep.toml](codex/agents/reviewer-deep.toml)   |
+| Claude Code | [reviewer.md](claude-code/agents/reviewer.md) | [reviewer-deep.md](claude-code/agents/reviewer-deep.md) |
 
-Patina symlinks the definitions into each client's user-level `agents` directory and the shared
-contract to `~/.agents/instructions/reviewer.md`. Both clients read review procedures from the
-`review-changes` references deployed under `~/.agents/skills/`.
-
-Ask either client to use the `reviewer` agent for a diff or selected files. The full
-`review-changes` workflow defaults to `reviewer` and selects `reviewer-deep` when a specific
-reasoning difficulty warrants it. Every review covers both correctness and simplification, except a
-cleanup request, which covers only simplification; one reviewer handles both, or parallel reviewers
-split them. The coordinator chooses effort before spawning and keeps it fixed for the assignment.
-Follow-ups reuse the existing reviewer; unresolved questions do not trigger a replacement at higher
-effort. The coordinator supplies scope and, in apply mode, applies accepted fixes. See the
-[effort routing criteria](shared/skills/review-changes/references/full-path.md#select-review-effort).
-
-The profiles set effort in client configuration; prompt text alone does not change it. The routing
-criteria are provisional and require evaluation on actual reviews. OpenAI recommends using `xhigh`
-when evaluations justify its added cost and latency. Anthropic recommends evaluating effort levels
-on the workload for Opus 5.5, whose default is `medium`. Choosing `high` for ordinary reviews is a
-local policy. See
-[OpenAI reasoning guidance](https://developers.openai.com/api/docs/guides/reasoning) and
-[Anthropic effort guidance](https://platform.claude.com/docs/en/build-with-claude/effort).
+Patina symlinks the definitions into each client's user-level `agents` directory. Both clients read
+the shared contract directly from `~/.agents/skills/review-changes/references/review-execution.md`.
+See [review-changes](shared/skills/review-changes/SKILL.md) for modes and scope, and the
+[full workflow](shared/skills/review-changes/references/full-path.md) for delegation, effort, and
+acceptance rules.
 
 Codex uses the built-in `:read-only` profile by default. Claude Code excludes editing and delegation
 tools but retains Bash for diff inspection, so its read-only behavior also depends on the shared
 instructions. Parent runtime settings can override Codex permissions. Explicit Claude model
 overrides can override the definition's model.
 
+Claude Code's bundled `code-review` and `simplify` skills are set to `user-invocable-only` in
+[settings.json](claude-code/settings.json). They remain available as slash commands and are hidden
+from automatic selection. See
+[skill visibility overrides](https://code.claude.com/docs/en/skills#override-skill-visibility-from-settings).
+
 Run `patina apply` to inspect deployment, then `patina apply --yes` to apply it. Start a new client
-session after the first deployment so it discovers the agent definitions. Opus 5.5 requires Claude
-Code 2.1.280 or later.
+session after changing the agent definitions so it discovers the updated profiles.
 
 Definition formats follow the official
 [Codex subagent documentation](https://developers.openai.com/codex/subagents) and

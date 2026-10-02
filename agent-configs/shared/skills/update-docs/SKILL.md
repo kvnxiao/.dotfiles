@@ -7,8 +7,23 @@ description: Update repository documentation to match a code, configuration, arc
 
 Keep the repository's documentation accurate for the target change set.
 
+## Select the mode
+
+Honor explicit user constraints, then the caller's `mode=report` or `mode=apply`. Without a supplied
+mode, use report for assessment/review requests and apply for requests to update or fix docs.
+
+- **Report:** Search and assess without editing. Return each required correction with its location,
+  conflicting behavior, and proposed replacement. Run only checks that preserve source files.
+- **Apply:** Make the scoped corrections, then verify and report them.
+
+Keep scope and investigation the same in both modes. Report mode takes precedence over the editing
+steps below. A delegated report does not authorize edits.
+
 ## Scope
 
+- Preserve the caller's resolved scope, including revisions and diff/snapshot boundaries. For a
+  snapshot, assess the selected artifacts against the current implementation without requiring a
+  diff.
 - If the caller names revisions, files, or a feature, use that boundary. Otherwise inspect the
   complete working-tree change set, including staged, unstaged, and untracked files.
 - Read the repository instructions and the changed implementation before editing documentation.
@@ -23,12 +38,13 @@ Keep the repository's documentation accurate for the target change set.
 
 ## Determine documentation impact
 
-Read the full diff and enough surrounding implementation to identify the behavior, interfaces, and
-constraints that the change adds, modifies, or removes. Check user-facing commands, flags,
-configuration keys, environment variables, defaults, outputs, APIs, schemas, setup procedures,
-compatibility boundaries, and workflows. When repository documentation describes maintainer-facing
-architecture, component relationships, extension points, or operational procedures, check those
-claims against the change. Do not infer documentation impact from filenames alone.
+Read the full scoped diff or snapshot and enough surrounding implementation to identify the
+behavior, interfaces, and constraints that the change adds, modifies, or removes. Check user-facing
+commands, flags, configuration keys, environment variables, defaults, outputs, APIs, schemas, setup
+procedures, compatibility boundaries, and workflows. When repository documentation describes
+maintainer-facing architecture, component relationships, extension points, or operational
+procedures, check those claims against the change. Do not infer documentation impact from filenames
+alone.
 
 Unless standalone documentation describes the changed design or mechanism, an internal refactor does
 not require a documentation edit.
@@ -46,6 +62,8 @@ context and follow local links to related documentation.
 
 ## Apply updates
 
+In report mode, propose these corrections without applying them.
+
 - Remove claims, examples, navigation entries, and cross-references for behavior that no longer
   exists.
 - When behavior changes, update descriptions, examples, defaults, prerequisites, and migration
@@ -60,10 +78,10 @@ context and follow local links to related documentation.
 
 ## Verify and report
 
-After editing, search the full documentation corpus again for stale names and conceptual
+After applying edits, search the full documentation corpus again for stale names and conceptual
 descriptions. When the repository provides an existing documentation-specific validation command and
 the command fits the caller's verification workflow, run it.
 
-Report the documentation files changed and the fact each edit now describes. If no edit is needed,
-state the documentation-impact assessment and the documentation areas searched. List stale generated
-output, unresolved claims, and unrelated defects separately.
+Report the documentation files changed or proposed and the fact each correction describes. If no
+edit is needed, state the documentation-impact assessment and the documentation areas searched. List
+stale generated output, unresolved claims, and unrelated defects separately.

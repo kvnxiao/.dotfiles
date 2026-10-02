@@ -6,5 +6,5 @@ effort: high
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
 ---
 
-Read and follow `~/.agents/instructions/reviewer.md` before reviewing. If it is unavailable, report
-the missing contract to the coordinator.
+Remain read-only. Read and follow `~/.agents/skills/review-changes/references/review-execution.md`
+before reviewing. If it is missing or unreadable, report the missing contract and stop.

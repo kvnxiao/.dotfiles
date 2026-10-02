@@ -8,6 +8,19 @@ description: Lightweight prose audit to remove AI tells, simplify diction into n
 Audit technical prose to remove machine tells, eliminate compliance slop, and ensure clean, natural
 English. Nudge prose toward direct, human-written clarity rather than rigid, bureaucratic evasions.
 
+## Select the mode
+
+Honor explicit user constraints, then the caller's `mode=report` or `mode=apply`. Without a supplied
+mode, use report for review or suggestion requests and apply for rewrite, cleanup, or correction
+requests.
+
+- **Report:** Do not edit. Return each correction with its location, violated rule, and proposed
+  wording. State when no correction is needed.
+- **Apply:** Rewrite only the scoped prose, or return the rewritten text when no file is targeted.
+
+Apply the same lenses in both modes. In report mode, instructions below to delete, rewrite, or
+otherwise edit mean to propose that correction.
+
 > **Semantic fidelity trumps style.** Treat wording and structure rules as defaults: preserve clear,
 > accurate, idiomatic prose, and rewrite only when the change improves clarity, precision, or
 > usefulness. Banned AI tells and semantic fidelity are firm: never alter verified behavior, invent
@@ -120,21 +133,19 @@ Apply these four review lenses in order:
 
 ---
 
-## Scope Gate & Audit Modes
+## Resolve scope and output
 
 Resolve scope before auditing:
 
+- Preserve a caller-supplied scope, including revisions and diff/snapshot boundaries. In a diff,
+  audit only added or modified prose; in a snapshot, audit the selected prose in full.
 - With an explicitly named file, path, or text snippet, audit only that target.
 - With no named target, audit staged changes, unstaged changes, and untracked files (the union of
   `git diff HEAD` and untracked files reported by `git status --porcelain`). Audit and rewrite only
   the prose lines added or modified within that resolved scope.
 
-Choose the mode matching the request:
-
-- **Quick Rewrite:** Use for commit messages, PR drafts, or small text snippets. Directly rewrite
-  the target in place or return the corrected artifact without verbose audit ledgers.
-- **Change-Set Audit:** Use for reviewing a change set. Directly rewrite only the added or modified
-  prose lines within the resolved scope.
+For commit messages, PR drafts, and small snippets, keep the output to corrections or the rewritten
+artifact as the selected mode requires. For change sets, preserve the resolved line scope.
 
 ## Operational Constraints
 

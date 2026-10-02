@@ -27,10 +27,6 @@ source = "claude-code/agents/reviewer-deep.md"
 target = "~/.claude/agents/reviewer-deep.md"
 
 [[file]]
-source = "shared/agents/reviewer.md"
-target = "~/.agents/instructions/reviewer.md"
-
-[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 

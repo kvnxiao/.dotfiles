@@ -1,6 +1,7 @@
 # Correctness review
 
-Review for defects introduced or exposed by the selected changes. Every correctness finding must
+In a diff review, find defects introduced or exposed by the selected changes. In a snapshot review,
+find defects in the selected artifacts, including existing behavior. Every correctness finding must
 identify a concrete input, state, or ordering that produces incorrect behavior; cite the conflicting
 instruction and artifact for a repository-rule violation.
 
@@ -8,9 +9,9 @@ Follow [review-execution.md](review-execution.md) for scope, read-only execution
 
 ## Investigation
 
-Read every in-scope hunk, including tests and configuration, and open enclosing functions and
-relevant contracts. Scale investigation depth to the behavior and risk of the change, without quotas
-for findings.
+Read every in-scope hunk, or the complete selected artifacts for a snapshot review, including tests
+and configuration. Open enclosing functions and relevant contracts. Scale investigation depth to
+behavior and risk, without quotas for findings.
 
 - **Changed behavior:** Check boundary values, invalid inputs, error paths, resource lifetimes,
   state transitions, and ordering. Follow language-specific semantics and supported platforms rather
@@ -27,10 +28,11 @@ for findings.
 - **Repository rules:** Apply the repository instructions and relevant rule skills supplied by the
   coordinator. Report gaps that require specialized investigation rather than assuming compliance.
 
-Read unchanged code to establish reachability and existing guards. Separate pre-existing defects
-from change-induced findings; a touched function alone does not put all of its old defects in scope.
-Leave simplification to [simplify-review.md](simplify-review.md), and specialized rule checks to the
-reviewers assigned them, without excluding correctness defects in the same code from your review.
+Read surrounding code to establish reachability and existing guards. In a diff review, separate
+pre-existing defects from change-induced findings; touching a function does not put its old defects
+in scope. Leave simplification to [simplify-review.md](simplify-review.md), and specialized rule
+checks to the reviewers assigned them, without excluding correctness defects in the same code from
+your review.
 
 ## Verify and report
 
@@ -54,7 +56,5 @@ Use this severity scale, independently of the verdict:
 - **P2:** Bounded functional or performance regression; correct in normal work.
 - **P3:** Minor impact or maintenance cost; low-priority correction or cleanup.
 
-Return confirmed findings ranked by severity, separate unresolved concerns, and verification limits.
-Use a compact paragraph or bullet per finding with its location, severity, concrete trigger or rule
-violation, evidence, and suggested correction. Distinguish inspection from observed execution. For
-unresolved concerns, state the missing evidence and required check; do not imply a confirmed defect.
+Return findings and verification limits using the format in
+[review-execution.md](review-execution.md).

@@ -168,6 +168,10 @@
     "command": "ccstat-rs",
     "padding": 0
   },
+  "skillOverrides": {
+    "code-review": "user-invocable-only",
+    "simplify": "user-invocable-only"
+  },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true,

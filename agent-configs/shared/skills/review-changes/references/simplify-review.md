@@ -8,12 +8,13 @@ Follow [review-execution.md](review-execution.md) for scope, read-only execution
 
 ## Investigation
 
-Read the changed code and enough surrounding code to establish the cost and the replacement's
-behavior. Scale investigation depth to the change's complexity and execution frequency.
+Read the scoped diff or snapshot and enough surrounding code to establish the cost and the
+replacement's behavior. Scale investigation depth to complexity and execution frequency.
 
-Limit proposals to complexity or costs introduced or exposed by the change. A touched function alone
-does not put its pre-existing cleanup opportunities in scope. Efficiency proposals must address
-costs introduced by the change. Leave comment deletion and prose cleanup to `audit-prose`.
+In a diff review, limit proposals to complexity or costs introduced or exposed by the change;
+touching a function does not put its pre-existing cleanup opportunities in scope. In a snapshot
+review, existing costs in the selected artifacts are in scope. The coordinator assigns comment
+deletion and prose cleanup to `audit-prose`; do not duplicate that assessment.
 
 - **Reuse:** Search nearby code and shared modules for an existing implementation. Name the helper
   and check its contract before proposing reuse. Similar syntax alone does not justify coupling
@@ -21,10 +22,10 @@ costs introduced by the change. Leave comment deletion and prose cleanup to `aud
 - **Simplification:** Look for redundant or derivable state, dead code, needless indirection,
   repeated branches, and nesting that obscures execution. Describe the simpler form and how it
   preserves the existing contract.
-- **Efficiency:** Identify repeated computation, I/O, allocation, or retained resources introduced
-  by the change. Establish execution frequency and dependencies before proposing caching or
-  concurrency. Check actual capture and lifetime semantics before claiming a closure retains memory.
-  Distinguish measured costs from estimates.
+- **Efficiency:** Identify repeated computation, I/O, allocation, or retained resources within
+  scope. Establish execution frequency and dependencies before proposing caching or concurrency.
+  Check actual capture and lifetime semantics before claiming a closure retains memory. Distinguish
+  measured costs from estimates.
 - **Placement of the fix:** Check whether a local special case duplicates a rule already implemented
   in a shared mechanism. Prefer the smallest change that expresses the required behavior; do not
   broaden APIs or redesign unrelated code merely to make a solution more general.
@@ -49,10 +50,6 @@ Use these verdicts:
   evidence and the check needed to resolve it.
 - **Refuted:** The proposal lacks a benefit or changes behavior. Exclude it from cleanup proposals.
 
-Return confirmed proposals ranked by concrete benefit, separate unresolved concerns, and
-verification limits. Use a compact paragraph or bullet per proposal with its location, current cost,
-replacement, equivalence evidence, and any material trade-off. Distinguish measured costs from
-estimates and inspection from observed execution. For unresolved concerns, state the missing
-evidence and required check.
-
-The caller decides which proposals to apply.
+Return proposals and verification limits using the format in
+[review-execution.md](review-execution.md). The coordinator applies the workflow's acceptance rules;
+a standalone reviewer returns proposals without editing.

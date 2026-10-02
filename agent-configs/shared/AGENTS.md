@@ -90,9 +90,9 @@ Bulleted failure paths and side effects.
 
 ## Reviewing changes
 
-When you finish an implementation or before you commit or open a PR, run `review-changes` once on
-the accumulated change set to apply review fixes. Route requests to review, verify, or clean up
-changes through `review-changes`. It scales review to risk, using in-session review for trivial
+When you finish an implementation or before you commit or open a PR, run `review-changes mode=apply`
+once on the accumulated change set to apply review fixes. Route requests to review, verify, or clean
+up changes through `review-changes`. It scales review to risk, using in-session review for trivial
 edits and independent review with conditional specialists for changes requiring the full path.
 
 ## Tool routing
