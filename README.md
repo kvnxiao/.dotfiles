@@ -16,7 +16,7 @@ Install the following before running any setup commands:
 | [fnm](https://github.com/Schniz/fnm)            | Node.js version manager |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | smarter cd              |
 | [skell](https://github.com/kvnxiao/skell)       | shell history           |
-| [lsd](https://github.com/lsd-rs/lsd)            | ls replacement          |
+| [eza](https://github.com/eza-community/eza)     | ls replacement          |
 | [skim](https://github.com/skim-rs/skim)         | fuzzy finder            |
 | [broot](https://github.com/Canop/broot)         | file navigator          |
 | [neovim](https://neovim.io/)                    | editor                  |

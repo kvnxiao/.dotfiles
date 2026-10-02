@@ -32,7 +32,7 @@ export PATH="$PATH:$HOME/.fvm/default/bin"
 [[ -f ~/.config/.dart-cli-completion/zsh-config.zsh ]] && . ~/.config/.dart-cli-completion/zsh-config.zsh || true
 
 # Aliases
-alias ls="lsd -a"
+alias ls="eza -a --icons=auto"
 alias vi="nvim"
 alias vim="nvim"
 alias vcpkg="$HOME/github/vcpkg/vcpkg"

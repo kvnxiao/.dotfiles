@@ -101,16 +101,13 @@ $processExclusions = @(
     # Fish
     "$msys2Path\usr\bin\fish.exe"
 
-    # Tools forked during shell startup (cached-eval, etc.)
-    "$cargoPath\fnm.exe"
-    "$cargoPath\zoxide.exe"
-    "$cargoPath\starship.exe"
-    "$cargoPath\lsd.exe"
+    # Cargo-installed tools, including those forked during shell startup
+    # (fnm, zoxide, starship) and by skell (sk)
+    "$cargoPath\*"
 
-    # skell forks sk once per Ctrl+R and once per Tab, and gawk once per
-    # preview keystroke. A native Windows sk runs its preview under cmd.exe,
-    # which resolves gawk from the Windows PATH where Git's copy is first.
-    "$cargoPath\sk.exe"
+    # skell forks gawk once per preview keystroke. A native Windows sk runs
+    # its preview under cmd.exe, which resolves gawk from the Windows PATH
+    # where Git's copy is first.
     "$msys2Path\usr\bin\gawk.exe"
     "C:\Program Files\Git\usr\bin\gawk.exe"
 )

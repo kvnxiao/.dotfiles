@@ -48,7 +48,7 @@ if status is-interactive
   end
 
   # Aliases as plain functions: each `alias` call costs 1-3ms under MSYS2
-  function ls --wraps='lsd -a' --description 'alias ls=lsd -a'; lsd -a $argv; end
+  function ls --wraps='eza -a --icons=auto' --description 'alias ls=eza -a --icons=auto'; eza -a --icons=auto $argv; end
   function vi --wraps=nvim --description 'alias vi=nvim'; nvim $argv; end
   function vim --wraps=nvim --description 'alias vim=nvim'; nvim $argv; end
   function cd --wraps=z --description 'alias cd=z'; z $argv; end

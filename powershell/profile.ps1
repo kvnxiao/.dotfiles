@@ -13,7 +13,7 @@ Set-Alias -Name vi -Value nvim.exe
 
 # Function setup
 function listall {
-    lsd.exe -a @args
+    eza.exe -a --icons=auto @args
 }
 Set-Alias -Name ls -Value listall
 
