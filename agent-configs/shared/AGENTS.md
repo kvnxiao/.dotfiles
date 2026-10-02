@@ -1,19 +1,30 @@
 # Prose
 
 Write technical prose in clear, direct English. Lead with the verdict or result, say each fact once,
-and end chat replies with the required action or decision if one is needed.
+and end chat replies with the required action or decision if one is needed. Treat wording and
+structure rules as defaults: preserve clear, accurate, idiomatic prose, and rewrite only when the
+change improves clarity, precision, or usefulness. Banned AI tells and technical fidelity are firm.
 
 - **Direct Phrasing:** Use direct engineering verbs (`has`, `stores`, `runs`, `executes`, `prints`,
   `outputs`, `writes`) and direct assertions (`only changes X`) rather than bureaucratic phrasing
   (`names on stderr`) or convoluted negative circumlocutions. Prefer `has` over `contains` where
-  simpler.
-- **No Verbing Nouns or Anthropomorphism:** Do not coin verbs from nouns (`actioning`,
-  `architecting`). Inanimate code and data entities have no intent, feelings, or physical
-  possession, and do not "hold" things: use `has`, `stores`, or `records` (reserve `holds` strictly
-  for synchronization locks or invariants).
-- **Structure & Altitude:** When an item has 3 or more conditions, triggers, or error variants, use
-  a bulleted list instead of a run-on sentence. In architecture docs and summaries, explain
-  high-level design and guarantees before low-level execution mechanics.
+  simpler. Negate at the main verb: rewrite `verb no noun` as `does not verb noun`
+  (`does not open a connection`, not `opens no connection`) unless the zero is the result
+  (`returns no rows`), and do not defer the negation past the object (`does not modify rows`, not
+  `leaves rows untouched`). `has no` and `there is no` stay.
+- **No AI Tells:** Do not use stock AI phrasing (`delve`, `load-bearing`, `testament to`,
+  `it's not just X, it's Y`, `seam` as a metaphor), figurative filler, or superlative justifications
+  (`the smallest edit that X, and it Y`). State what the change does.
+- **No Verbing Nouns or Anthropomorphism:** Do not use a noun as a verb when it has no established
+  verb sense (`open a PR for the fix`, not `PR the fix`); `cache`, `log`, and `architect` stay.
+  Inanimate code and data entities have no intent or feelings, and do not "hold" or "carry" content:
+  use `has`, `stores`, or `records`. Established idioms stay (`a variable holds a value`,
+  `a thread holds a lock`, `a function expects an argument`).
+- **Structure & Altitude:** When an item has 3 or more conditions, triggers, or error variants that
+  each have their own verb, use a bulleted list instead of a run-on sentence; a short list of nouns
+  stays inline. Follow execution order: put a guard before the step it gates and a failure right
+  after the step that can fail or after the whole sequence. In architecture docs and summaries,
+  explain high-level design and guarantees before low-level execution mechanics.
 - **Rigor & Fidelity:** Distinguish verified facts, tool outputs, and inferences. Never sacrifice
   technical fidelity or caveats for style. Correct the user directly when needed, with the cause.
 
@@ -53,10 +64,10 @@ Shared behavioral defaults for agents.
 Code alone determines what runs; comments and docstrings that restate code become misleading noise.
 
 - **Comments and docstrings target zero:** Default to silence. Write one only for facts code cannot
-  express: hazards, ABI/OS quirks, race/lock constraints, or invariants the signature cannot convey.
-  Docstrings satisfy lint and stop on public items (summary line plus bulleted invariants/errors;
-  omit on private helpers). Delete anything a reader would infer unaided; rename or extract rather
-  than annotating.
+  express: hazards, ABI/OS quirks, race/lock constraints, compatibility requirements, why the
+  obvious alternative fails, or invariants the signature cannot convey. Docstrings satisfy lint and
+  stop on public items (summary line plus bulleted invariants/errors; omit on private helpers).
+  Delete anything a reader would infer unaided; rename or extract rather than annotating.
 - **No provenance or grievance:** State current constraints directly. Never explain history,
   tickets, outages, PRs, or why an external dependency is deficient.
 
@@ -68,7 +79,7 @@ Follow the ecosystem's required form before this table:
 | :----------------------------- | :------------------------ | :------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------- |
 | **Docstrings & API Contracts** | Imperative, present tense | Bare compliance: single-line summary, plus bulleted invariants/errors when needed. No narrator framing. | `Parse incoming buffer and emit decode diagnostics.`                       |
 | **Test Comments & Harnesses**  | **None (target 0)**       | The test name is the contract. Keep only invisible fixture/skip preconditions.                          | `// Skipped without a live broker; a silent pass would hide a regression.` |
-| **Inline Code Comments**       | **None (target 0)**       | Delete by default. Explain only non-obvious hazards or lock constraints.                                | `// Declined prompt returns before acquiring lock to avoid deadlock.`      |
+| **Inline Code Comments**       | **None (target 0)**       | Delete by default. Explain only hazards, constraints, or why the obvious alternative fails.             | `// Declined prompt returns before acquiring lock to avoid deadlock.`      |
 | **Git Commit Subjects**        | Imperative, present tense | Action verb (no trailing period); cause-before-effect body.                                             | `feat: log path and major versions on decode failure`                      |
 | **Architecture Docs & RFCs**   | Third-person indicative   | Design intent and guarantees first, mechanics second. Concrete actors; plain verbs.                     | `When the connection resets, the worker flushes the buffer.`               |
 | **PR Descriptions**            | Direct, indicative        | Verdict first in plain words, then bulleted rationale/fixes; keep internal minutiae out of the summary. | `Applied migration. Added composite index on (user_id, created_at).`       |

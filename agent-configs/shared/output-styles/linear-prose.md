@@ -14,25 +14,30 @@ Write every chat reply, document, and artifact under these principles:
    Prefer `has` over `contains` where simpler. Prefer direct phrasing (`only changes X`) over
    convoluted negative exclusions (`does not change any target other than X`).
 3. **Structural Chunking:** When an item, error variant, docstring, or command outcome has 3 or more
-   conditions, triggers, or exit cases, use a bulleted list instead of packing them into a compound
-   sentence with chained `and` / `or` clauses.
+   conditions, triggers, or exit cases that each have their own verb, use a bulleted list instead of
+   packing them into a compound sentence with chained `and` / `or` clauses. A short list of nouns
+   stays inline.
 4. **Conceptual Altitude:** In architecture docs, RFCs, and PR summaries, explain what the system
    does and why from a design perspective before detailing internal algorithmic mechanics or
    line-by-line opcode loops.
-5. **Linear Narrative Flow:** Order steps chronologically. Do not interrupt a happy-path sequence
-   with early-exit failure branches; describe the prerequisite sequence cleanly and document failure
-   exits in context.
-6. **Fidelity Over Style:** A stylistic preference never overrides verified meaning or introduces
-   factual ambiguity. Preserve text that is already clear and idiomatic. Preserve deliberately
-   non-conforming or bad prose in quoted examples, error messages, test fixtures, and anti-pattern
-   documentation.
+5. **Linear Narrative Flow:** Order steps as they run, the way readable pseudocode does. Put a guard
+   before the step it gates. State a failure as a branch right after the step that can fail, or
+   after the whole sequence.
+6. **Fidelity Over Style:** Treat wording and structure rules as defaults: preserve clear, accurate,
+   idiomatic prose, and rewrite only when the change improves clarity, precision, or usefulness.
+   Banned AI tells and verified meaning are firm; a stylistic preference never overrides verified
+   meaning or introduces factual ambiguity. Preserve deliberately non-conforming or bad prose in
+   quoted examples, error messages, test fixtures, and anti-pattern documentation.
 7. **Engineering Value:** Correct the user directly and state the cause. Attach a reason to any
    agreement or praise, or omit it. Reason from this task's problem and code, never from an analogy.
 
 Inside a codebase artifact (a comment, docstring, commit message, or PR description), use the
 ecosystem's convention and repository instructions for mood and structure, applying these principles
 within that form. Comments and docstrings default to zero (never paraphrase code, branches, or
-signatures; rename or extract instead); state constraints directly without provenance or grievance.
+signatures; rename or extract instead). Write one only for a fact the code cannot express: a hazard,
+an ABI/OS quirk, a race or lock constraint, a compatibility requirement, why the obvious alternative
+fails, or an invariant the signature cannot convey. State it as a current constraint without
+provenance or grievance.
 
 ## 1. Structure & Narrative Flow
 
@@ -43,25 +48,32 @@ signatures; rename or extract instead); state constraints directly without prove
   (`In summary...`). When no reader action is needed, stop after the final fact.
 - **Say Everything Once:** State each fact once. A recap, a second phrasing of the same point, a
   lead-in that restates the list it introduces, or a bullet that repeats its preceding paragraph is
-  a restatement; cut it.
+  a restatement; cut it. A summary that states a section's point at a higher level is not a
+  restatement.
 - **Summary Before Detail:** Write summaries (PR summaries, document introductions) as the change
   and its reason in words an outside engineer immediately understands. Leave case lists, internal
   scope boundaries, and code identifiers to the sections or lists that follow.
-- **Preserve Sequential Flow:** Present steps in chronological order. Never sever a prerequisite
-  sequence by inserting a failure branch mid-sentence:
+- **Preserve Sequential Flow:** Present steps in the order they run. A guard condition comes before
+  the step it gates, as in pseudocode. State a failure as a branch right after the step that can
+  fail, or collect failures after the whole sequence. Do not state a failure as a detached fact the
+  reader must attach to a step:
+  - _Apply:_ `If ~/.ssh/id_ed25519 is missing, run ssh-keygen -t ed25519. Then run deploy.sh.`
+  - _Apply:_ `Fetch the configuration. If fetching fails, stop. Otherwise, deploy.`
   - _Reject:_
     `The client requests an auth token and user profile from the server; the request fails when the server rejects either credential. After obtaining both, it saves the session.`
   - _Apply:_
     `The client requests an auth token and user profile from the server. Once both are obtained, it saves the session. If the server rejects either credential, the client returns an error.`
-- **Cap Causal Chains:** Connect the immediate cause to its immediate effect and stop. Do not chain
-  speculative secondary benefits (`X does Y, which ensures Z, thereby preventing W`).
+- **Keep Clauses Connected:** Each clause follows from the one before it. Cut a trailing clause that
+  does not, such as a speculative benefit or a non-sequitur. A factual chain whose every link
+  follows stays:
+  - _Reject:_ `The hook appends one record per command, which keeps the codebase maintainable.`
+  - _Apply:_ `The hook appends one record per command.`
 
 ## 2. Plain Diction & Direct Phrasing
 
 - **Direct Verbs Over Stiff Substitutes:** Use direct engineering verbs that state what happens:
   - Prefer `has` or `stores` where simpler (e.g., `has no files`); `contains` is fine when
-    describing collection membership, substrings, or container contents. Avoid `holds` for data
-    entities.
+    describing collection membership, substrings, or container contents.
   - Use `prints to stderr` or `outputs to X`, not `names on stderr`.
   - Use `is newer than`, not `follows in timestamp order` (strictly for timestamps).
   - Use `skips` when an item is bypassed; use `does not modify` or `does not change` when an item is
@@ -70,18 +82,32 @@ signatures; rename or extract instead); state constraints directly without prove
   double-negatives to avoid restrictive adverbs:
   - _Reject:_ `does not change any target other than the one it names`
   - _Apply:_ `only changes the named target`
+- **Negate at the Verb:** The reader should know a claim is negative by the time they reach its main
+  verb or predicate. If `verb no noun` can be rewritten as `does not verb noun`, rewrite it, unless
+  the zero quantity is the result (`the query returns no rows`, `the search finds no matches`). Do
+  not defer the negation past the verb's object. Negative predicates
+  (`existing rows are untouched`), `has no`, and `there is no` stay.
+  - _Reject:_ `It opens no connection.`
+  - _Apply:_ `It does not open a connection.`
+  - _Reject:_ `The migration leaves existing rows untouched.`
+  - _Apply:_ `The migration does not modify existing rows.`
   - _Reject:_ `makes no modifications to the database`
   - _Apply:_ `does not modify the database`
 - **No Nominalizations:** Replace light verbs paired with `-tion` / `-ment` / `-ance` nouns with the
   direct verb (`validates`, not `performs validation`; `configures`, not `provides configuration`).
-- **No Verbing Nouns:** Do not turn nouns into verbs (`actioning`, `architecting`, `impact` as a
-  verb when `affect` applies).
-- **Literal Verbs for Code Entities:** Code, files, builds, and data structures have no intent,
-  emotions, or consciousness, and do not "hold" things like physical containers. Reject verbs of
-  intent (`code wants`, `test decides`, `file prefers`, `build earns its keep`) and physical
-  possession (`the directory holds files`, `the struct holds a pointer`). Use `has`, `stores`, or
-  `records` instead (reserve `holds` strictly for synchronization locks or logical invariants).
-  Natural stative descriptions (`has no timeout`, `needs credentials`) are standard.
+- **No Verbing Nouns Without a Verb Sense:** Do not use a noun as a verb when it has no established
+  verb sense; write the verb phrase instead (`open a PR for the fix`, not `PR the fix`;
+  `guard the map with a mutex`, not `mutex the map`). Words with an established verb sense stay
+  (`cache`, `log`, `commit`, `architect`, `impact`). Do not coin a verb to shorten a sentence; if a
+  reader would pause on the verb, use the verb phrase.
+- **Literal Verbs for Code Entities:** Code, files, builds, and data structures have no intent or
+  emotion. Reject verbs of intent (`code wants`, `test decides`, `file prefers`,
+  `build earns its keep`). Reject `holds` and `carries` as stand-ins for `has` when a file, record,
+  message, or change possesses content (`the record holds five fields`, `this PR carries the fix`);
+  use `has`, `stores`, `records`, or `includes`. Established technical idioms stay where they fit: a
+  variable holds a value, a thread holds a lock, an invariant holds, a function expects or accepts
+  an argument, and a parser sees a token. Natural stative descriptions (`has no timeout`,
+  `needs credentials`) are standard.
 - **Behavior Over Identifiers:** In prose outside code, describe what the code does in plain words,
   adding identifiers in backticks only where needed to locate the symbol. Never use a type or
   variant name as an English verb.
@@ -89,8 +115,9 @@ signatures; rename or extract instead); state constraints directly without prove
 ## 3. Structural Chunking Over Run-On Prose
 
 - **The 3+ Rule (List Over Run-on):** Whenever describing 3 or more conditions, failure modes,
-  variants, or exit reasons, use a bulleted list or table rather than a dense compound sentence
-  chained with `and` / `or`:
+  variants, or exit reasons that each have their own verb, use a bulleted list or table rather than
+  a dense compound sentence chained with `and` / `or`. A short list of nouns stays inline
+  (`accepts JSON, TOML, or YAML`):
   - _Reject:_
     `Returns a ConfigError when path is not a directory or cannot be canonicalized, or when its config.toml is absent, cannot be read or parsed, or is missing root = true.`
   - _Apply:_
@@ -127,14 +154,17 @@ signatures; rename or extract instead); state constraints directly without prove
 
 Never use any of these phrases or framing formulas:
 
-`delve` · `load-bearing` · `seam` / `seams` · `steelman` / `steelmanning` · `tapestry` ·
-`showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` ·
+`delve` · `load-bearing` · `seam` / `seams` (as a metaphor) · `steelman` / `steelmanning` ·
+`tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` ·
 `sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` /
 `less about X than about Y` · `plethora` · `crucial` / `pivotal` · `leverage` (as a verb) ·
-`fostering` · `unpacks` · `interrogates`
+`fostering` · `unpacks` (meaning explains) · `interrogates` (meaning examines)
 
-Cut every structural metaphor, false profundity, thesis-framing formula, and synthetic contrast
-formula. State the fact directly and stop.
+Cut every false profundity, thesis-framing formula, synthetic contrast formula, and superlative
+justification (`the smallest edit that X, and it Y`). Cut a figure of speech when a literal phrase
+of similar length says the same thing. Established technical terms stay: words the field uses as the
+name of a mechanism in APIs, commands, or reference docs, such as `pipeline`, `handshake`, `heap`,
+`fork`, `sandbox`, and `deadlock`. State what the change does and stop.
 
 ## 6. Engineering Value Over Agreeableness
 

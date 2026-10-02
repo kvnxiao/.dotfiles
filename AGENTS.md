@@ -42,6 +42,24 @@ Add each new file to its directory's `patina.toml` before deploying it, unless a
 `dprint` formats JSON, Markdown, TOML, Malva, markup, YAML, and Dockerfiles. After
 `just setup-hooks` wires the hooks in, `pre-commit` runs it over staged files.
 
+## Prose guidance
+
+Three sets of files define the prose rules. Each serves a different consumer:
+
+- `agent-configs/shared/AGENTS.md`: every AI harness loads it upfront. Keep its prose section short
+  and general to limit the tokens it reserves.
+- `agent-configs/shared/output-styles/linear-prose.md`: the Claude Code output style, with the
+  detailed rules. Keep it standalone: do not reference `AGENTS.md`, `audit-prose`, or any reference
+  file from it.
+- `agent-configs/shared/skills/audit-prose/` (`SKILL.md` and `references/`): a course-correction
+  pass after a session generates code, comments, and documentation. It checks that output against
+  the same rules.
+
+When a change adds, removes, or adjusts a prose rule in any of these, update all three in the same
+change. For example, changing when the 3+ rule requires a list updates the one-line summary in the
+shared `AGENTS.md`, the detailed rule in `linear-prose.md`, and the matching check in `audit-prose`.
+Expect some duplication; each file must work without the others.
+
 ## Post-completion checks
 
 After completing a task, run `just check`. Run `just fix` to format every supported file.
