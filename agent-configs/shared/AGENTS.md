@@ -88,11 +88,12 @@ Follow the ecosystem's required form before this table:
 Multi-line docstring tiers: (1) Operational summary, (2) Inputs/preconditions/invariants, (3)
 Bulleted failure paths and side effects.
 
-## Verifying changes
+## Reviewing changes
 
-Before committing or opening a PR, run `verify-changes` once on the accumulated change set. It
-scales verification to risk, using in-session review for trivial edits and independent review with
-conditional specialists for changes requiring the full path.
+When you finish an implementation or before you commit or open a PR, run `review-changes` once on
+the accumulated change set to apply review fixes. Route requests to review, verify, or clean up
+changes through `review-changes`. It scales review to risk, using in-session review for trivial
+edits and independent review with conditional specialists for changes requiring the full path.
 
 ## Tool routing
 

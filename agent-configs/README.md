@@ -33,15 +33,15 @@ client:
 
 Patina symlinks the definitions into each client's user-level `agents` directory and the shared
 contract to `~/.agents/instructions/reviewer.md`. Both clients read review procedures from the
-shared skills deployed under `~/.agents/skills/`.
+`review-changes` references deployed under `~/.agents/skills/`.
 
 Ask either client to use the `reviewer` agent for a diff or selected files. The full
-`verify-changes` workflow defaults to `reviewer` and selects `reviewer-deep` when a specific
+`review-changes` workflow defaults to `reviewer` and selects `reviewer-deep` when a specific
 reasoning difficulty warrants it. Both profiles support correctness and focused simplification
 review. The coordinator chooses effort before spawning and keeps it fixed for the assignment.
 Follow-ups reuse the existing reviewer; unresolved questions do not trigger a replacement at higher
-effort. The coordinator supplies scope and applies accepted fixes. See the
-[effort routing criteria](shared/skills/verify-changes/references/full-review.md#select-review-effort).
+effort. The coordinator supplies scope and, in apply mode, applies accepted fixes. See the
+[effort routing criteria](shared/skills/review-changes/references/full-review.md#select-review-effort).
 
 The profiles set effort in client configuration; prompt text alone does not change it. The routing
 criteria are provisional and require evaluation on actual reviews. OpenAI recommends using `xhigh`

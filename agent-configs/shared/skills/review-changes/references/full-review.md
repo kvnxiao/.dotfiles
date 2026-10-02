@@ -1,9 +1,9 @@
-# Full Verification Workflow
+# Full Review Workflow
 
-Keep one independent correctness reviewer for the full path. Add reviewers for concrete uncertainty
-or specialized investigation, not diff size. For example, inspect an authorization change deeply
-even when it changes one line; check a mechanical rename across all references without requiring a
-separate design review.
+Keep one independent reviewer for the full path: a correctness reviewer, or a simplification
+reviewer for a cleanup request. Add reviewers for concrete uncertainty or specialized investigation,
+not diff size. For example, inspect an authorization change deeply even when it changes one line;
+check a mechanical rename across all references without requiring a separate design review.
 
 The coordinator owns delegation. Give each reviewer a focused task with the repository, revisions,
 file scope, intended behavior, applicable rules, constraints, and known uncertainties. Avoid copying
@@ -58,12 +58,19 @@ not add comparison runs to every verification or claim an unmeasured quality or 
 
 ## Review Pipeline
 
-1. [ ] **Assign review coverage:** Select the effort profile above and assign `review-changes` for
-       correctness, applicable repository rules, and a simplification assessment. Inspect relevant
-       local `*-rules` skills and supply them to that reviewer. Assign each specialist a specific
-       concern and tell the general reviewer which assessments are assigned elsewhere. Run
-       independent reviews in parallel. Delegate focused work separately when:
-   - Structural changes or competing designs warrant a reviewer assigned `simplify-changes`.
+Each step lists its apply-mode action first. In report mode, follow the same steps without editing
+and record each result as a numbered finding.
+
+1. [ ] **Assign review coverage:** Select the effort profile above and assign
+       [correctness-review.md](correctness-review.md) for correctness, applicable repository rules,
+       and a simplification assessment. For a cleanup request, assign
+       [simplify-review.md](simplify-review.md) instead, and run steps 3–5 only on fixes applied in
+       apply mode. Inspect relevant local `*-rules` skills and supply them to that reviewer. Assign
+       each specialist a specific concern and tell the general reviewer which assessments are
+       assigned elsewhere. Run independent reviews in parallel. Delegate focused work separately
+       when:
+   - Structural changes or competing designs warrant a reviewer assigned
+     [simplify-review.md](simplify-review.md).
    - Specialized rules require investigation beyond the general review.
    - An unresolved contract or unexpected dependency requires additional expertise.
 2. [ ] **Apply fixes:** Deduplicate findings by mechanism and location, keeping unresolved concerns
@@ -73,22 +80,24 @@ not add comparison runs to every verification or claim an unmeasured quality or 
 3. [ ] **Assess and update documentation:** Use `update-docs` in the main session to search the
        documentation corpus and assess public behavior and documented internal design. Make small
        edits in-session; delegate substantial writing or investigation with the relevant search
-       results. Report the assessment when no update is needed.
+       results. Report the assessment when no update is needed. In report mode, ask `update-docs`
+       for the documentation-impact assessment only and report the required edits.
 4. [ ] **Audit changed prose:** After documentation updates, use `audit-prose` on all added or
        modified prose in the resolved change set, including comments and follow-up edits. Keep
        modest audits in-session; delegate when writing is a substantial deliverable. Check that
        prose edits preserve meaning and stay within scope.
 5. [ ] **Validate:** Run relevant formatting, linting, type-checking, and tests after the final
        edits. Choose checks that establish the changed contracts; broaden them for shared behavior
-       or uncertain dependencies. Reuse passed results only while their inputs remain unchanged.
+       or uncertain dependencies. Reuse passed results only while their inputs remain unchanged. In
+       report mode, run only checks that do not modify tracked or source files.
 
 ## Operational Constraints
 
 - **Read-Only Reviewers:** Review subagents must not edit files, stage changes, mutate external
-  services, spawn children, or invoke another verification workflow. Keep reviewed files unchanged
-  until their reports return.
-- **Tree Mutation Scope:** Only the coordinator, `update-docs` subagent, and `audit-prose` subagent
-  may edit the working tree.
+  services, spawn children, or invoke `review-changes`. Keep reviewed files unchanged until their
+  reports return.
+- **Tree Mutation Scope:** In apply mode, only the coordinator, `update-docs` subagent, and
+  `audit-prose` subagent may edit the working tree. In report mode, nothing edits it.
 - **Boundaries:** Do not repair problems outside the scoped change set; list them for the user
   instead. Review delegated edits before continuing; finish documentation before auditing prose.
 - **Reporting:** Keep findings compact and evidence-based. Report remaining issues, checks run, and
