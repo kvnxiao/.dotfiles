@@ -17,14 +17,19 @@ authorized work without inventing questions.
 
 Work the tree in **rounds**. The **frontier** is every decision you can present to the user now
 without guessing. A decision waiting on an open question stays off the frontier. Ask the whole
-frontier in one round. Number each question, offer 2–4 genuinely different options with their
-trade-offs, and mark your recommendation. Make at least one option unconventional. Then wait for the
-user's answers.
+frontier in one round. Offer 2–4 genuinely different options with their trade-offs, and mark your
+recommendation. Make at least one option unconventional. Then wait for the user's answers.
+
+Number questions in one consecutive sequence across the entire conversation, starting at 1. Assign
+each new question the next unused number, including follow-up questions. Never restart numbering
+when the frontier changes or a new round begins. For example, after questions 1–3, number the next
+frontier's questions 4–6. Keep the original numbers when referring to earlier questions. Preserve
+the highest issued number in continuation summaries and resume from the next number.
 
 Format each question like this:
 
 ```
-  ❓ **1.** - **<question title>**: <question body, might be multiple paragraphs, laying out the candidate options and their trade-offs>
+  ❓ **<N>.** - **<question title>**: <question body, might be multiple paragraphs, laying out the candidate options and their trade-offs>
 
      A. <option 1>
      B. <option 2>
