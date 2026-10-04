@@ -43,6 +43,10 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "skillOverrides": {
+    "code-review": "user-invocable-only",
+    "simplify": "user-invocable-only"
+  },
   "hooks": {
     "Notification": [
       {
@@ -168,10 +172,6 @@
     "command": "ccstat-rs",
     "padding": 0
   },
-  "skillOverrides": {
-    "code-review": "user-invocable-only",
-    "simplify": "user-invocable-only"
-  },
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
@@ -193,7 +193,7 @@
   "outputStyle": "Linear Prose",
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
-  "tui": "default",
+  "tui": "fullscreen",
   "autoCompactEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
