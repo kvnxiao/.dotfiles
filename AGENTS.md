@@ -42,6 +42,9 @@ Add each new file to its directory's `patina.toml` before deploying it, unless a
 `dprint` formats JSON, Markdown, TOML, Malva, markup, YAML, and Dockerfiles. After
 `just setup-hooks` wires the hooks in, `pre-commit` runs it over staged files.
 
+`ruff` lints and formats Python, and `ty` type-checks it. Annotate every Python function. `just fix`
+and `just check` run them at the versions pinned in the `justfile`.
+
 ## Prose guidance
 
 Three sets of files define the prose rules. Each serves a different consumer:

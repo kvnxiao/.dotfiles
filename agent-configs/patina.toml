@@ -66,6 +66,16 @@ source = "shared/skills/brainstorm"
 target = "~/.agents/skills/brainstorm"
 mode = "symlink"
 
+# optimize-agents
+[[directory]]
+source = "shared/skills/optimize-agents"
+target = "~/.claude/skills/optimize-agents"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-agents"
+target = "~/.agents/skills/optimize-agents"
+mode = "symlink"
+
 # review-changes
 [[directory]]
 source = "shared/skills/review-changes"

@@ -40,13 +40,21 @@ defender-exclusions:
 setup-hooks:
     git config --local --replace-all include.path ../.githooks/config '^\.\./\.githooks/config$'
 
+ruff := "uvx ruff@0.16.10"
+ty := "uvx ty@0.0.84"
+
 # Apply repository fixes
 fix:
     dprint fmt
+    {{ruff}} check --fix
+    {{ruff}} format
 
 # Run repository checks
 check:
     dprint check
+    {{ruff}} check
+    {{ruff}} format --check
+    {{ty}} check
 
 # Full setup: deploy + platform-specific setup
 [windows]
