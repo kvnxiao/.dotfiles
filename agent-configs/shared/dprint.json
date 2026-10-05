@@ -1,0 +1,6 @@
+{
+  "extends": "../../dprint.json",
+  "markdown": {
+    "textWrap": "never"
+  }
+}

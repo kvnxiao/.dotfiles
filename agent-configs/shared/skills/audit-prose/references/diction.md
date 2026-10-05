@@ -6,22 +6,13 @@ Lookup data for the `audit-prose` diction lens: banned AI tells and plain-Englis
 
 Delete or rewrite these phrases. An entry with a stated sense applies only in that sense:
 
-`delve` · `load-bearing` · `seam` / `seams` (as a metaphor) · `steelman` / `steelmanning` ·
-`tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` ·
-`sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` /
-`less about X than about Y` · `plethora` · `crucial` / `pivotal` · `leverage` (as a verb) ·
-`fostering` · `unpacks` (meaning explains) · `interrogates` (meaning examines)
+`delve` · `load-bearing` · `seam` / `seams` (as a metaphor) · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` / `less about X than about Y` · `plethora` · `crucial` / `pivotal` · `leverage` (as a verb) · `fostering` · `unpacks` (meaning explains) · `interrogates` (meaning examines)
 
-Cut every false profundity, thesis-framing formula, synthetic contrast formula, and superlative
-justification. Cut a figure of speech when a literal phrase of similar length says the same thing.
-Established technical terms stay: words the field uses as the name of a mechanism in APIs, commands,
-or reference docs, such as `pipeline`, `handshake`, `heap`, `fork`, `sandbox`, and `deadlock`. State
-what the change does and stop.
+Cut every false profundity, thesis-framing formula, synthetic contrast formula, and superlative justification. Cut a figure of speech when a literal phrase of similar length says the same thing. Established technical terms stay: words the field uses as the name of a mechanism in APIs, commands, or reference docs, such as `pipeline`, `handshake`, `heap`, `fork`, `sandbox`, and `deadlock`. State what the change does and stop.
 
 ## 2. Diction Upgrades: Natural Programmer English
 
-Replace stiff, formal, or Latinate substitutes with everyday, natural words **when the meaning is
-equivalent**:
+Replace stiff, formal, or Latinate substitutes with everyday, natural words **when the meaning is equivalent**:
 
 | Avoid (Stiff / Compliance Slop)                              | Prefer (Plain & Natural)                             | Context / Condition                                                          |
 | :----------------------------------------------------------- | :--------------------------------------------------- | :--------------------------------------------------------------------------- |
