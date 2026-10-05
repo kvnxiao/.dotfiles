@@ -191,6 +191,14 @@
     }
   },
   "outputStyle": "Linear Prose",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "autoCompactWindow": 600000
+    },
+    "claude-fable-5-1": {
+      "autoCompactWindow": 600000
+    }
+  },
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
