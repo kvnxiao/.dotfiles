@@ -65,6 +65,10 @@ CODEX_SHELL_OUTPUT_BYTES = CODEX_TOOL_OUTPUT_TOKENS * 4 * 6 // 5
 CLAUDE_LISTING_MAX_CHARS = 1_536
 CLAUDE_IMPORT_DEPTH = 4
 GEMINI_IMPORT_DEPTH = 5
+ANTIGRAVITY_RULE_MAX_BYTES = 24_000
+ANTIGRAVITY_RULES_BUDGET_TOKENS = 20_000
+ANTIGRAVITY_TRIGGERS = ("always_on", "model_decision", "glob", "manual")
+ANTIGRAVITY_SKILL_FILTERS = ("include_only", "exclude", "inherits")
 PAGE_LINES = 200
 PI_READ_MAX_LINES = 2_000
 PI_READ_MAX_BYTES = 51_200
@@ -72,8 +76,8 @@ MIN_REPEAT_WORDS = 12
 MIN_IDENTICAL_CHARS = 200
 MAX_ROWS = 30
 
-HOSTS = ("claude", "codex", "pi", "gemini")
-HOST_CODE = {"claude": "c", "codex": "x", "pi": "p", "gemini": "g"}
+HOSTS = ("claude", "codex", "pi", "gemini", "antigravity")
+HOST_CODE = {"claude": "c", "codex": "x", "pi": "p", "gemini": "g", "antigravity": "a"}
 
 FENCE = re.compile(r"^\s*(```|~~~)")
 INLINE_CODE = re.compile(r"(`+)(.+?)\1")
@@ -89,7 +93,11 @@ STALE_CANDIDATE = re.compile(
     r"^(?:\.{1,2}/)+|^references/|^(?:\.agents|\.claude|\.codex|\.gemini|\.pi)/[^/]+/"
 )
 IMPORT = re.compile(r"(?:^|(?<=\s))@([~./\w][^\s,;)\]`'\"]*)")
+LABELED_IMPORT = re.compile(r"@\[[^\]]*\]\(\s*<?([^)\s>]+)>?\s*\)")
 FM_KEY = re.compile(r"^([A-Za-z0-9_-]+):\s*(.*)$")
+YAML_COMMENT = re.compile(r"(?:^|\s)#")
+YAML_MAPPING = re.compile(r":(?:\s|$)")
+YAML_QUOTED = ("'", '"', "|", ">", "[", "{")
 INSTRUCTION_PATH = re.compile(
     r"~?[\w./-]*(?:(?:\.agents|\.claude|\.codex|\.gemini)/[\w./-]+\.(?:md|toml)|\.pi/(?:agent|skills|prompts)/[\w./-]+\.md|/(?:AGENTS|CLAUDE|GEMINI|SKILL)\.md)\b"
 )
@@ -175,6 +183,31 @@ def merged(base: Meta, over: Meta) -> Meta:
     return out
 
 
+def strip_yaml_comment(value: str) -> str:
+    quote = ""
+    index = 0
+    previous = ""
+    while index < len(value):
+        char = value[index]
+        if quote:
+            if quote == '"' and char == "\\":
+                index += 2
+                continue
+            if char == quote:
+                if quote == "'" and value[index : index + 2] == "''":
+                    index += 2
+                    continue
+                quote = ""
+        elif char == "#" and (index == 0 or value[index - 1].isspace()):
+            return value[:index].rstrip()
+        elif char in "\"'" and (not previous or previous in "[{,:"):
+            quote = char
+        if not char.isspace():
+            previous = char
+        index += 1
+    return value.rstrip()
+
+
 def frontmatter(text: str) -> tuple[Meta, str]:
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
@@ -191,7 +224,20 @@ def frontmatter(text: str) -> tuple[Meta, str]:
             entries[-1][2].append(line.strip())
     data: Meta = {}
     for key, inline, raw_block in entries:
-        block = [b for b in raw_block if b]
+        inline = strip_yaml_comment(inline)
+        if inline[:1] in ("'", '"'):
+            data[key] = unquote(strip_yaml_comment(" ".join([inline, *raw_block])))
+            continue
+        block_scalar = inline in ("|", "|-", "|+", ">", ">-", ">+")
+        block = []
+        for value in raw_block:
+            if block_scalar:
+                block.append(value)
+            elif value.startswith("- "):
+                block.append("- " + strip_yaml_comment(value[2:]))
+            else:
+                block.append(strip_yaml_comment(value))
+        block = [b for b in block if b]
         if block and all(b.startswith("- ") for b in block) and inline == "":
             data[key] = [unquote(b[2:]) for b in block]
         elif inline.startswith("[") and inline.endswith("]"):
@@ -201,6 +247,74 @@ def frontmatter(text: str) -> tuple[Meta, str]:
         else:
             data[key] = unquote(" ".join([inline, *block]))
     return data, "\n".join(lines[end + 1 :])
+
+
+def yaml_reserved(value: str) -> bool:
+    return (
+        value[:1] in ("@", "`", "*", "%", ",") or value[:2] in ("- ", "? ") or value in ("-", "?")
+    )
+
+
+def yaml_hazards(text: str) -> list[tuple[bool, str]]:
+    """Return (fails_parsing, message) for each frontmatter construct strict YAML rejects or truncates."""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return []
+    end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
+    if end is None:
+        return [(True, "frontmatter has no closing ---")]
+    out: list[tuple[bool, str]] = []
+    entries: list[tuple[int, str, str, list[str]]] = []
+    for i, line in enumerate(lines[1:end], 2):
+        indent = line[: len(line) - len(line.lstrip())]
+        if "\t" in indent:
+            out.append((True, f"line {i} indents with a tab"))
+        m = FM_KEY.match(line)
+        if m and not indent:
+            entries.append((i, m.group(1), m.group(2).strip(), []))
+        elif entries and not (not indent and line.startswith("#")):
+            entries[-1][3].append(line.strip())
+    keys: set[str] = set()
+    for i, key, inline, block in entries:
+        if key in keys:
+            out.append((True, f"'{key}' (line {i}) repeats an earlier key"))
+        keys.add(key)
+        body = [b for b in block if b]
+        if inline[:1] in YAML_QUOTED:
+            continue
+        comment_at = YAML_COMMENT.search(inline)
+        head = (inline[: comment_at.start()] if comment_at else inline).strip()
+        nested = [b for b in body if not b.startswith("#")]
+        if not head and all(FM_KEY.match(b) or b == "-" or b.startswith("- ") for b in nested):
+            for b in nested:
+                m = FM_KEY.match(b)
+                value = strip_yaml_comment((m.group(2) if m else b[1:]).strip())
+                if value[:1] in YAML_QUOTED:
+                    continue
+                if yaml_reserved(value):
+                    out.append(
+                        (True, f"'{key}' (line {i}) has a nested value starting with '{value[0]}'")
+                    )
+                if m and YAML_MAPPING.search(value):
+                    out.append((True, f"'{key}' (line {i}) has an unquoted ': ' in a nested value"))
+            continue
+        parts = [inline, *body] if head else body
+        while parts and parts[0].startswith("#"):
+            parts = parts[1:]
+        while parts and parts[-1].startswith("#"):
+            parts = parts[:-1]
+        if not parts:
+            continue
+        if yaml_reserved(parts[0]):
+            out.append((True, f"'{key}' (line {i}) starts with the reserved '{parts[0][0]}'"))
+        comment = next((n for n, part in enumerate(parts) if YAML_COMMENT.search(part)), None)
+        if comment is not None and comment < len(parts) - 1:
+            out.append(
+                (True, f"'{key}' (line {i}) has an unquoted ' #' before more lines of its value")
+            )
+        if any(YAML_MAPPING.search(strip_yaml_comment(part)) for part in parts):
+            out.append((True, f"'{key}' (line {i}) has an unquoted ': ' inside a plain value"))
+    return out
 
 
 def truthy(value: object) -> bool:
@@ -374,7 +488,7 @@ class Analysis:
                     self.repo_context.append(p)
                 if f == "SKILL.md":
                     self.add_skill(p)
-                if base.name == "agents" and f.endswith(".md"):
+                if base.name == "agents" and f.endswith(".md") and ".agents" not in p.parts:
                     self.add_md_agent(p, "gemini" if ".gemini" in p.parts else "claude")
                 if base.name == "agents" and f.endswith(".toml"):
                     self.add_codex_agent(p)
@@ -921,8 +1035,212 @@ class Analysis:
                     )
                 )
 
+    def antigravity(self) -> None:
+        host = "antigravity"
+        home = HOME / ".gemini"
+        config = home / "config"
+        cli = home / "antigravity-cli"
+        boundary = self.git_boundary() or self.root
+        chain = [d for d in reversed((self.root, *self.root.parents)) if d.is_relative_to(boundary)]
+        dots = [d / dot for d in chain for dot in (".agents", ".agent")]
+        candidates = [
+            *((d / n, "global") for d in (home, config) for n in ("AGENTS.md", "GEMINI.md")),
+            *(
+                (p, "global rule")
+                for rules in (config / "rules", cli / "rules")
+                for p in sorted(walk_files(rules, ".md", False))
+            ),
+            *((d / n, "") for d in chain for n in ("AGENTS.md", "GEMINI.md")),
+            *((d / ".agents" / n, "") for d in chain for n in ("AGENTS.md", "GEMINI.md")),
+            *((p, "rule") for dot in dots for p in sorted(walk_files(dot / "rules", ".md", False))),
+        ]
+        seen: set[Path] = set()
+        documents: list[tuple[Path, str, bool]] = []
+        for p, note in candidates:
+            if not p.is_file() or p.resolve() in seen:
+                continue
+            active = True
+            if note.endswith("rule"):
+                trigger = str(frontmatter(read(p))[0].get("trigger") or "")
+                if trigger not in ANTIGRAVITY_TRIGGERS or any(
+                    fatal for fatal, _ in yaml_hazards(read(p))
+                ):
+                    self.limit(
+                        "truncates",
+                        host,
+                        f"{self.rel(p)} is discarded: Antigravity drops a rule whose frontmatter fails strict YAML or lacks a trigger of {', '.join(ANTIGRAVITY_TRIGGERS)}",
+                        p,
+                    )
+                    continue
+                if trigger != "always_on":
+                    self.conditional[host].append((p, f"trigger: {trigger}"))
+                    active = False
+                else:
+                    note = f"always-on {note}"
+            if active:
+                seen.add(p.resolve())
+            documents.append((p, note, active))
+        shared_bytes = 0
+        for p, note, active in documents:
+            if active:
+                self.load(host, p, note)
+            inlined = self.antigravity_imports(host, p, seen, load_includes=active)
+            if note.endswith("rule"):
+                size = nbytes(p) + sum(nbytes(t) for t in inlined)
+                if size > ANTIGRAVITY_RULE_MAX_BYTES:
+                    self.limit(
+                        "truncates",
+                        host,
+                        f"{self.rel(p)} is {size} B with its includes; Antigravity truncates each rule at {ANTIGRAVITY_RULE_MAX_BYTES} B",
+                        p,
+                    )
+                if active:
+                    shared_bytes += min(
+                        cost(p) + sum(cost(t) for t in inlined), ANTIGRAVITY_RULE_MAX_BYTES
+                    )
+            elif note == "global":
+                shared_bytes += cost(p)
+        if tokens(shared_bytes) > ANTIGRAVITY_RULES_BUDGET_TOKENS:
+            self.limit(
+                "risk",
+                host,
+                f"global files and always-on rules total {tokens(shared_bytes)} tokens, over the {ANTIGRAVITY_RULES_BUDGET_TOKENS}-token budget they share; Antigravity demotes the largest rules to path-and-description pointers",
+            )
+        for p in self.repo_context:
+            directory = p.parent.parent if p.parent.name == ".agents" else p.parent
+            if (
+                p.name in ("AGENTS.md", "GEMINI.md")
+                and p.resolve() not in seen
+                and directory.resolve() != self.root
+            ):
+                self.conditional[host].append(
+                    (p, f"when a file under {self.rel(directory)} is read or edited")
+                )
+        mcp_files = (config / "mcp_config.json", *(d / ".agents/mcp_config.json" for d in chain))
+        servers = sorted({s for f in mcp_files for s in table(load_json(f).get("mcpServers"))})
+        if servers:
+            self.unmeasured.append(
+                f"antigravity: MCP servers ({', '.join(servers)}): their tool declarations"
+            )
+        roots = [
+            *(dot / "skills" for dot in dots),
+            config / "skills",
+            cli / "skills",
+            home / "antigravity/skills",
+        ]
+        filtered = False
+        manifests = [
+            (config / "skills.json", HOME),
+            *((d / ".agents/skills.json", d) for d in chain),
+        ]
+        for manifest, base in manifests:
+            data = load_json(manifest)
+            entries = data.get("entries")
+            filtered = filtered or any(k in data for k in ANTIGRAVITY_SKILL_FILTERS)
+            for entry in entries if isinstance(entries, list) else []:
+                item = table(entry)
+                filtered = filtered or any(k in item for k in ANTIGRAVITY_SKILL_FILTERS)
+                raw = str(item.get("path") or "")
+                if raw.startswith("~"):
+                    path = home_path(raw)
+                elif raw:
+                    path = base / raw if (base / raw).is_dir() else boundary / raw
+                else:
+                    path = None
+                if path:
+                    roots.append(path)
+        if filtered:
+            self.unmeasured.append(
+                "antigravity: skills.json include_only, exclude, or inherits filters are not applied to the listing"
+            )
+        listed: set[Path] = set()
+        for root in roots:
+            for p in self.skill_dirs(root):
+                if p.parent.resolve() in listed:
+                    continue
+                listed.add(p.parent.resolve())
+                skill = self.add_skill(p)
+                hazards = yaml_hazards(read(p))
+                for fatal, message in hazards:
+                    self.limit(
+                        "truncates",
+                        host,
+                        f"{skill.name}: {message}"
+                        + (
+                            "; Antigravity likely drops a skill whose frontmatter fails strict YAML"
+                            if fatal
+                            else ""
+                        ),
+                        p,
+                    )
+                if any(fatal for fatal, _ in hazards):
+                    continue
+                skill.hosts.add(host)
+                self.listing[host]["skills"].append(
+                    (
+                        skill.name,
+                        len(skill.name)
+                        + len(skill.description)
+                        + len(str(skill.path.resolve()))
+                        + 6,
+                        skill.path,
+                    )
+                )
+        if listed:
+            self.unmeasured.append(
+                "antigravity: skills, subagents, and MCP tools share a customization budget of unverified size; items over it are left out of the listing"
+            )
+        for root in (*(d / ".agents/agents" for d in chain), config / "agents"):
+            files = walk_files(root, ".md", recurse=False)
+            if root.is_dir():
+                files += [d / "agent.md" for d in root.iterdir() if (d / "agent.md").is_file()]
+            for p in sorted(files):
+                agent = self.add_md_agent(p, host)
+                if not agent or str(agent.meta.get("subagent")).strip().lower() == "false":
+                    continue
+                self.list_agent(host, agent)
+                body = weight(agent.body)
+                self.delegates.append(
+                    (
+                        host,
+                        agent.name,
+                        body,
+                        f"body {tokens(body)}; inherits skills, rules, and subagents unless inheritCustomizations is off (not verified)",
+                        self.in_repo(agent.path),
+                    )
+                )
+
+    def antigravity_imports(
+        self, host: str, p: Path, seen: set[Path], *, load_includes: bool
+    ) -> list[Path]:
+        inlined: list[Path] = []
+        for i, line in enumerate(prose_lines(read(p)), 1):
+            text = INLINE_CODE.sub(" ", line)
+            for m in LABELED_IMPORT.finditer(text):
+                raw = m.group(1)
+                target = home_path(raw) if raw.startswith("~") else p.parent / raw
+                if not (target and target.is_file()):
+                    continue
+                inlined.append(target)
+                if load_includes and target.resolve() not in seen:
+                    seen.add(target.resolve())
+                    self.load(host, target, f"inlined from {self.rel(p)}")
+            for m in IMPORT.finditer(text):
+                raw = m.group(1).rstrip(".")
+                target = home_path(raw) if raw.startswith("~") else p.parent / raw
+                if target and target.is_file() and target.resolve() not in seen:
+                    self.limit(
+                        "risk",
+                        host,
+                        f"{self.rel(p)}:{i}: '@{raw}' is a path reference in Antigravity, not an import; write @[{raw}]({raw}) to inline it",
+                        p,
+                    )
+        return inlined
+
     def nested_context(self) -> None:
-        loaded = {p.resolve(): p for h in HOSTS for p, _, _ in self.always[h] if p}
+        loaded = {
+            p.resolve(): p for h in HOSTS if h != "antigravity" for p, _, _ in self.always[h] if p
+        }
         claude_real = {p.resolve(): p for p, _, _ in self.always["claude"] if p}
         claude_paths = {Path(os.path.normpath(p)) for p, _, _ in self.always["claude"] if p}
         for p in self.repo_context:
@@ -1214,7 +1532,9 @@ def report(a: Analysis) -> list[str]:
     if a.only:
         out.append(f"Findings limited to: {', '.join(a.rel(p) for p in a.only)}")
     present = [
-        d for d in (".claude", ".codex", ".agents", ".gemini", ".pi") if (a.root / d).exists()
+        d
+        for d in (".claude", ".codex", ".agents", ".agent", ".gemini", ".pi")
+        if (a.root / d).exists()
     ]
     present += [n for n in ("AGENTS.md", "CLAUDE.md", "GEMINI.md") if (a.root / n).is_file()]
     user_dirs = [
@@ -1232,7 +1552,7 @@ def report(a: Analysis) -> list[str]:
         f"User host directories: {', '.join(user_dirs) or 'none'}",
         "",
         "## Session start per host",
-        "host     total    repo    user   skills listed  agents listed",
+        "host          total    repo    user   skills listed  agents listed",
     ]
     for h in HOSTS:
         repo = sum(n for p, _, n in a.always[h] if p and a.in_repo(p))
@@ -1244,7 +1564,7 @@ def report(a: Analysis) -> list[str]:
                 else:
                     user += chars
         out.append(
-            f"{h:<8}{tokens(repo + user):>6}{tokens(repo):>8}{tokens(user):>8}   {len(a.listing[h]['skills']):>13}  {len(a.listing[h]['agents']):>13}"
+            f"{h:<13}{tokens(repo + user):>6}{tokens(repo):>8}{tokens(user):>8}   {len(a.listing[h]['skills']):>13}  {len(a.listing[h]['agents']):>13}"
         )
     out += ["", "## Not measured", *(a.unmeasured or ["none"])]
     out += ["", "## Always loaded", "hosts  tokens  file"]
@@ -1279,9 +1599,9 @@ def report(a: Analysis) -> list[str]:
     out += [
         f"{HOST_CODE[h]}  {tokens(cost(p)):>6}  {a.show(p)}  ({note})" for h, p, note in cond
     ] or ["none"]
-    out += ["", "## Delegate start", "host    tokens  scope  agent  (parts)"]
+    out += ["", "## Delegate start", "host         tokens  scope  agent  (parts)"]
     out += [
-        f"{h:<8}{tokens(n):>6}  {'repo' if in_repo else 'user':<5}  {name}  ({parts})"
+        f"{h:<13}{tokens(n):>6}  {'repo' if in_repo else 'user':<5}  {name}  ({parts})"
         for h, name, n, parts, in_repo in a.delegates
     ] or ["none"]
     listing_chars: dict[Path, int] = defaultdict(int)
@@ -1290,7 +1610,7 @@ def report(a: Analysis) -> list[str]:
             listing_chars[path.resolve()] = max(listing_chars[path.resolve()], chars)
     out += [
         "",
-        "## Skills (c=claude x=codex p=pi g=gemini listed for the model; listing = its largest listing entry; linked = files its SKILL.md links)",
+        "## Skills (c=claude x=codex p=pi g=gemini a=antigravity listed for the model; listing = its largest listing entry; linked = files its SKILL.md links)",
         "listed  listing   body  linked (n)  scope  skill",
     ]
     for skill in sorted(a.skills.values(), key=lambda s: (not a.in_repo(s.path), s.name)):
@@ -1327,7 +1647,7 @@ def report(a: Analysis) -> list[str]:
     out += ["", "## Files named by placeholder paths", *(placeholders(a, nodes) or ["none"])]
     out += ["", "## Limits"]
     out += [
-        f"{sev:<10}{host:<8}{msg}"
+        f"{sev:<10}{host:<13}{msg}"
         for sev, host, msg in sorted(a.limits, key=lambda r: r[0] != "truncates")
     ] or ["none"]
     out += structure(a, always, nodes, graph, edges)
@@ -1611,6 +1931,7 @@ def main() -> int:
     a.claude()
     a.codex()
     a.pi()
+    a.antigravity()
     a.nested_context()
     print("\n".join(report(a)))
     return 0

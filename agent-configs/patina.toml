@@ -27,6 +27,22 @@ source = "claude-code/agents/reviewer-deep.md"
 target = "~/.claude/agents/reviewer-deep.md"
 
 [[file]]
+source = "codex/agents/spec-researcher.toml"
+target = "~/.codex/agents/spec-researcher.toml"
+
+[[file]]
+source = "codex/agents/implementer.toml"
+target = "~/.codex/agents/implementer.toml"
+
+[[file]]
+source = "claude-code/agents/spec-researcher.md"
+target = "~/.claude/agents/spec-researcher.md"
+
+[[file]]
+source = "claude-code/agents/implementer.md"
+target = "~/.claude/agents/implementer.md"
+
+[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 
@@ -66,6 +82,16 @@ source = "shared/skills/brainstorm"
 target = "~/.agents/skills/brainstorm"
 mode = "symlink"
 
+# implement-spec-plan
+[[directory]]
+source = "shared/skills/implement-spec-plan"
+target = "~/.claude/skills/implement-spec-plan"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/implement-spec-plan"
+target = "~/.agents/skills/implement-spec-plan"
+mode = "symlink"
+
 # optimize-agents
 [[directory]]
 source = "shared/skills/optimize-agents"
@@ -74,6 +100,16 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/optimize-agents"
 target = "~/.agents/skills/optimize-agents"
+mode = "symlink"
+
+# plan-from-spec
+[[directory]]
+source = "shared/skills/plan-from-spec"
+target = "~/.claude/skills/plan-from-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/plan-from-spec"
+target = "~/.agents/skills/plan-from-spec"
 mode = "symlink"
 
 # review-changes
@@ -94,6 +130,16 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/update-docs"
 target = "~/.agents/skills/update-docs"
+mode = "symlink"
+
+# write-spec
+[[directory]]
+source = "shared/skills/write-spec"
+target = "~/.claude/skills/write-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/write-spec"
+target = "~/.agents/skills/write-spec"
 mode = "symlink"
 
 # humanizer

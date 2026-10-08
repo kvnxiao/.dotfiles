@@ -2,7 +2,7 @@
 
 ## Assign review coverage
 
-Assign one reviewer both [correctness-review.md](correctness-review.md) and [simplify-review.md](simplify-review.md), or only simplification for a cleanup request. Add a specialist only for a distinct contract or repository rule requiring separate investigation; name that concern and its owner. Run independent assignments in parallel when available.
+Assign one reviewer both [correctness-review.md](correctness-review.md) and [simplify-review.md](simplify-review.md), or only simplification for a cleanup request. When the scope has only a spec, its area files, and its research, assign [spec-review.md](spec-review.md) alone; when it has them alongside other changes, also assign spec-review.md to that reviewer. When the scope includes a plan set under `.plans/`, pass `~/.agents/skills/plan-from-spec/references/plan-format.md` as a rule file. Add a specialist only for a distinct contract or repository rule requiring separate investigation; name that concern and its owner. Run independent assignments in parallel when available.
 
 Pass the resolved assignment from [SKILL.md](../SKILL.md#resolve-the-assignment), the selected profile, and the assigned contract paths. Include intended behavior and known uncertainties without copying the conversation or presenting the author's conclusions as evidence. Require inspection of the actual artifacts.
 

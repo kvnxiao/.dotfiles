@@ -1,0 +1,12 @@
+name = "spec-researcher"
+description = "Research one assigned question for a spec and write a dated, standalone research document at the assigned path."
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+developer_instructions = "Read and follow ~/.agents/skills/write-spec/references/research.md before researching. If it is missing or unreadable, report the missing contract and stop."
+
+[sandbox_workspace_write]
+network_access = true
+
+[skills]
+include_instructions = false

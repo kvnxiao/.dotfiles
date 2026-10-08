@@ -1,0 +1,7 @@
+interface:
+  display_name: "Plan From Spec"
+  short_description: "Break an approved spec into a tree of implementation plans."
+  default_prompt: "Use $plan-from-spec to plan the implementation of this spec."
+
+policy:
+  allow_implicit_invocation: true

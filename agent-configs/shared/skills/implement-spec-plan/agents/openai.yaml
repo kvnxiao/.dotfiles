@@ -1,0 +1,7 @@
+interface:
+  display_name: "Implement Spec Plan"
+  short_description: "Implement or resume a plan set written from an approved spec."
+  default_prompt: "Use $implement-spec-plan to continue implementing this plan."
+
+policy:
+  allow_implicit_invocation: true

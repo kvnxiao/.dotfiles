@@ -52,3 +52,31 @@ session after changing the agent definitions so it discovers the updated profile
 Definition formats follow the official
 [Codex subagent documentation](https://developers.openai.com/codex/subagents) and
 [Claude Code subagent documentation](https://code.claude.com/docs/en/sub-agents).
+
+## Spec workflow agents
+
+The [write-spec](shared/skills/write-spec/SKILL.md) and
+[implement-spec-plan](shared/skills/implement-spec-plan/SKILL.md) skills delegate to two more
+agents. Each definition sets the model and permissions and points at a contract in its skill:
+
+| Client      | Researcher                                                  | Implementer                                         |
+| ----------- | ----------------------------------------------------------- | --------------------------------------------------- |
+| Codex       | [spec-researcher.toml](codex/agents/spec-researcher.toml)   | [implementer.toml](codex/agents/implementer.toml)   |
+| Claude Code | [spec-researcher.md](claude-code/agents/spec-researcher.md) | [implementer.md](claude-code/agents/implementer.md) |
+
+The researcher writes one dated research document under the
+[research contract](shared/skills/write-spec/references/research.md). The implementer edits code for
+one plan task under the
+[implementer contract](shared/skills/implement-spec-plan/references/implementer.md). Both write
+files, so Codex runs them in the `workspace-write` sandbox and Claude Code grants them `Write` and
+`Edit`. The Codex researcher also has network access for package and API probes. As with the
+reviewers, the parent session's runtime permissions can override the Codex sandbox.
+
+The workflow runs through `write-spec`, [plan-from-spec](shared/skills/plan-from-spec/SKILL.md), and
+`implement-spec-plan`. A ready plan records a fingerprint of its approved spec and area files. When
+those files change, planning must reconcile the affected obligations before implementation can
+resume. Completed tasks stay recorded, and new obligations get new tasks. Each child plan also
+records whether its final checks and review are complete; dependent plans remain blocked until then.
+
+Run `just test-agent-skills` for the checker and analyzer regression tests. `just check` includes
+these tests.

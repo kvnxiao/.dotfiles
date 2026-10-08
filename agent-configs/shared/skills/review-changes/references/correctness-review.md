@@ -13,6 +13,14 @@ Read every in-scope hunk, or the complete selected artifacts for a snapshot revi
 - **Callers and callees:** Trace changed preconditions, return values, exceptions, and side effects through relevant call sites. For wrappers and adapters, check delegation targets and the methods callers use.
 - **Tests and contracts:** Check whether changed tests still exercise the intended behavior. Tie a missing regression test to a concrete failure mode; do not report generic requests for more coverage. For a rule violation, cite the applicable rule and the conflicting code.
 - **Repository rules:** Apply the repository instructions and relevant rule skills supplied by the coordinator. Report gaps that require specialized investigation rather than assuming compliance.
+- **Governing spec:** When the assignment names a governing spec, read its Conformance clause, Invariants, and applicable scope constraints and non-goals. Read the requirement blocks the change affects and the external contracts and normative diagrams that govern them; `uv run "$HOME/.agents/skills/write-spec/scripts/check_spec.py" <spec> --list` prints requirement locations. When it also names a plan, read the plan's tasks and requirements. Report a change that:
+  - breaks an invariant.
+  - misses a requirement's intent.
+  - crosses a non-goal or constraint.
+  - exceeds a permitted choice.
+  - adds externally observable behavior that no requirement or permitted choice covers.
+
+  When a plan task and the spec disagree, the spec governs; report the drift.
 
 Read surrounding code to establish reachability and existing guards. In a diff review, separate pre-existing defects from change-induced findings; touching a function does not put its old defects in scope. Leave simplification to [simplify-review.md](simplify-review.md), and specialized rule checks to the reviewers assigned them, without excluding correctness defects in the same code from your review.
 

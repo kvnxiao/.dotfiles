@@ -49,9 +49,19 @@ For a diff, use the first matching row. Resolve revision names to commit IDs bef
 
 Resolve the default branch from the remote's symbolic `HEAD` or repository metadata; do not assume the tracking upstream is the integration branch. If the base cannot be established, report the missing base rather than selecting a historical commit. Report an empty diff only after resolving the requested comparison. `git diff HEAD` omits untracked files; enumerate them with Git status and read them separately. Keep unrelated working changes out of revision-based reviews.
 
+### Find the governing spec
+
+Skip this lookup when the review takes the fast path. Otherwise, find the spec that governs the scoped changes, using the first source that applies:
+
+1. A spec path in the request or issue, or a plan path whose frontmatter `spec` names it.
+2. A spec location in the repository instructions.
+3. The nearest `SPEC.md` at or above the changed files whose frontmatter has `status: approved`.
+
+When no plan was named, record the one plan set under `.plans/` whose root `README.md` names that spec, if exactly one does. When no spec is found, record "no governing spec"; the reviewers skip the Governing spec check.
+
 ### Record the assignment
 
-Record the repository/worktree, scope kind, base/target IDs or working contents, selected paths, intent, mode, assessments, applicable rule paths, and known uncertainties. Label inferred intent; report unknown requirements instead of inventing them. Include governing `AGENTS.md`/`CLAUDE.md` paths from the repository root through the scoped directories, plus relevant `*-rules` skills.
+Record the repository/worktree, scope kind, base/target IDs or working contents, selected paths, intent, mode, assessments, governing spec and plan, applicable rule paths, and known uncertainties. Label inferred intent; report unknown requirements instead of inventing them. Include governing `AGENTS.md`/`CLAUDE.md` paths from the repository root through the scoped directories, plus relevant `*-rules` skills.
 
 Keep the reviewed contents stable until reviewers return. If the user or another process changes them, reconcile the changed scope and invalidate affected findings/checks before applying fixes.
 
@@ -70,7 +80,7 @@ Use this path only for a diff where every hunk is one of:
 - A typo, wording, or formatting correction in prose, comments, or docstrings that preserves meaning and does not change executable examples or directives.
 - Documentation outside skills, prompts, agent definitions, and other instruction files, with no change to the behavior it describes.
 
-Changes to test assertions, configuration, runtime code, or behavioral instructions use the full path. Snapshot reviews also use the full path.
+Changes to test assertions, configuration, runtime code, behavioral instructions, or a spec's requirements use the full path. Snapshot reviews also use the full path.
 
 Perform these steps in-session without loading the full-path or reviewer contract references:
 

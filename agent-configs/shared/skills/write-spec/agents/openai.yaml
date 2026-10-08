@@ -1,0 +1,7 @@
+interface:
+  display_name: "Write Spec"
+  short_description: "Write, amend, or reconcile a technical spec backed by dated research."
+  default_prompt: "Use $write-spec to write or amend the spec for this."
+
+policy:
+  allow_implicit_invocation: true
