@@ -78,7 +78,10 @@ button:focus-visible {
   border-radius: 6px;
 }
 
-#bar button:hover {
+/* The bar does not receive pointer movement while another app is focused, so
+   a :hover style stays on after the pointer leaves. Like the native menu bar,
+   a button is highlighted only while its popup is open. */
+#bar button.open {
   background: color-mix(in srgb, var(--text) 10%, transparent);
 }
 
@@ -127,12 +130,7 @@ button:focus-visible {
   color: var(--overlay2);
 }
 
-.space:hover {
-  color: var(--text);
-}
-
-.space.focused,
-.space.focused:hover {
+.space.focused {
   background: var(--surface1);
   color: var(--mauve);
 }

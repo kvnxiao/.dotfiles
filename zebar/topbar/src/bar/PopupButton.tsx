@@ -1,4 +1,4 @@
-import { onMount, type ParentComponent } from 'solid-js';
+import { createSignal, onCleanup, onMount, type ParentComponent } from 'solid-js';
 
 import { createPopup } from '../lib/popup';
 
@@ -13,14 +13,18 @@ export interface PopupButtonProps {
 export const PopupButton: ParentComponent<PopupButtonProps> = props => {
   let button!: HTMLButtonElement;
   let popup: ReturnType<typeof createPopup> | undefined;
+  const [open, setOpen] = createSignal(false);
   onMount(() => {
-    popup = createPopup(props.popup, button, props.width, props.height);
+    popup = createPopup(props.popup, button, props.width, props.height, setOpen);
+    onCleanup(() => popup?.dispose());
   });
   return (
     <button
       ref={button}
       id={props.id}
       aria-label={props.label}
+      aria-expanded={open()}
+      classList={{ open: open() }}
       onPointerDown={() => popup?.press()}
       onClick={() => void popup?.toggle()}
     >

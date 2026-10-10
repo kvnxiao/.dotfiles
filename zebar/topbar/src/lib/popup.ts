@@ -73,16 +73,29 @@ function startPopup(name: string, x: number, width: number, height: number) {
 
 /**
  * Create the popup widget `name` hidden, and return handlers for its anchor
- * button: `press` on pointer down and `toggle` on click.
+ * button: `press` on pointer down and `toggle` on click. `onOpenChange` runs
+ * with the popup's requested or reported open state; `dispose` stops it.
  *
  * - The bar decides whether a click opens or closes the popup, and stores the
  *   requested state under one key, so the popup applies only the latest request.
  * - Popups are created once and then hidden and shown, because Zebar 3.3.1
  *   leaks a native window each time a widget closes.
  */
-export function createPopup(name: string, anchor: HTMLElement, width: number, height: number) {
+export function createPopup(
+  name: string,
+  anchor: HTMLElement,
+  width: number,
+  height: number,
+  onOpenChange: (open: boolean) => void,
+) {
   void startPopup(name, popupX(anchor, width), width, height);
   let pressedAt = 0;
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === key('shown', name)) onOpenChange(true);
+    if (event.key === key('hidden', name)) onOpenChange(false);
+  };
+  window.addEventListener('storage', onStorage);
 
   const press = () => {
     pressedAt = Date.now();
@@ -104,6 +117,7 @@ export function createPopup(name: string, anchor: HTMLElement, width: number, he
       (shownAt >= last.at || Date.now() - last.at < 2000);
     const request: PopupRequest = { at: Date.now(), open: !isOpen, x: popupX(anchor, width) };
     writeRequest(name, request);
+    onOpenChange(request.open);
     if (!request.open) return;
 
     // macOS suspends the page of a window hidden for more than a few seconds,
@@ -131,7 +145,7 @@ export function createPopup(name: string, anchor: HTMLElement, width: number, he
     await startPopup(name, request.x, width, height);
   };
 
-  return { press, toggle };
+  return { press, toggle, dispose: () => window.removeEventListener('storage', onStorage) };
 }
 
 /**
