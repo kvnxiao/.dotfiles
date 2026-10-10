@@ -1,0 +1,90 @@
+{
+  "$schema": "https://github.com/glzr-io/zebar/raw/v3.3.1/resources/zpack-schema.json",
+  "name": "topbar",
+  "version": "0.3.0",
+  "description": "macOS top bar that leaves the MacBook notch empty, with window manager workspaces, Spotify, battery, and clock.",
+  "widgets": [
+    {
+      "name": "bar",
+      "htmlPath": "./dist/bar.html",
+      "zOrder": "bottom_most",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": ["dist/**"],
+      "privileges": {
+        "shellCommands": [
+          {
+            "program": "/opt/homebrew/bin/aerospace",
+            "argsRegex": "^(subscribe( [a-z-]+)+|list-workspaces (--focused|--monitor all --empty no)|list-windows --focused --format %\\{app-name\\}|workspace \\S+)$"
+          }
+        ]
+      },
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "top_left",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "width": "100%",
+          "height": "38px",
+          "monitorSelection": {
+            "type": "primary"
+          },
+          "dockToEdge": {
+            "enabled": false,
+            "edge": null,
+            "windowMargin": "0px"
+          }
+        }
+      ]
+    },
+    {
+      "name": "apple-menu",
+      "htmlPath": "./dist/apple-menu.html",
+      "zOrder": "normal",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": ["dist/**"],
+      "privileges": {
+        "shellCommands": [
+          {
+            "program": "/usr/bin/open",
+            "argsRegex": "^-a (System Settings|Activity Monitor)$"
+          },
+          {
+            "program": "/usr/bin/pmset",
+            "argsRegex": "^displaysleepnow$"
+          }
+        ]
+      },
+      "presets": []
+    },
+    {
+      "name": "spotify",
+      "htmlPath": "./dist/spotify.html",
+      "zOrder": "normal",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": ["dist/**"],
+      "privileges": {
+        "shellCommands": [
+          {
+            "program": "/usr/bin/osascript",
+            "argsRegex": "^-l JavaScript \\S+/topbar/scripts/spotify\\.js( (status|playpause|next|previous|shuffle|repeat|seek \\d+))?$"
+          },
+          {
+            "program": "/usr/bin/open",
+            "argsRegex": "^-a Spotify$"
+          }
+        ]
+      },
+      "presets": []
+    }
+  ]
+}

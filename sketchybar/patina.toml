@@ -1,5 +1,0 @@
-[[directory]]
-source = "config"
-target = "~/.config/sketchybar"
-mode = "symlink-tree"
-when = "patina.os == 'macos'"

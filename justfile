@@ -6,9 +6,28 @@ set windows-shell := ["pwsh", "-NoProfile", "-Command"]
 default: deploy
 
 # Deploy dotfiles via patina
-[unix]
+[linux]
 deploy:
     patina apply
+
+# Deploy dotfiles via patina, then build the Zebar widget pack
+[macos]
+deploy: && build-zebar
+    patina apply
+
+# Build the Zebar widget pack into zebar/topbar/dist
+[macos]
+build-zebar: _zebar-install
+    pnpm --dir zebar/topbar build
+
+# Type-check, lint, and format-check the Zebar widget pack
+[macos]
+check-zebar: _zebar-install
+    pnpm --dir zebar/topbar check
+
+[macos]
+_zebar-install:
+    pnpm --dir zebar/topbar install --frozen-lockfile
 
 # Deploy dotfiles via patina (also patches scoop config)
 [windows]

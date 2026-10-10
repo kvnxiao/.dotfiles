@@ -1,0 +1,27 @@
+{
+  "name": "topbar",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "check": "tsc --noEmit && oxlint && oxfmt --check",
+    "dev": "vite build --watch",
+    "fix": "oxlint --fix && oxfmt"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.0.2",
+    "lucide-solid": "1.52.0",
+    "solid-js": "1.9.16",
+    "zebar": "3.3.1"
+  },
+  "devDependencies": {
+    "eslint-plugin-solid": "0.18.1",
+    "oxfmt": "0.72.0",
+    "oxlint": "1.87.0",
+    "oxlint-tsgolint": "7.0.2003",
+    "typescript": "7.0.2",
+    "vite": "8.3.3",
+    "vite-plugin-solid": "2.11.14"
+  }
+}

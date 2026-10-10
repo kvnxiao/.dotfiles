@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Update sketchybar workspace number
-sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
-
 # Whitelist: window titles (partial match) or app IDs (exact match)
 WHITELIST_TITLES=()
 WHITELIST_APP_IDS=("com.versualizer.app")

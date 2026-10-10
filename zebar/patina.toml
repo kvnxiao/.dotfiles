@@ -1,0 +1,9 @@
+[[directory]]
+source = "topbar"
+target = "~/.glzr/zebar/topbar"
+when = "patina.os == 'macos'"
+
+[[file]]
+source = "settings.json"
+target = "~/.glzr/zebar/settings.json"
+when = "patina.os == 'macos'"

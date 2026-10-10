@@ -15,7 +15,8 @@
   },
   "excludes": [
     "**/*-lock.json",
-    "**/node_modules"
+    "**/node_modules",
+    "zebar/topbar/**"
   ],
   "plugins": [
     "npm:@dprint/json@0.23.0",

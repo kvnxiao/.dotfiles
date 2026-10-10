@@ -1,0 +1,59 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import", "promise"],
+  "jsPlugins": ["eslint-plugin-solid"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "options": {
+    "typeAware": true
+  },
+  "ignorePatterns": ["dist/**"],
+  "rules": {
+    "solid/components-return-once": "error",
+    "solid/event-handlers": "error",
+    "solid/imports": "error",
+    "solid/jsx-no-duplicate-props": "error",
+    "solid/jsx-no-script-url": "error",
+    "solid/no-destructure": "error",
+    "solid/no-innerhtml": "error",
+    "solid/no-react-deps": "error",
+    "solid/no-react-specific-props": "error",
+    "solid/prefer-for": "error",
+    "solid/prefer-show": "error",
+    "solid/reactivity": "error",
+    "solid/self-closing-comp": "error",
+    "solid/style-prop": "error",
+
+    "typescript/await-thenable": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "import/no-cycle": "error",
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
+    // Solid assigns `let el!: HTMLElement` refs through the JSX `ref` attribute.
+    "no-unassigned-vars": "off"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/*.js"],
+      "env": { "browser": false },
+      "globals": {
+        "$": "readonly",
+        "Application": "readonly",
+        "ObjC": "readonly",
+        "delay": "readonly"
+      },
+      "rules": {
+        "no-unused-vars": ["error", { "varsIgnorePattern": "^run$" }]
+      }
+    }
+  ]
+}

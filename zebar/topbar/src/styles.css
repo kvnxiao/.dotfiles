@@ -1,0 +1,469 @@
+/* Catppuccin Mocha: https://catppuccin.com/palette */
+:root {
+  --rosewater: #f5e0dc;
+  --flamingo: #f2cdcd;
+  --pink: #f5c2e7;
+  --mauve: #cba6f7;
+  --red: #f38ba8;
+  --maroon: #eba0ac;
+  --peach: #fab387;
+  --yellow: #f9e2af;
+  --green: #a6e3a1;
+  --teal: #94e2d5;
+  --sky: #89dceb;
+  --sapphire: #74c7ec;
+  --blue: #89b4fa;
+  --lavender: #b4befe;
+  --text: #cdd6f4;
+  --subtext1: #bac2de;
+  --subtext0: #a6adc8;
+  --overlay2: #9399b2;
+  --overlay1: #7f849c;
+  --overlay0: #6c7086;
+  --surface2: #585b70;
+  --surface1: #45475a;
+  --surface0: #313244;
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  color: var(--text);
+  /* `-apple-system` gets SF Pro's optical sizes and tracking; "SF Pro" draws SF Symbols. */
+  font:
+    500 13px -apple-system,
+    'SF Pro',
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition-property: background-color, color, scale;
+  transition-duration: 120ms;
+  transition-timing-function: ease-out;
+}
+
+button:active {
+  scale: 0.96;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: -2px;
+}
+
+/* Every bar button is at least a 28 pt square click target. */
+#bar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 6px;
+}
+
+#bar button:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+/* Bar */
+
+/* The middle column matches the 220 pt notch on the built-in display. */
+#bar {
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  /* Centers the Apple button 27 pt from the left edge, where the native logo is. */
+  padding: 0 10px 0 13px;
+  background: var(--base);
+}
+
+.side {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.side.right {
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+#apple {
+  margin-right: 6px;
+}
+
+#spaces {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--surface0);
+}
+
+.space {
+  padding: 0 8px;
+  font-weight: 600;
+  color: var(--overlay2);
+}
+
+.space:hover {
+  color: var(--text);
+}
+
+.space.focused,
+.space.focused:hover {
+  background: var(--surface1);
+  color: var(--mauve);
+}
+
+#front-app {
+  padding-left: 10px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.apple-logo {
+  fill: currentColor;
+}
+
+.spotify-logo {
+  fill: #1ed760;
+}
+
+#battery {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+#battery svg {
+  display: block;
+}
+
+#battery .level {
+  fill: var(--text);
+}
+
+#battery.low .level {
+  fill: var(--peach);
+}
+
+#battery.critical .level {
+  fill: var(--red);
+}
+
+#battery.charging .level {
+  fill: var(--green);
+}
+
+/* The bolt is cut out of the level with the bar background color. */
+#battery .bolt {
+  fill: var(--text);
+  stroke: var(--base);
+  stroke-width: 1.2;
+  paint-order: stroke;
+}
+
+#calendar {
+  padding-right: 13px;
+  white-space: pre;
+}
+
+/* Popups */
+
+/* `shown` is set while the popup window is visible, so each show replays the entrance. */
+.popup {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 6px;
+  background: var(--base);
+  /* Radius = menu item radius (6) + padding (6). */
+  border-radius: 12px;
+  position: relative;
+  opacity: 0;
+  translate: 0 -4px;
+  transition-property: opacity, translate;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+/* The ring is a pseudo-element so it draws above the Spotify artwork backdrop. */
+.popup::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.1);
+  pointer-events: none;
+}
+
+body.hiding .popup {
+  transition: none;
+}
+
+body.shown .popup {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Popup size in bar.tsx = content size: 3 items × 32 + 2 × 6 padding = 108. */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.menu-item:hover {
+  background: var(--surface0);
+}
+
+.menu-icon {
+  flex: none;
+  color: var(--subtext0);
+}
+
+/* Popup size in bar.tsx = 2 × (6 + 10) padding + 64 header + 14 + 29 progress + 10 + 36 controls = 185. */
+#spotify {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.backdrop {
+  position: absolute;
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  object-fit: cover;
+  filter: blur(40px) saturate(1.5);
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#player {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+/* Negative margins keep the cover aligned with the slider while the hover background extends past it. */
+#now-playing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -4px;
+  padding: 4px;
+  /* Radius = cover radius (6) + padding (4). */
+  border-radius: 10px;
+  text-align: left;
+}
+
+#now-playing:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+#cover {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: cover;
+  outline: 1px solid oklch(1 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+#cover.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface0);
+  color: var(--overlay1);
+}
+
+#track {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+#title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#artist {
+  color: var(--subtext1);
+}
+
+#album {
+  font-size: 12px;
+  color: var(--overlay1);
+}
+
+#title,
+#artist,
+#album {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+/* `--progress` is the played fraction; the stop follows the thumb center, which travels 6 px to width − 6 px. */
+#seek {
+  --fill: var(--text);
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+#seek:hover,
+#seek:active {
+  --fill: var(--green);
+}
+
+#seek:disabled {
+  cursor: default;
+}
+
+#seek::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--fill) calc(6px + (100% - 12px) * var(--progress)),
+    var(--surface1) 0
+  );
+}
+
+#seek::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 1px 3px oklch(0 0 0 / 0.4);
+  scale: 0;
+  transition: scale 120ms ease-out;
+}
+
+#seek:enabled:hover::-webkit-slider-thumb,
+#seek:enabled:active::-webkit-slider-thumb,
+#seek:focus-visible::-webkit-slider-thumb {
+  scale: 1;
+}
+
+#seek:focus-visible {
+  outline: none;
+}
+
+#times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  line-height: 13px;
+  color: var(--subtext0);
+}
+
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#controls button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--subtext1);
+}
+
+#controls button:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
+}
+
+#controls .toggle[aria-pressed='true'] {
+  color: var(--green);
+}
+
+/* A dot under an active toggle, so its state does not depend on color alone. */
+#controls .toggle[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+#controls #playpause {
+  width: 36px;
+  height: 36px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--base);
+}
+
+#controls #playpause:hover {
+  background: color-mix(in srgb, var(--text), white 40%);
+  color: var(--base);
+}
+
+/* The play triangle's visual center sits left of its box. */
+#playpause.paused {
+  padding-left: 1.5px;
+}
+
+#player.idle #progress,
+#player.idle #controls {
+  opacity: 0.5;
+}

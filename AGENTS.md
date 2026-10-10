@@ -16,6 +16,21 @@ machine configuration as dotfiles.
 - Keep platform bootstrap scripts in `setup/`.
 - Keep rootless Podman configuration, the `lmserve` Compose file, and model tuning files in
   `lmserve/`; its README documents the model stack.
+- Keep Zebar widget packs in `zebar/<pack>/`. Patina links each pack directory whole, because Zebar
+  serves only files whose real path is inside the pack directory.
+
+## Zebar widgets
+
+Write every Zebar widget in SolidJS and TypeScript, built by Vite into the pack's `dist/`. Follow
+the SolidJS rules in `~/src/ruleskill/rules/solidjs/`. For example, declare a component as
+`export const Clock: VoidComponent = () => …`.
+
+Isolate window manager calls in the pack's `src/lib/wm.ts`. For example, replace that module, not
+the components, to move from AeroSpace to OmniWM.
+
+Run `just check-zebar` after changing a pack. It type-checks with `tsc`, lints with `oxlint`
+(including `eslint-plugin-solid`), and checks formatting with `oxfmt`. `pnpm --dir zebar/topbar fix`
+applies lint fixes and formatting. `just deploy` on macOS rebuilds `dist/` after linking.
 
 Patina renders sources ending in `.tmpl` through MiniJinja instead of linking them.
 
