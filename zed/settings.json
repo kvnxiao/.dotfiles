@@ -8,11 +8,11 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "buffer_line_height": {
-    "custom": 1.5
+    "custom": 1.5,
   },
   "markdown_preview": {
     "font_size": 15.0,
-    "font_family": "Inter"
+    "font_family": "Inter",
   },
   "wsl_connections": [
     {
@@ -20,17 +20,13 @@
       "user": null,
       "projects": [
         {
-          "paths": [
-            "/home/kvnxiao"
-          ]
+          "paths": ["/home/kvnxiao"],
         },
         {
-          "paths": [
-            "/home/kvnxiao/.dotfiles"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/kvnxiao/.dotfiles"],
+        },
+      ],
+    },
   ],
   "terminal": {
     "font_size": 16.0,
@@ -125,7 +121,7 @@
         "MSYS2_PATH_TYPE": "minimal",
         "MSYSTEM": "MSYS",
         "SHELL": "/usr/bin/fish",
-        "LANG": "C.UTF-8"
+        "LANG": "C.UTF-8",
       },
       "shell": {
         "with_arguments": {
@@ -134,6 +130,19 @@
         },
       },
       "font_size": 14,
+    },
+  },
+  "lsp": {
+    "ty": {
+      "binary": {
+        "path": "uvx",
+        "arguments": ["ty", "server"],
+      },
+    },
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["ty", "!pyright", "!basedpyright"],
     },
   },
 }
