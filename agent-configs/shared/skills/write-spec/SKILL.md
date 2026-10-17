@@ -30,7 +30,7 @@ This skill produces an approved spec: `SPEC.md`, area files when the spec outgro
 
 ## 2. Research the facts
 
-Research when a decision depends on facts the session lacks, such as external APIs, versions, comparable products, or published evidence. Skip research for a small or settled spec. Finish research before the decision rounds, so the user is asked for preferences, not facts.
+Research when a decision depends on facts the session lacks, such as external APIs, versions, comparable products, or published evidence. A small or settled spec does not require new research. Optional prototyping and validation can still strengthen confidence under [Approval readiness](references/spec-format.md#approval-readiness). Finish research before the decision rounds, so the user is asked for preferences, not facts.
 
 1. Split the facts into independent questions, one per research document.
 2. If the host has no `spec-researcher` agent, research each question in-session under [research.md](references/research.md). Otherwise, start one `spec-researcher` per question, at most three at a time, and queue the rest. Give each the question, the decision it informs, its output path, and today's date.
@@ -55,7 +55,7 @@ A spec for existing code reconciles against an empty spec, so every behavior sta
 
 ## 4. Settle the decisions
 
-Use `brainstorm` for every decision round, including proposed mints and retirements and content that sits on the spec–plan boundary in [spec-format.md](references/spec-format.md#spec-or-plan). When no decision remains, present the integrated design: scope, invariants, requirements by area, failure behavior, security, and explicit deferrals. Wait for the user to confirm it.
+Use `brainstorm` for every decision round, including proposed mints and retirements and content that sits on the spec–plan boundary in [spec-format.md](references/spec-format.md#spec-or-plan). Assess readiness under [Approval readiness](references/spec-format.md#approval-readiness); do not substitute completed implementation tests for settled design decisions. When no decision remains, present the integrated design: scope, invariants, requirements by area, failure behavior, security, and explicit deferrals. Wait for the user to confirm it.
 
 ## 5. Write the spec
 
@@ -69,7 +69,7 @@ Use `brainstorm` for every decision round, including proposed mints and retireme
 
    If the script cannot run, print its stderr and stop. Otherwise, fix every error.
 4. Run `review-changes mode=apply` on the spec, its area files, and the changed research. Bring each finding that needs a decision back to the user through `brainstorm`.
-5. Present the spec for approval. When the user approves the complete spec, set `status: approved`. After an amendment, report which existing plan sets need reconciliation through `plan-from-spec`; do not refresh their baselines or completed task states here.
+5. Present the spec for approval once the readiness criteria are met. Keep pending implementation and release verification explicit without treating it as an unresolved product decision. When the user approves the complete spec, set `status: approved`. After an amendment, report which existing plan sets need reconciliation through `plan-from-spec`; do not refresh their recorded spec fingerprints or completed task states here.
 
 ## Return
 

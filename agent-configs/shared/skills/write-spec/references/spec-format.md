@@ -15,16 +15,38 @@ These hold in every repository, whatever its layout or heading conventions:
 
 ## Spec or plan
 
-Decide where content belongs with one test: would a user, an integrator, another component, or stored data notice if two implementations chose differently? If so, the content belongs in the spec. If only this implementation's own code depends on it, it belongs in the plan.
+Decide where content belongs with one test: would a user, an integrator, another component, or stored data notice if two implementations chose differently? If so, the content belongs in the spec. If only this implementation's own code depends on it, it belongs in the plan. Detailed edge cases and failure behavior belong in the spec when they change observable outcomes; length alone does not make them an implementation plan.
 
-| Concern                                       | Spec                                                                                                                          | Plan                   |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| Goals, non-goals, constraints, invariants     | States them                                                                                                                   | Cites them             |
-| System design                                 | Components, responsibilities, state ownership, data flow                                                                      | Module and file layout |
-| Names and formats                             | Exact only when an external party depends on the exact form: CLI flags, configuration keys, file and wire formats, exit codes | Everything else        |
-| Signatures, internal types, unexposed schemas | Leaves them out                                                                                                               | Defines them           |
-| Algorithms, libraries, task order             | Leaves them out unless an external contract forces one                                                                        | Selects them           |
-| Undecided details                             | Open questions in a draft; Permitted choices once approved                                                                    | Resolves them          |
+| Concern                                       | Spec                                                                                                                          | Plan                                 |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| Goals, non-goals, constraints, invariants     | States them                                                                                                                   | Cites them                           |
+| System design                                 | Components, responsibilities, state ownership, data flow                                                                      | Module and file layout               |
+| Names and formats                             | Exact only when an external party depends on the exact form: CLI flags, configuration keys, file and wire formats, exit codes | Everything else                      |
+| Signatures, internal types, unexposed schemas | Leaves them out                                                                                                               | Defines them                         |
+| Languages, frameworks, and libraries          | States the required technology choices and compatibility constraints                                                          | Selects details the spec leaves open |
+| Algorithms and task order                     | Leaves them out unless an external contract requires one                                                                      | Selects them                         |
+| Undecided details                             | Open questions in a draft; Permitted choices once approved                                                                    | Resolves them                        |
+
+Keep the spec concise by stating the required technology choices and a brief rationale, then linking to the supporting research and probes. Put implementation code, internal API call sequences, experimental setup, and measured results in those supporting artifacts or implementation plans. Keep examples in the spec when they define the system's public interfaces, configuration, or other compatibility contract. For example, require a chosen UI framework in the spec; link to the capability assessment and runnable probe for evidence that it supports the intended interactions.
+
+## Approval readiness
+
+A draft is ready for user approval when it defines a feasible design for its stated scope. For an MVP, establish that its required experience is achievable with the chosen architecture and technology stack. Keep approval separate from implementation acceptance, which requires evidence that the code conforms, and release readiness, which includes deployment and operational checks.
+
+Present a spec for approval when:
+
+- Product choices, scope, and important failure behavior are settled.
+- Requirements are consistent and have observable acceptance scenarios.
+- Evidence supports the design's material feasibility assumptions, or the user explicitly accepts the remaining uncertainty.
+- Remaining engineering choices have clear permitted boundaries.
+
+Require a preapproval investigation only for a concrete uncertainty whose answer could change required behavior, architecture, or an essential dependency. Identify the assumption and the design consequence before proposing more research. Use documentation, source inspection, or a bounded probe in proportion to that risk, and stop when the decision has enough support. Honor an explicitly requested prototype or approval condition.
+
+Allow optional prototyping and validation within the authorized scope to test claims, compare approaches, or strengthen confidence in the direction. These experiments can be useful before approval even when the design is already feasible. Do not turn optional validation into an approval prerequisite merely because it remains possible or incomplete. Record its evidence and limitations in research and probes.
+
+Treat missing features, unrun integration tests, and ordinary implementation defects as implementation work. Do not require a complete feature prototype merely to approve its requirements. For example, a spec can require cancellation to restore the current target while the implementation plan assigns the cancellation code and tests.
+
+Keep acceptance outcomes and necessary validation conditions in the spec. Put files, internal types, algorithms, task order, test commands, and concrete verification assignments in plans. Record pending implementation and release checks separately from Open questions; moving a check does not waive it. When a bounded investigation remains necessary within an approved design, assign it to the plan and block only dependent work.
 
 ## Sections
 
@@ -45,7 +67,7 @@ Add an optional section only when its condition holds:
 | External contracts          | An external party depends on exact names, formats, or values.                                                                                                          |
 | State and lifecycle         | An entity moves through several states with distinct transitions.                                                                                                      |
 | Compatibility and migration | Existing users, stored data, or versions must keep working during a change. A spec set puts it in a transitional area (see [Size and spec sets](#size-and-spec-sets)). |
-| Open questions              | The spec is a draft with undecided behavior.                                                                                                                           |
+| Open questions              | The draft has undecided behavior or a material feasibility assumption that prevents approval.                                                                          |
 | Explored alternatives       | The design rejected or abandoned an option.                                                                                                                            |
 | Supporting evidence         | Research documents back the spec's decisions.                                                                                                                          |
 | References                  | The spec cites external contracts, standards, or API documentation.                                                                                                    |
@@ -150,6 +172,6 @@ Write each path relative to the file that declares it. A spec is `draft` from it
 
 ## Informative sections
 
-- **Open questions:** list each undecided behavior with the requirements it blocks. Remove a question in the change that resolves it.
+- **Open questions:** list undecided behavior and material feasibility assumptions that prevent design approval, with the requirements they block. Remove a question when resolved or when the user accepts the remaining uncertainty. Do not list ordinary implementation or release checks here.
 - **Explored alternatives:** give one entry per rejected or abandoned idea, with the reason it was dropped. Reconsider an entry only when new evidence or changed constraints invalidate that reason, and name what changed.
 - **Supporting evidence:** link the research index. Add a row for a requirement when readers need to trace it: the requirement, its research links, and the outcome the research does not establish. Keep findings in the research documents.

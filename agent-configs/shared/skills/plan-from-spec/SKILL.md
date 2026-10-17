@@ -17,7 +17,8 @@ This skill writes a plan set that implementer sessions can execute without the c
    | No spec, `status: draft`, or open questions | Return `Needs spec`. |
    | `status: approved`                          | Continue.            |
 
-3. Read the research findings the planned behavior depends on. Recheck an `Observed in` finding against the installed version when the plan relies on it.
+3. Treat pending feature, integration, performance, and deployment checks as plan inputs under [Approval readiness](../write-spec/references/spec-format.md#approval-readiness). Their absence alone does not invalidate an approved spec.
+4. Read the research findings the planned behavior depends on. Recheck an `Observed in` finding against the installed version when the plan relies on it.
 
 ## 2. Inspect the repository
 
@@ -25,19 +26,19 @@ Inspect the source, tests, dependencies, and build setup the scope touches. Sepa
 
 ## 3. Map the scope
 
-List the requirement IDs in scope, the ones already satisfied, and the ones out of scope with the reason. Never invent, rename, or retire a requirement; a change to a requirement goes through `write-spec`.
+List the requirement IDs in scope, the ones already satisfied, and the ones out of scope with the reason. Map pending implementation and release checks to their requirements and include them in task acceptance or Definition of done; retain explicitly out-of-scope checks with their reasons. Never invent, rename, or retire a requirement; a change to a requirement goes through `write-spec`.
 
 ## 4. Settle the approach
 
 Choose files, internal types, algorithms, libraries, and slice boundaries within the spec's permitted choices. Settle the interfaces between slices, module boundaries, and persisted formats the spec leaves open before dividing the work, and drop any mechanism that no requirement forces. Resolve each open question by its kind:
 
-| Question                                                                                                                | Resolution                                                                             |
-| ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| A routine implementation detail was not explicitly left open or deferred, and the spec permits the recommended approach | Choose it and record it in Shared decisions.                                           |
-| An implementation decision was explicitly left open or deferred                                                         | Settle it with the user through `brainstorm`, even when the spec permits every option. |
-| It needs a human's judgment, such as a trade-off between products or costs                                              | Settle it with the user through `brainstorm`.                                          |
-| A user, an integrator, another component, or stored data would notice the answer, and the spec leaves it open           | Return `Needs spec` with the proposed change.                                          |
-| An API or runtime behavior is unconfirmed                                                                               | Plan an investigation task and block the work that depends on it.                      |
+| Question                                                                                                                | Resolution                                                                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A routine implementation detail was not explicitly left open or deferred, and the spec permits the recommended approach | Choose it and record it in Shared decisions.                                                                                                          |
+| An implementation decision was explicitly left open or deferred                                                         | Settle it with the user through `brainstorm`, even when the spec permits every option.                                                                |
+| It needs a human's judgment, such as a trade-off between products or costs                                              | Settle it with the user through `brainstorm`.                                                                                                         |
+| The answer changes an observable contract outside the spec's permitted choices                                          | Return `Needs spec` with the proposed change.                                                                                                         |
+| A specific API or runtime uncertainty affects the implementation approach                                               | Plan a bounded investigation and block only dependent work. Missing feature code or an unrun acceptance test alone does not require an investigation. |
 
 ## 5. Write the plan set
 

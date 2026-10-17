@@ -17,7 +17,7 @@ The assignment names one question, the decision it informs, the output path, and
 - Distinguish a shipped feature from an example or proposal, and source inspection from runtime verification.
 - State a paper's publication status and evaluation limits: `Preprint; evaluated on Python repositories only.`
 - Treat download counts and stars as adoption signals dated to their retrieval, not as evidence of quality.
-- Stop at the evidence the decision needs. A design does not need an exhaustive market survey.
+- Apply [Approval readiness](spec-format.md#approval-readiness): name the design decision an uncertain fact could change, and stop requiring more evidence once that decision has enough support. Optional prototypes and validation can continue within the authorized scope; keep their findings and implementation details here or in supporting probes. Do not require a complete feature prototype by default.
 
 ## Document
 
@@ -47,7 +47,7 @@ Choose headings that fit the topic. The body has:
    Leave reasoning and others' claims unmarked.
 4. The alternatives compared, as a table when there are three or more, with the criteria that separate them.
 5. A recommendation for the decision.
-6. Gaps: what remains unobserved or unmeasured, and what would settle it.
+6. Gaps: separate uncertainty that could change the design decision from implementation and release checks. State what would settle each material uncertainty; an unrun acceptance test alone does not block spec approval.
 7. Sources.
 
 Do not record provenance about the session, such as who asked or which tools ran.

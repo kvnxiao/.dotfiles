@@ -32,7 +32,7 @@ The root plan has these sections:
 - **Shared decisions:** what every child plan builds on, fixed before any of them runs: interfaces between slices, module boundaries, and persisted formats the spec leaves open. Give each mechanism the requirement that forces it and the simpler mechanism that fails that requirement. Write a multi-step lifecycle as a state table.
 - **Coverage:** a `Requirement | Owner | Contributors` table. Exactly one plan owns each requirement's full check; contributors implement parts of it. Leave invariants out: every task reads them, and review checks them.
 - **Plans:** a `Plan | Outcome | Blocked by | Parallel-safe` table in execution order, with each plan linked. `check_spec.py --status` picks the next task or pending plan review in this order. Dependencies remain blocked until the prerequisite's tasks and review are done.
-- **Definition of done:** the checks every plan meets, stated once: formatter, linter, tests, and `review-changes`.
+- **Definition of done:** the checks every plan meets, stated once: formatter, linter, tests, and `review-changes`. Assign requirement-specific integration, performance, and deployment checks to their owning tasks or the relevant completion criteria. Record their required outcomes before execution; passing them is a completion condition, not a prerequisite for approving the spec or plan.
 
 ## Child plan
 
@@ -68,7 +68,7 @@ For example, a task in a TypeScript repository:
 - Cite requirement IDs; never copy requirement text or the implementer contract's mandatory reading steps into each task.
 - Give each validate step its working directory, the repository's command, and the expected result.
 - Leave out the failing check when the task has no natural one, such as wiring or configuration.
-- Write an investigation task as the question, a bounded experiment, and a validate step that states the result that unblocks the dependent tasks. Those tasks stay blocked until it completes.
+- Write an investigation task only when a specific uncertainty affects the approach. Name the question, a bounded experiment, and the result that unblocks dependent tasks. Do not require a complete feature prototype before planning defined behavior. Optional prototyping can inform the approach; distinguish it from required implementation and acceptance work.
 
 ## Dividing the work
 
@@ -80,9 +80,9 @@ For example, a task in a TypeScript repository:
 
   Prefer the split that lets a piece be dropped.
 - **Task:** a contiguous set of edits that one implementer session finishes, with one observable acceptance check. A candidate without its own check becomes a step in another task.
-- **Unknowns:** an API or runtime behavior the plan cannot confirm becomes an investigation task, not a finer split.
+- **Unknowns:** an API or runtime uncertainty that affects the approach becomes an investigation task. Ordinary missing code and unrun acceptance tests belong in implementation and validation tasks. Preserve the approved spec unless evidence requires changing its contract.
 - **Integration:** give the work that joins slices, such as wiring, migration, or end-to-end checks, its own task. It is the work most often left out.
-- **Order:** investigations first, then the walking skeleton and the riskiest core, then variations, then the rest. Order by prerequisites, never by requirement ID.
+- **Order:** place an investigation before its dependent work; independent tasks can proceed. Build the minimal end-to-end implementation and riskiest core before variations. Order by prerequisites, never by requirement ID.
 - **Parallel-safe:** mark a plan parallel-safe only when no plan that can run at the same time edits the same files, and every interface the plan consumes is fixed in Shared decisions.
 
 ## State file

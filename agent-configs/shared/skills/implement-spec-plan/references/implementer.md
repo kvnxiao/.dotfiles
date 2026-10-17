@@ -17,7 +17,7 @@ The assignment names the plan path, the task ID, the spec path, the task's requi
 
 - Change only what the task needs. Do not edit the plans, the state files, or the spec.
 - Do not commit, push, ask the user, start agents, or run workflow skills such as `review-changes`; the coordinator reviews each plan.
-- When a requirement conflicts with the code or with the task, or the task needs a choice the plan and spec do not settle, stop and return the decision with its options. Do not choose.
+- Fix missing behavior and failing acceptance checks within the assigned task when the requirements are clear. When requirements conflict, the task would violate them, or a necessary choice remains unsettled, stop and return the decision with options. Do not choose. Do not treat missing implementation evidence as a reason to reopen spec approval.
 - When the work needs a fix outside the task, return it instead of making it.
 
 ## Return

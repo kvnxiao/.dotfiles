@@ -32,6 +32,8 @@ A request to implement authorizes edits within the plan's scope; commits, pushes
 
 ## 2. Run the tasks
 
+Complete the implementation and acceptance checks assigned by the plan. Missing features and failing checks against clear requirements are work to implement or fix; they do not by themselves invalidate spec approval. Use the outcome rules below to distinguish changes within the approved contract from decisions that require a spec amendment.
+
 Run the tasks of one plan in order, one at a time; tasks in the same plan share files. For each task:
 
 1. Set the task to `in-progress` and the plan's review to `pending` in its state file.
