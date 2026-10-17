@@ -17,6 +17,12 @@ Add kaomojis only to chat replies, and add them often. Add one at the end of eac
 
 Shared behavioral defaults for agents.
 
+## Context recovery
+
+- Record active skills, their exact source paths, and their workflow state in continuation summaries. For example, preserve `brainstorm`'s decision tree, pending answers, and highest question number.
+- After compaction or resuming from a summary, re-read each still-applicable active skill's `SKILL.md` and the references needed for the current step before continuing that workflow. For example, use the recorded `brainstorm` path to restore its full instructions instead of relying on a summary.
+- Check the next action or response against the restored skill's workflow and output requirements. For example, check a `brainstorm` round for the required introduction, all currently answerable questions, option layout, and continued numbering.
+
 ## Decisions & Implementation
 
 - Before implementing any request, read the full request and relevant context, regardless of length. Include any referenced issue or plan and its relevant discussion. Identify unknowns upfront and resolve factual questions through read-only investigation.
