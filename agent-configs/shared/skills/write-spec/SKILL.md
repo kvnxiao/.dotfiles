@@ -5,6 +5,8 @@ description: Write, amend, or reconcile a technical specification (SPEC.md and a
 
 # Write a spec
 
+Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
+
 This skill produces an approved spec: `SPEC.md`, area files when the spec outgrows one file, and the research behind its decisions. Approval does not authorize planning or implementation; `plan-from-spec` plans an approved spec.
 
 ## 1. Establish the baseline
@@ -32,6 +34,10 @@ This skill produces an approved spec: `SPEC.md`, area files when the spec outgro
 
 Research when a decision depends on facts the session lacks, such as external APIs, versions, comparable products, or published evidence. A small or settled spec does not require new research. Optional prototyping and validation can still strengthen confidence under [Approval readiness](references/spec-format.md#approval-readiness). Finish research before the decision rounds, so the user is asked for preferences, not facts.
 
+During active brainstorming, use conversation-only research assignments under [research.md](references/research.md), with the brainstorm state and temporary-probe restrictions. Return findings to the conversation; defer research documents and index updates until conclusion and authorization to save them. A request to write a spec includes its supporting research; an investigation request alone does not.
+
+Outside active brainstorming, when durable research is authorized:
+
 1. Split the facts into independent questions, one per research document.
 2. If the host has no `spec-researcher` agent, research each question in-session under [research.md](references/research.md). Otherwise, start one `spec-researcher` per question, at most three at a time, and queue the rest. Give each the question, the decision it informs, its output path, and today's date.
 3. Read each returned summary. Open a research document only where a decision needs its detail.
@@ -55,7 +61,7 @@ A spec for existing code reconciles against an empty spec, so every behavior sta
 
 ## 4. Settle the decisions
 
-Use `brainstorm` for every decision round, including proposed mints and retirements and content that sits on the spec–plan boundary in [spec-format.md](references/spec-format.md#spec-or-plan). Assess readiness under [Approval readiness](references/spec-format.md#approval-readiness); do not substitute completed implementation tests for settled design decisions. When no decision remains, present the integrated design: scope, invariants, requirements by area, failure behavior, security, and explicit deferrals. Wait for the user to confirm it.
+Use `brainstorm` for every decision round, including proposed mints and retirements and content that sits on the spec–plan boundary in [spec-format.md](references/spec-format.md#spec-or-plan). Assess readiness under [Approval readiness](references/spec-format.md#approval-readiness); do not substitute completed implementation tests for settled design decisions. When no decision remains, include scope, invariants, requirements by area, failure behavior, security, and explicit deferrals in the consolidated design. Follow brainstorm's conclusion rule before writing; reuse confirmation already obtained for that design rather than asking again.
 
 ## 5. Write the spec
 

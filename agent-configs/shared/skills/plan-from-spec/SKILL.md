@@ -5,6 +5,8 @@ description: Break an approved spec (SPEC.md and its area files) into a tree of 
 
 # Plan from a spec
 
+Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
+
 This skill writes a plan set that implementer sessions can execute without the conversation: a root plan, one child plan per vertical slice, and agent-only state files. Approving a plan does not authorize implementing it; `implement-spec-plan` implements an approved plan set.
 
 ## 1. Establish the baseline

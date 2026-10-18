@@ -5,6 +5,8 @@ description: Review, verify, or clean up a diff, commit, branch, pull request, o
 
 # Review changes
 
+Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
+
 ## Select mode and coverage
 
 Honor explicit user constraints first, then a supplied `mode=report` or `mode=apply`. Otherwise use this table. A self-run after implementation uses `mode=apply` explicitly.

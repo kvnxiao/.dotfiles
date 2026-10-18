@@ -42,7 +42,7 @@ Present a spec for approval when:
 
 Require a preapproval investigation only for a concrete uncertainty whose answer could change required behavior, architecture, or an essential dependency. Identify the assumption and the design consequence before proposing more research. Use documentation, source inspection, or a bounded probe in proportion to that risk, and stop when the decision has enough support. Honor an explicitly requested prototype or approval condition.
 
-Allow optional prototyping and validation within the authorized scope to test claims, compare approaches, or strengthen confidence in the direction. These experiments can be useful before approval even when the design is already feasible. Do not turn optional validation into an approval prerequisite merely because it remains possible or incomplete. Record its evidence and limitations in research and probes.
+Allow optional prototyping and validation within the authorized scope to test claims, compare approaches, or strengthen confidence in the direction. These experiments can be useful before approval even when the design is already feasible. Do not turn optional validation into an approval prerequisite merely because it remains possible or incomplete. Record its evidence and limitations under [the research output boundary](research.md#assignment-and-boundaries), using conversation-only findings during active brainstorming.
 
 Treat missing features, unrun integration tests, and ordinary implementation defects as implementation work. Do not require a complete feature prototype merely to approve its requirements. For example, a spec can require cancellation to restore the current target while the implementation plan assigns the cancellation code and tests.
 

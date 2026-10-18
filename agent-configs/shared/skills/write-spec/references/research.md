@@ -4,9 +4,11 @@ Research records the evidence behind a spec's decisions as dated documents. It i
 
 ## Assignment and boundaries
 
-The assignment names one question, the decision it informs, the output path, and today's date.
+The assignment names one question, the decision it informs, today's date, and either an authorized output path or conversation-only output. Include any active brainstorm state and follow [Brainstorming boundary and conclusion](../../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). During active brainstorming, use conversation-only output and temporary probes; defer durable documents even when an output path was assigned.
 
-- Write only the assigned document. Do not edit the spec, other research, or code.
+For conversation-only output, return the evidence, sources, findings, and limitations to the coordinator without saving a report or updating an index. The Document instructions below apply only to authorized durable output when no brainstorm is active.
+
+- For authorized durable output, write only the assigned document. Do not edit the spec, other research, or code.
 - Do not ask the user, start agents, or run workflow skills such as `review-changes`. Return unresolved points to the coordinator.
 - Run bounded probes, such as installing a package or calling an API, only in a temporary directory outside the repository.
 
@@ -56,4 +58,4 @@ When the assignment rechecks an existing document, rewrite it in place with the 
 
 ## Return
 
-Return at most 300 words: the verdict, the findings that change the decision's options, the gaps, and the document path.
+Return at most 300 words: the verdict, the findings that change the decision's options, the gaps, and the document path if saved. For conversation-only output, include source references needed to assess the evidence.

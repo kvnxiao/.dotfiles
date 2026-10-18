@@ -5,6 +5,8 @@ description: Update repository documentation to match a code, configuration, arc
 
 # Update docs
 
+Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
+
 Keep the repository's documentation accurate for the target change set.
 
 ## Select the mode
