@@ -12,6 +12,7 @@ fast_default_opt_out = true
 daemon_auto_start = false
 
 [tui]
+mouse_scroll_speed = 3.0
 whimsy = false
 status_line = [
   "model-with-reasoning",
