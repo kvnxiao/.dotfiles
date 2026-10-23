@@ -9,8 +9,8 @@ updated_at = "2026-08-25T00:50:07Z"
 [remotes.humanizer]
 url = "https://github.com/blader/humanizer"
 ref = "main"
-rev = "e2e92e7b4b8229253ed5c8e81dc65463fdeddda5"
-updated_at = "2026-08-25T00:50:07Z"
+rev = "8c307f367c91bd974002f10f2be2965d642c13df"
+updated_at = "2026-10-23T23:35:27Z"
 
 [remotes.make-interfaces-feel-better]
 url = "https://github.com/jakubkrehel/make-interfaces-feel-better"
