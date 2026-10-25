@@ -29,6 +29,7 @@ definitions set the model, effort, and available permissions:
 | ----------- | --------------------------------------------- | ------------------------------------------------------- |
 | Codex       | [reviewer.toml](codex/agents/reviewer.toml)   | [reviewer-deep.toml](codex/agents/reviewer-deep.toml)   |
 | Claude Code | [reviewer.md](claude-code/agents/reviewer.md) | [reviewer-deep.md](claude-code/agents/reviewer-deep.md) |
+| Antigravity | [reviewer.md](agy/agents/reviewer.md)         | [reviewer-deep.md](agy/agents/reviewer-deep.md)         |
 
 Patina symlinks the definitions into each client's user-level `agents` directory. Both clients read
 the shared contract directly from `~/.agents/skills/review-changes/references/review-execution.md`.
@@ -63,6 +64,7 @@ agents. Each definition sets the model and permissions and points at a contract 
 | ----------- | ----------------------------------------------------------- | --------------------------------------------------- |
 | Codex       | [spec-researcher.toml](codex/agents/spec-researcher.toml)   | [implementer.toml](codex/agents/implementer.toml)   |
 | Claude Code | [spec-researcher.md](claude-code/agents/spec-researcher.md) | [implementer.md](claude-code/agents/implementer.md) |
+| Antigravity | [spec-researcher.md](agy/agents/spec-researcher.md)         | [implementer.md](agy/agents/implementer.md)         |
 
 The researcher writes one dated research document under the
 [research contract](shared/skills/write-spec/references/research.md). The implementer edits code for

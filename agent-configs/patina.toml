@@ -7,6 +7,10 @@ source = "shared/AGENTS.md"
 target = "~/.codex/AGENTS.md"
 
 [[file]]
+source = "shared/AGENTS.md"
+target = "~/.gemini/GEMINI.md"
+
+[[file]]
 source = "codex/config.toml"
 target = "~/.codex/config.toml"
 
@@ -43,6 +47,22 @@ source = "claude-code/agents/implementer.md"
 target = "~/.claude/agents/implementer.md"
 
 [[file]]
+source = "agy/agents/reviewer.md"
+target = "~/.gemini/config/agents/reviewer.md"
+
+[[file]]
+source = "agy/agents/reviewer-deep.md"
+target = "~/.gemini/config/agents/reviewer-deep.md"
+
+[[file]]
+source = "agy/agents/spec-researcher.md"
+target = "~/.gemini/config/agents/spec-researcher.md"
+
+[[file]]
+source = "agy/agents/implementer.md"
+target = "~/.gemini/config/agents/implementer.md"
+
+[[file]]
 source = "claude-code/settings.json"
 target = "~/.claude/settings.json"
 
@@ -71,6 +91,10 @@ mode = "symlink"
 source = "shared/skills/audit-prose"
 target = "~/.agents/skills/audit-prose"
 mode = "symlink"
+[[directory]]
+source = "shared/skills/audit-prose"
+target = "~/.gemini/config/skills/audit-prose"
+mode = "symlink"
 
 # brainstorm
 [[directory]]
@@ -80,6 +104,10 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/brainstorm"
 target = "~/.agents/skills/brainstorm"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/brainstorm"
+target = "~/.gemini/config/skills/brainstorm"
 mode = "symlink"
 
 # implement-spec-plan
@@ -91,6 +119,10 @@ mode = "symlink"
 source = "shared/skills/implement-spec-plan"
 target = "~/.agents/skills/implement-spec-plan"
 mode = "symlink"
+[[directory]]
+source = "shared/skills/implement-spec-plan"
+target = "~/.gemini/config/skills/implement-spec-plan"
+mode = "symlink"
 
 # optimize-agents
 [[directory]]
@@ -100,6 +132,10 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/optimize-agents"
 target = "~/.agents/skills/optimize-agents"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-agents"
+target = "~/.gemini/config/skills/optimize-agents"
 mode = "symlink"
 
 # plan-from-spec
@@ -111,6 +147,10 @@ mode = "symlink"
 source = "shared/skills/plan-from-spec"
 target = "~/.agents/skills/plan-from-spec"
 mode = "symlink"
+[[directory]]
+source = "shared/skills/plan-from-spec"
+target = "~/.gemini/config/skills/plan-from-spec"
+mode = "symlink"
 
 # review-changes
 [[directory]]
@@ -120,6 +160,10 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/review-changes"
 target = "~/.agents/skills/review-changes"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/review-changes"
+target = "~/.gemini/config/skills/review-changes"
 mode = "symlink"
 
 # update-docs
@@ -131,6 +175,10 @@ mode = "symlink"
 source = "shared/skills/update-docs"
 target = "~/.agents/skills/update-docs"
 mode = "symlink"
+[[directory]]
+source = "shared/skills/update-docs"
+target = "~/.gemini/config/skills/update-docs"
+mode = "symlink"
 
 # write-spec
 [[directory]]
@@ -140,6 +188,10 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/write-spec"
 target = "~/.agents/skills/write-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/write-spec"
+target = "~/.gemini/config/skills/write-spec"
 mode = "symlink"
 
 # humanizer
@@ -153,6 +205,11 @@ remote = "humanizer"
 source = "."
 target = "~/.agents/skills/humanizer"
 mode = "symlink"
+[[directory]]
+remote = "humanizer"
+source = "."
+target = "~/.gemini/config/skills/humanizer"
+mode = "symlink"
 
 # make-interfaces-feel-better
 [[directory]]
@@ -165,6 +222,11 @@ remote = "make-interfaces-feel-better"
 source = "skills/make-interfaces-feel-better"
 target = "~/.agents/skills/make-interfaces-feel-better"
 mode = "symlink"
+[[directory]]
+remote = "make-interfaces-feel-better"
+source = "skills/make-interfaces-feel-better"
+target = "~/.gemini/config/skills/make-interfaces-feel-better"
+mode = "symlink"
 
 # diagram-design
 [[directory]]
@@ -176,6 +238,11 @@ mode = "symlink"
 remote = "diagram-design"
 source = "skills/diagram-design"
 target = "~/.agents/skills/diagram-design"
+mode = "symlink"
+[[directory]]
+remote = "diagram-design"
+source = "skills/diagram-design"
+target = "~/.gemini/config/skills/diagram-design"
 mode = "symlink"
 
 # diagram-design commands
