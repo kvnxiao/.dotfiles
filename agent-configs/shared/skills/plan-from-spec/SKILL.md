@@ -61,7 +61,13 @@ If the plan set already exists, amend it under the format's amendment rules inst
    ```
 
    If the script cannot run, print its stderr and stop. Otherwise, fix every error, and add each requirement the coverage warning names to a plan or to the root plan's `out-of-scope` list with the reason.
-4. Run `review-changes mode=apply` on the plan files as a snapshot, naming the spec as the governing spec. Bring each finding that needs a decision to the user through `brainstorm`.
+4. Run `review-changes mode=apply` as a snapshot of the root plan and these child plans, naming the spec as the governing spec:
+
+   - The plans this run wrote or revised.
+   - The plans whose `blocked-by` directly names a plan this run wrote or revised.
+   - The plans whose `requirements` include a requirement that the reconciled spec change added, changed, or retired.
+
+   For a new plan set, review every root and child plan. Otherwise, ask the reviewer in the review request to search the plans outside this list for those requirement IDs and the names of changed shared interfaces. Bring each finding that needs a decision to the user through `brainstorm`.
 5. Present the plan set. When no question is open and the user approves it, set the root plan's `status: ready` and rerun the plan check. For wording-only reconciliation that preserves the approved plan, retain approval under the format's amendment rules. A missing or mismatched baseline requires reconciliation before implementation.
 
 ## Return

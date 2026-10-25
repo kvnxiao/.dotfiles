@@ -98,7 +98,7 @@ Resolve scope before auditing:
 - Preserve a caller-supplied scope, including revisions and diff/snapshot boundaries. In a diff, audit only added or modified prose; in a snapshot (the selected files as they are now), audit the selected prose in full.
 - With an explicitly named file, path, or text snippet, audit only that target.
 - With no named target, audit staged changes, unstaged changes, and untracked files (the union of `git diff HEAD` and untracked files reported by `git status --porcelain`). Audit and rewrite only the prose lines added or modified within that resolved scope.
-- For a reader-facing deliverable (a document, page, proposal, README, or PR description written for people to read as a whole, not agent instructions or code comments), audit the whole artifact each time this skill runs, even when the caller supplies a diff scope, unless the user explicitly limits the scope. Earlier passes may have missed violations in unchanged lines.
+- For a reader-facing deliverable (a document, page, proposal, README, or PR description written for people to read as a whole, not agent instructions or code comments), audit the whole artifact each time this skill runs, even when the caller supplies a diff scope, unless the user explicitly limits the scope. Earlier passes may have missed violations in unchanged lines. For a diff of a spec amendment, audit each changed section whole instead: from the nearest heading above a changed or deleted line through the line before the next heading with the same or fewer `#` characters. A change before the first heading covers the lines up to that heading.
 
 For commit messages, PR drafts, and small snippets, keep the output to corrections or the rewritten artifact as the selected mode requires.
 

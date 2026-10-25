@@ -1,6 +1,6 @@
 # Plan format
 
-A plan set turns an approved spec into work that implementer sessions execute one task at a time. Humans review the plan files; agents track progress in state files that nobody else reads. Plans tie to the spec more strictly than host plan-mode plans: every task cites the requirements it serves, and a reviewer checks the plans and the resulting code against the spec.
+A plan set turns an approved spec into work that implementer sessions execute one plan at a time, running its tasks in order. Humans review the plan files; agents track progress in state files that nobody else reads. Plans tie to the spec more strictly than host plan-mode plans: every task cites the requirements it serves, and a reviewer checks the plans and the resulting code against the spec.
 
 ## Layout
 
@@ -72,14 +72,14 @@ For example, a task in a TypeScript repository:
 
 ## Dividing the work
 
-- **Plan:** one vertical slice that ships as one PR and changes behavior a user can observe. Never make a plan for a single layer, except a walking skeleton or enabling slice that names the behavior it unblocks.
+- **Plan:** one vertical slice that ships as one PR, changes behavior a user can observe, and is small enough for one implementer session to finish. Never make a plan for a single layer, except a walking skeleton or enabling slice that names the behavior it unblocks.
 - **Split a plan** when it:
   - has more than one independently mergeable behavior.
   - has a grab-bag name.
   - mixes investigation with routine work.
 
   Prefer the split that lets a piece be dropped.
-- **Task:** a contiguous set of edits that one implementer session finishes, with one observable acceptance check. A candidate without its own check becomes a step in another task.
+- **Task:** a contiguous set of edits with one observable acceptance check, which the plan's implementer passes before starting the next task. A candidate without its own check becomes a step in another task.
 - **Unknowns:** an API or runtime uncertainty that affects the approach becomes an investigation task. Ordinary missing code and unrun acceptance tests belong in implementation and validation tasks. Preserve the approved spec unless evidence requires changing its contract.
 - **Integration:** give the work that joins slices, such as wiring, migration, or end-to-end checks, its own task. It is the work most often left out.
 - **Order:** place an investigation before its dependent work; independent tasks can proceed. Build the minimal end-to-end implementation and riskiest core before variations. Order by prerequisites, never by requirement ID.

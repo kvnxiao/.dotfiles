@@ -82,7 +82,7 @@ Use this path only for a diff where every hunk is one of:
 - A typo, wording, or formatting correction in prose, comments, or docstrings that preserves meaning and does not change executable examples or directives.
 - Documentation outside skills, prompts, agent definitions, and other instruction files, with no change to the behavior it describes.
 
-Changes to test assertions, configuration, runtime code, behavioral instructions, or a spec's requirements use the full path. Snapshot reviews also use the full path.
+Changes to test assertions, configuration, runtime code, behavioral instructions, or a spec, its area files, or its research use the full path. Snapshot reviews also use the full path.
 
 Perform these steps in-session without loading the full-path or reviewer contract references:
 

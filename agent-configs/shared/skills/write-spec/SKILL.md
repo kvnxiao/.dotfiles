@@ -21,7 +21,7 @@ This skill produces an approved spec: `SPEC.md`, area files when the spec outgro
    | Amend     | The request changes specified behavior.                      |
    | Reconcile | Code changed before its spec, or code exists without a spec. |
 
-4. For Amend and Reconcile, read the root spec, the affected area files, Explored alternatives, and the source and tests the request touches. In Reconcile mode, section 3 classifies each behavior. In Amend mode, map the request to the affected requirement IDs and classify it:
+4. For Amend and Reconcile, when the spec files are committed in Git, note the current commit (`git rev-parse HEAD`) in the session as the amendment base for section 5's review. Read the root spec, the affected area files, Explored alternatives, and the source and tests the request touches. In Reconcile mode, section 3 classifies each behavior. In Amend mode, map the request to the affected requirement IDs and classify it:
 
    | Finding                                                                                 | Action                                                        |
    | --------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -74,7 +74,7 @@ Use `brainstorm` for every decision round, including proposed mints and retireme
    ```
 
    If the script cannot run, print its stderr and stop. Otherwise, fix every error.
-4. Run `review-changes mode=apply` on the spec, its area files, and the changed research. Bring each finding that needs a decision back to the user through `brainstorm`.
+4. Run `review-changes mode=apply` on the spec, its area files, and the research directory, as the diff from the amendment base to the working contents, including untracked files in those paths. When no amendment base was noted, review the spec, its area files, and the research documents this run wrote or changed as a snapshot instead. Bring each finding that needs a decision back to the user through `brainstorm`.
 5. Present the spec for approval once the readiness criteria are met. Keep pending implementation and release verification explicit without treating it as an unresolved product decision. When the user approves the complete spec, set `status: approved`. After an amendment, report which existing plan sets need reconciliation through `plan-from-spec`; do not refresh their recorded spec fingerprints or completed task states here.
 
 ## Return

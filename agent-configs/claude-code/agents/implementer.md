@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Implement one assigned task from a spec-derived plan set and return the result to the coordinating session.
+description: Implement the assigned tasks of one plan from a spec-derived plan set and return the result to the coordinating session.
 model: claude-opus-5-5
 effort: high
 tools: Read, Grep, Glob, Bash, Edit, Write

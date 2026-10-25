@@ -68,7 +68,7 @@ agents. Each definition sets the model and permissions and points at a contract 
 
 The researcher writes one dated research document under the
 [research contract](shared/skills/write-spec/references/research.md). The implementer edits code for
-one plan task under the
+the assigned tasks of one plan under the
 [implementer contract](shared/skills/implement-spec-plan/references/implementer.md). Both write
 files, so Codex runs them in the `workspace-write` sandbox and Claude Code grants them `Write` and
 `Edit`. The Codex researcher also has network access for package and API probes. As with the

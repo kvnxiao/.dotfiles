@@ -32,7 +32,7 @@ Correctness takes precedence over cleanup. Inspect fixes in-session with affecte
 
 Use `update-docs` with the selected mode to assess documented public behavior and internal design. Search the relevant documentation corpus; report the assessment even when no update is needed. Skip this assessment only for cleanup-only work that preserves documented behavior and design, and state that reason.
 
-Use `audit-prose` with the selected mode on added or modified prose and requested prose-cleanup targets; for a reader-facing deliverable, as `audit-prose` defines it, it audits the whole artifact. A cleanup request does not skip this step when prose is in scope. In snapshot reviews, audit the selected prose. Skip only when no prose is in scope. Finish documentation before auditing prose; preserve meaning. After a prose correction to a prompt or instruction, recheck that it still directs the same behavior.
+Use `audit-prose` with the selected mode on added or modified prose and requested prose-cleanup targets; for a reader-facing deliverable, as `audit-prose` defines it, `audit-prose` widens that scope under its own rules. A cleanup request does not skip this step when prose is in scope. In snapshot reviews, audit the selected prose. Skip only when no prose is in scope. Finish documentation before auditing prose; preserve meaning. After a prose correction to a prompt or instruction, recheck that it still directs the same behavior.
 
 The coordinator applies edits. If documentation or prose investigation is delegated, require `mode=report` and apply accepted corrections in-session. Before delegating a prose audit that needs a cold-reader pass, run that pass in-session and pass its flags to the delegate.
 

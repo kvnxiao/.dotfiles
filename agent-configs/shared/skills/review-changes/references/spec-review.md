@@ -6,7 +6,13 @@ Read the format rules in `~/.agents/skills/write-spec/references/spec-format.md`
 
 ## Investigation
 
-First read the spec top to bottom without following links; then read the linked research and area files.
+For a snapshot, first read the spec top to bottom without following links; then read the linked research and area files. For a diff:
+
+1. Read the root spec and each changed file top to bottom.
+2. Read the requirement blocks of each area file that a changed area file lists directly in its `depends-on` frontmatter, and of each area file that lists a changed one there. A change to the root spec alone does not make an area file changed.
+3. Search the remaining area files and research for the added, changed, and retired requirement IDs and defined terms, including the old names of renamed terms. Read each paragraph, requirement block, or table row that mentions them.
+
+Apply the checks below to the changed text and its interactions with the passages you read. State in the report that cross-area consistency was checked only for those passages.
 
 - **Idea and approach:** Does the design solve the stated problem for the stated audience within its constraints? Name a simpler design that meets the same goals, an Explored alternative dismissed for a reason that does not hold, and a decision the linked research does not support.
 - **Requirements:** Check that each requirement is necessary (its intent traces to a goal), singular, observable from outside the system, and complete in trigger, result, and failure behavior. Flag vague criteria such as "fast", "appropriate", "if possible", and "etc.". Report a scenario that a plausible wrong implementation passes.
