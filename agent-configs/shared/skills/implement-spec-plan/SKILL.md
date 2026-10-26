@@ -73,6 +73,13 @@ Plans marked parallel-safe can run at the same time only in separate sessions th
 
 After a plan's last task, complete the root plan's Definition of done, including one `review-changes mode=apply` on the files this plan's tasks changed. Name the plan and the spec as the governing artifacts. Keep `review: pending` until the checks and review fixes are complete. If interrupted or blocked, resume this phase before reporting the plan done or starting a dependent plan. Then set `review: done` and rerun the status check.
 
+When the review, `update-docs`, or `audit-prose` surfaces an open decision, settle it through `brainstorm` instead of listing it in a report. Open decisions include a spec gap, a requirement that admits several readings, and a product choice the spec does not settle. Do not present an open decision to the user without this research and decision round:
+
+1. Research each decision before asking: read the governing requirements, the code, and the relevant research, and dispatch subagents for facts from the environment. The round then presents explored options with a recommendation.
+2. If the plan's current behavior follows the spec as written, finish this phase, commit the plan when commits are authorized, and then start the brainstorm. While it is active, continue with plans that no open decision affects, under the brainstorm skill's rule for independent work.
+3. If the plan's behavior depends on an answer, keep `review: pending` and hold the plan until the session concludes.
+4. When the session concludes, add each confirmed change as a task with the next unused ID in the plan it affects, and tell the user. If a confirmed change requires a spec change, return `Needs spec` instead.
+
 Continue with the next plan only when the user asked for more than one plan. Without authorization to commit each plan first, the next plan's review also covers this plan's changes in files both plans touch.
 
 ## Return
