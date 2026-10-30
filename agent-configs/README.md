@@ -82,3 +82,13 @@ records whether its final checks and review are complete; dependent plans remain
 
 Run `just test-agent-skills` for the checker and analyzer regression tests. `just check` includes
 these tests.
+
+## Repository README writing
+
+The [write-readme](shared/skills/write-readme/SKILL.md) skill writes repository introductions for
+their primary audience. It adapts the reading order to applications, command-line tools, libraries,
+and collections, and moves detailed guidance into linked documents when the audience or level of
+detail changes. It checks claims against current evidence and uses `audit-prose` for a cold-reader
+review. It groups related app features and supports audience-appropriate media placeholders when
+requested. Patina deploys it to the shared skill directories for Codex, Claude Code, and
+Antigravity.

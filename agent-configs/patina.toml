@@ -250,3 +250,17 @@ mode = "symlink"
 remote = "diagram-design"
 source = "commands"
 target = "~/.claude/commands/diagram-design"
+
+# write-readme
+[[directory]]
+source = "shared/skills/write-readme"
+target = "~/.claude/skills/write-readme"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/write-readme"
+target = "~/.agents/skills/write-readme"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/write-readme"
+target = "~/.gemini/config/skills/write-readme"
+mode = "symlink"
