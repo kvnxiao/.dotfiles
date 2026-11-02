@@ -83,6 +83,26 @@ records whether its final checks and review are complete; dependent plans remain
 Run `just test-agent-skills` for the checker and analyzer regression tests. `just check` includes
 these tests.
 
+## Optimization reviews
+
+Use [optimize](shared/skills/optimize/SKILL.md) to find performance and resource-efficiency
+opportunities across a system. Use
+[optimize-implementation](shared/skills/optimize-implementation/SKILL.md) for algorithms and
+resource use within existing system responsibilities, or
+[optimize-architecture](shared/skills/optimize-architecture/SKILL.md) to reconsider those
+responsibilities, boundaries, and data ownership.
+
+All three skills preserve requirements and return recommendations without applying production
+changes. Default mode uses inexpensive inspection and existing evidence. Add `deep` or `mode=deep`
+to authorize more extensive investigation and selective temporary experiments. For example,
+`/optimize deep` examines both scopes, while `/optimize-architecture` uses default effort on the
+architecture alone. Use the client's skill invocation syntax; Codex also accepts `$optimize`.
+
+Patina deploys the three skills together to the Claude Code and Antigravity skill directories, and
+to `~/.agents/skills/` for Codex and the pi coding agent. Their references share investigation rules
+and load area-specific and experimental guidance when needed. Investigations run in-session when
+delegation is unavailable.
+
 ## Repository README writing
 
 The [write-readme](shared/skills/write-readme/SKILL.md) skill writes repository introductions for

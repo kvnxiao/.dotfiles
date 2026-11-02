@@ -124,6 +124,48 @@ source = "shared/skills/implement-spec-plan"
 target = "~/.gemini/config/skills/implement-spec-plan"
 mode = "symlink"
 
+# optimize
+[[directory]]
+source = "shared/skills/optimize"
+target = "~/.claude/skills/optimize"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize"
+target = "~/.agents/skills/optimize"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize"
+target = "~/.gemini/config/skills/optimize"
+mode = "symlink"
+
+# optimize-implementation
+[[directory]]
+source = "shared/skills/optimize-implementation"
+target = "~/.claude/skills/optimize-implementation"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-implementation"
+target = "~/.agents/skills/optimize-implementation"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-implementation"
+target = "~/.gemini/config/skills/optimize-implementation"
+mode = "symlink"
+
+# optimize-architecture
+[[directory]]
+source = "shared/skills/optimize-architecture"
+target = "~/.claude/skills/optimize-architecture"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-architecture"
+target = "~/.agents/skills/optimize-architecture"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/optimize-architecture"
+target = "~/.gemini/config/skills/optimize-architecture"
+mode = "symlink"
+
 # optimize-agents
 [[directory]]
 source = "shared/skills/optimize-agents"
