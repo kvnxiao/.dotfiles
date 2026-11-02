@@ -40,6 +40,7 @@ Code alone determines what runs; comments and docstrings that restate code becom
 
 - **Comments and docstrings target zero:** Default to silence. Write one only for facts code cannot express: hazards, ABI/OS quirks, race/lock constraints, compatibility requirements, why the obvious alternative fails, or invariants the signature cannot convey. On public items, write only the docstring the linter requires (a summary line plus bulleted invariants and errors); omit docstrings on private helpers. Delete anything a reader would infer unaided; rename or extract rather than annotating.
 - **No provenance or grievance:** State current constraints directly; omit development chronology and complaints about dependencies. Preserve necessary migration context and the versions and conditions of retained evidence in their owning documents. Record evaluated alternatives that affect requirements or feasibility in public decision records; keep execution history in private plans.
+- **Document the intended design:** Write documentation and instructions for the intended end state. When code does not follow a documented rule yet, track the remaining work in a private plan instead of describing the exception next to the rule; for example, write `the auth service is the only writer of the sessions table` without appending `the billing worker still writes it directly`. Keep migration notes that users or operators act on in their owning documents.
 
 ## Format Each Artifact Type
 
