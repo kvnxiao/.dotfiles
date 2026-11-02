@@ -59,8 +59,8 @@ defender-exclusions:
 setup-hooks:
     git config --local --replace-all include.path ../.githooks/config '^\.\./\.githooks/config$'
 
-ruff := "uvx ruff@0.16.10"
-ty := "uvx ty@0.0.84"
+ruff := "uvx ruff@0.17.3"
+ty := "uvx ty@0.0.95"
 
 # Apply repository fixes
 fix:
@@ -77,8 +77,8 @@ check:
     just test-agent-skills
 
 test-agent-skills:
-    uv run --no-project --managed-python --python 3.14 -m unittest discover -s agent-configs/shared/skills/write-spec/scripts -p 'test_*.py'
-    uv run --no-project --managed-python --python 3.14 -m unittest discover -s agent-configs/shared/skills/optimize-agents/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.15 -m unittest discover -s agent-configs/shared/skills/write-spec/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.15 -m unittest discover -s agent-configs/shared/skills/optimize-agents/scripts -p 'test_*.py'
 
 # Full setup: deploy + platform-specific setup
 [windows]

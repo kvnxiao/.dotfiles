@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.14"
+# requires-python = ">=3.15"
 # dependencies = []
 # ///
 """Measure a repository's agent-facing files per host and report limits and structural findings.
@@ -1853,7 +1853,14 @@ def delegates_across(a: Analysis) -> list[str]:
         for (h1, d1), (h2, d2) in itertools.pairwise(sorted(defs.items())):
             t1, t2 = (re.sub(r"\s+", " ", re.sub(r"[`*_]", "", d.body)).strip() for d in (d1, d2))
             if t1 != t2:
-                i = len(os.path.commonprefix([t1, t2]))
+                i = next(
+                    (
+                        index
+                        for index, (left, right) in enumerate(zip(t1, t2, strict=False))
+                        if left != right
+                    ),
+                    min(len(t1), len(t2)),
+                )
                 rows.append(
                     f'{name}: {h1} and {h2} bodies differ at char {i}: "{t1[i : i + 50]}" vs "{t2[i : i + 50]}"'
                 )

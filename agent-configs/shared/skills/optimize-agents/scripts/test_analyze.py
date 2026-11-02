@@ -122,5 +122,28 @@ class AntigravityChecks(unittest.TestCase):
         self.assertEqual(meta["skills"], ["name # suffix"])
 
 
+class DelegateComparisonChecks(unittest.TestCase):
+    def test_reports_first_difference_in_normalized_agent_bodies(self) -> None:
+        cases = [
+            ("abc", "xbc", 'researcher: claude and codex bodies differ at char 0: "abc" vs "xbc"'),
+            ("ab", "abc", 'researcher: claude and codex bodies differ at char 2: "" vs "c"'),
+            ("abc", "ab", 'researcher: claude and codex bodies differ at char 2: "c" vs ""'),
+            ("", "a", 'researcher: claude and codex bodies differ at char 0: "" vs "a"'),
+            ("a", "", 'researcher: claude and codex bodies differ at char 0: "a" vs ""'),
+            ("猫犬", "猫鳥", 'researcher: claude and codex bodies differ at char 1: "犬" vs "鳥"'),
+            ("**Read**   files.", "Read files.", "bodies match across hosts"),
+        ]
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for left, right, expected in cases:
+                with self.subTest(left=left, right=right):
+                    result = analyze.Analysis(root, [], [])
+                    result.agents = [
+                        analyze.Agent("claude", "researcher", root / "claude.md", "", left, {}),
+                        analyze.Agent("codex", "researcher", root / "codex.toml", "", right, {}),
+                    ]
+                    self.assertEqual(analyze.delegates_across(result), [expected])
+
+
 if __name__ == "__main__":
     unittest.main()

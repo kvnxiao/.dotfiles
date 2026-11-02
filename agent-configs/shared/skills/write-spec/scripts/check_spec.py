@@ -1,5 +1,5 @@
 # /// script
-# requires-python = ">=3.14"
+# requires-python = ">=3.15"
 # dependencies = []
 # ///
 """Check the structure of a spec set and, optionally, the plans derived from it.
