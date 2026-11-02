@@ -1,14 +1,13 @@
 # Spec format
 
-A spec states what a system must do and why, for humans who review it at a high level and for agents that implement and check against it. It owns behavior and system design; plans own mechanism. Every rule here applies to `SPEC.md` and its area files; research has its own format in [research.md](research.md).
+Define the intended end state for human review and implementation. Apply [documentation boundaries](document-boundaries.md); these format rules govern `SPEC.md` and its area files.
 
 ## Invariants
 
 These hold in every repository, whatever its layout or heading conventions:
 
-- **Readable top-down.** Introduce each term, actor, state, and approach before or at its first use. Put concepts that several sections share in Background and terms, and define a term used in one section at its first use there. Before drafting a section, list the concepts it assumes and place their introductions earlier. A link to a later section may offer optional detail; it never replaces an explanation the current passage needs.
-- **Current state only.** Amend the spec in place, as if writing it for the first time. Leave out history, changelogs, "last updated" dates, ticket links, and phrases such as "previously" or "now"; git records history. Explored alternatives is the one record of rejected ideas. Leave out figures that go stale, such as requirement or word counts.
-- **One home per fact.** Link research, other spec files, and external contracts instead of restating them.
+- **Intended end state.** State durable functional and nonfunctional requirements. Code may lag behind the contract; do not weaken it to match incomplete implementation. Keep engineering choices open within explicit constraints and amend related requirements consistently when findings require a changed contract.
+- **No development history.** Amend the spec in place. Keep concise current rationale beside a constraint; put evaluated alternatives that affect requirements or feasibility in public decisions and implementation history in private plans. Leave out changelogs, update dates, ticket references, and counts that go stale.
 - **Normative text is declared.** The conformance clause states which text binds; examples and notes are labeled.
 - **Proportionate.** Leave out a section or field that has nothing to say. Never write "N/A" or "None".
 - **Unwrapped.** Write each paragraph and list item on one line, so a read returns more content per line range.
@@ -46,33 +45,28 @@ Allow optional prototyping and validation within the authorized scope to test cl
 
 Treat missing features, unrun integration tests, and ordinary implementation defects as implementation work. Do not require a complete feature prototype merely to approve its requirements. For example, a spec can require cancellation to restore the current target while the implementation plan assigns the cancellation code and tests.
 
-Keep acceptance outcomes and necessary validation conditions in the spec. Put files, internal types, algorithms, task order, test commands, and concrete verification assignments in plans. Record pending implementation and release checks separately from Open questions; moving a check does not waive it. When a bounded investigation remains necessary within an approved design, assign it to the plan and block only dependent work.
+Keep acceptance outcomes and necessary validation conditions in the spec. Put files, internal types, algorithms, task order, test commands, and concrete verification assignments in plans. Record pending implementation and release checks in plans, or in the conversation until planning is authorized; moving a check does not waive it. When a bounded investigation remains necessary within an approved design, assign it to the plan and block only dependent work.
 
 ## Sections
 
-Write the core sections in this order:
+Use this reading order, adapting headings to repository conventions:
 
-1. **Purpose and scope:** the problem, the audience, goals, non-goals, constraints, assumptions, and dependencies.
-2. **Background and terms:** the context a reader needs, and a `Term | Meaning` table for terms that more than one section uses.
-3. **Invariants:** properties every change must preserve, written as requirement blocks.
-4. **Requirements:** functional and quality requirements, grouped under H2 headings by area of responsibility and ordered by prerequisite knowledge.
-5. **Security:** the threats in and out of scope and the requirements that address them. When the system does not add attack surface, write one sentence that says why.
-6. **Conformance:** the conformance clause.
+1. **Purpose and context:** the problem, audience, and goals.
+2. **Functional requirements:** capabilities, business rules, behavior, workflows, and user experience.
+3. **Nonfunctional requirements:** measurable performance, target scale, reliability, security, privacy, compatibility, and other required guarantees.
+4. **Non-goals and out-of-scope behavior:** what the system deliberately does not solve.
+5. **Constraints and assumptions:** required choices, dependencies, and conditions shaping the solution.
+6. **High-level system design:** responsibilities, state ownership, boundaries, and interactions needed to explain the contract.
+7. **Detailed contracts and behavior:** exact interfaces, lifecycle transitions, failure outcomes, compatibility, and migration where needed.
+8. **Conformance and supporting evidence:** what binds and the evidence supporting feasibility.
 
-Add an optional section only when its condition holds:
+Keep functional requirements, nonfunctional requirements, and scope boundaries near the top, before design mechanics. Introduce terms before use; add a shared glossary only when it helps. State security obligations with the relevant requirements; add a threat model when its scope needs further explanation. Leave out detailed sections that have nothing to add.
 
-| Section                     | Include when                                                                                                                                                           |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Architecture overview       | The system has more than one component, or state ownership or data flow crosses component boundaries. Place it after Background and terms.                             |
-| External contracts          | An external party depends on exact names, formats, or values.                                                                                                          |
-| State and lifecycle         | An entity moves through several states with distinct transitions.                                                                                                      |
-| Compatibility and migration | Existing users, stored data, or versions must keep working during a change. A spec set puts it in a transitional area (see [Size and spec sets](#size-and-spec-sets)). |
-| Open questions              | The draft has undecided behavior or a material feasibility assumption that prevents approval.                                                                          |
-| Explored alternatives       | The design rejected or abandoned an option.                                                                                                                            |
-| Supporting evidence         | Research documents back the spec's decisions.                                                                                                                          |
-| References                  | The spec cites external contracts, standards, or API documentation.                                                                                                    |
+For a small spec, the early requirement sections can contain complete blocks and scenarios. For a spec set, use concise overviews linked to authoritative blocks in the areas. Overviews do not introduce separate obligations or repeat complete rules. Place invariant requirement blocks under an H2 heading containing `Invariants`, which the checker uses to distinguish them from requirements that need plan coverage. Keep cross-cutting invariants in the root; detailed areas follow prerequisite order.
 
-Place optional sections where their prerequisites allow: shared concepts before the workflow, states before their transitions, behavior before its exceptions.
+An implementation choice is not a nonfunctional requirement merely because it is technical. Require a framework or algorithm only when deliberately constrained to establish the intended contract. Approval does not imply that all implementation mechanisms or runtime behavior have been discovered.
+
+Add **Open questions** only for unresolved behavior or material feasibility assumptions that prevent approval. Link supporting research and public decisions when relevant; do not reproduce their findings or rejected directions in the spec.
 
 ## Requirements
 
@@ -129,7 +123,7 @@ After a retirement or rename, run `rg -i 'req-<old-slug>'` over the spec, its ar
 
 Open the Conformance section with the clause, adapted to the spec:
 
-> A conforming implementation satisfies every requirement and invariant in this spec and its area files, the constraints and non-goals in Purpose and scope, the exact names and formats in External contracts, and the transitions in each state or flow diagram that lists every transition. Present-tense statements in these parts are mandatory. Uppercase SHOULD marks a recommendation an implementation may decline with a documented reason; uppercase MAY marks an allowed option. Text labeled Example or Note, Background, Explored alternatives, Supporting evidence, other diagrams, and linked research are informative.
+> A conforming implementation satisfies every requirement and invariant in this spec and its area files, the stated constraints and non-goals, the exact names and formats in external contracts, and the transitions in each state or flow diagram that lists every transition. Present-tense statements in these parts are mandatory. Uppercase SHOULD marks a recommendation an implementation may decline with a documented reason; uppercase MAY marks an allowed option. Text labeled Example or Note, background, requirements overviews linking authoritative blocks, supporting evidence, other diagrams, linked research, and public decisions are informative.
 
 State obligations in plain present tense: "The command exits with status 3", not "The command should exit with status 3". Use uppercase SHOULD or MAY only for a real exception or option, and state its condition. A lowercase "should" or "may" in a requirement block leaves its force unclear; the `review-changes` spec review judges each one.
 
@@ -137,9 +131,9 @@ State obligations in plain present tense: "The command exits with status 3", not
 
 Keep each spec file under 40 KB. That is about one 10,000-token tool output and about thirty minutes of reading, so one file fits one reading session for an agent or a human. When the core spec exceeds the budget, split it into a spec set:
 
-- **Root `SPEC.md`:** purpose and scope, shared terms, the architecture overview, invariants that span areas, Security, Conformance, and an area index. The index lists each area file in prerequisite order with one line on what it covers and when to read it.
+- **Root `SPEC.md`:** purpose, functional and nonfunctional requirements overviews, non-goals, constraints, shared terms, high-level design, cross-area invariants, conformance, and an area index. The index lists each area file in prerequisite order with one line on what it covers and when to read it.
 - **Area files `specs/<area>.md`:** one per area of responsibility, drawn along state ownership: each requirement belongs to exactly one area. An area assumes only the root and the areas it lists in `depends-on`; the dependencies do not form a cycle. Terms that only one area uses live in that area.
-- **Transitional area:** current-state description, migration rules, and compatibility paths that end at a cutover go in one area, retired when the cutover completes. The rest of the set then stays current-state only.
+- **Transitional area:** current-state description, migration rules, and compatibility paths that end at a cutover go in one area, retired when the cutover completes. The rest of the set describes the intended end state.
 
 Split along areas of responsibility, never by section type. A spec under budget stays one file, with its diagrams inline.
 
@@ -173,5 +167,4 @@ Write each path relative to the file that declares it. A spec is `draft` from it
 ## Informative sections
 
 - **Open questions:** list undecided behavior and material feasibility assumptions that prevent design approval, with the requirements they block. Remove a question when resolved or when the user accepts the remaining uncertainty. Do not list ordinary implementation or release checks here.
-- **Explored alternatives:** give one entry per rejected or abandoned idea, with the reason it was dropped. Reconsider an entry only when new evidence or changed constraints invalidate that reason, and name what changed.
 - **Supporting evidence:** link the research index. Add a row for a requirement when readers need to trace it: the requirement, its research links, and the outcome the research does not establish. Keep findings in the research documents.

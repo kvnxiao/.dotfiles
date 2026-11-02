@@ -5,6 +5,8 @@ description: Write or restructure repository READMEs around their primary audien
 
 # Write README
 
+Follow [documentation boundaries](../write-spec/references/document-boundaries.md) when selecting or relocating content.
+
 Make the README help a new reader understand what the project provides, why it may be useful, and how to start using it. Preserve the user's requested scope and established repository conventions.
 
 ## Establish the audience and facts
@@ -50,16 +52,18 @@ Keep information when it helps the primary audience evaluate the project or comp
 
 Reuse existing destinations before creating new ones. Choose filenames to fit the repository; the following are examples, not required files:
 
-| Information                                            | Possible destination                                    |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| Local contributor setup, builds, tests, and debugging  | `DEVELOPMENT.md` or an existing development guide       |
-| Contribution process and review expectations           | `CONTRIBUTING.md`                                       |
-| Internal components and architectural decisions        | Existing architecture or design documentation           |
-| Complete settings, advanced usage, and troubleshooting | User guide or configuration reference                   |
-| Benchmark methodology, environments, and limitations   | Benchmark or research documentation                     |
-| Plans and implementation acceptance criteria           | Existing roadmap, specification, or implementation plan |
+| Information                                                      | Possible destination                              |
+| ---------------------------------------------------------------- | ------------------------------------------------- |
+| Local contributor setup, builds, tests, and debugging            | `DEVELOPMENT.md` or an existing development guide |
+| Contribution process and review expectations                     | `CONTRIBUTING.md`                                 |
+| Important, stable explanations of implemented code               | Existing architecture or developer documentation  |
+| Rejected, deferred, or superseded product or system alternatives | Public decision record                            |
+| Complete settings, advanced usage, and troubleshooting           | User guide or configuration reference             |
+| Benchmark methodology, environments, and limitations             | Benchmark or research documentation               |
+| Required observable outcomes and acceptance scenarios            | Specification                                     |
+| Plans, task progress, commands, and validation results           | Private implementation plans and state            |
 
-Link each relocated topic from the README with a label that explains its destination. Preserve useful content without copying it into several documents. Do not create empty scaffolding, a file for every paragraph, or a second authoritative copy of an existing guide. Check relocated links relative to their new location and update affected inbound links within scope.
+Link relocated public topics from the README with labels that explain their destinations. Do not link to private plans or make the introduction depend on them. Preserve useful content without copying it into several documents. Do not create empty scaffolding, a file for every paragraph, or a second authoritative copy of an existing guide. Check relocated links relative to their new location and update affected inbound links within scope.
 
 Keep limitations that affect adoption visible beside the relevant claim or step, even when their explanation moves elsewhere. For example, retain an application's supported operating system and significant changes it makes to system settings. Separate planned capabilities from available ones. Remove notes about the editing session, temporary verification notes, implementation-only names or tracking IDs, and exhaustive edge cases from introductory prose; retain their relevant facts in the appropriate documentation.
 

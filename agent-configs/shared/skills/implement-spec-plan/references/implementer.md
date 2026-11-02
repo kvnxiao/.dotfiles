@@ -28,6 +28,6 @@ Return these fields for each assigned task, in order; a task you did not start h
 - **Outcome:** done, blocked, needs a decision, needs a fix outside the assigned tasks, or not started.
 - **Changes:** the files changed and what each change does.
 - **Validate:** the command run and its observed result.
-- **Discoveries:** what a later task needs to know, including an investigation's answer.
+- **Discoveries:** what a later task needs to know, including an investigation's answer. Identify consequential findings about requirements or feasibility for the coordinator to consider for public decisions; do not publish task history.
 - **Decisions or fixes:** each open decision with its options and your recommendation, and each fix outside the assigned tasks.
 - **Deviations:** where the work departs from the task's steps, and why.

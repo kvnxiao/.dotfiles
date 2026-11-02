@@ -7,6 +7,8 @@ description: Implement or resume a plan set under .plans/ that plan-from-spec wr
 
 Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
 
+Apply [documentation boundaries](../write-spec/references/document-boundaries.md) to plan state and any documentation this workflow changes. When selecting an approach or investigating a blocker, consult relevant [public decisions](../write-spec/references/decisions.md); record qualifying settled findings and integrate overlapping entries within the authorized scope. Keep routine technical attempts and validation commands and results in private plans.
+
 This skill executes an approved plan set from `plan-from-spec`. The session that runs it coordinates:
 
 - It picks the next plan and runs its tasks inline or through one `implementer` subagent.
@@ -40,7 +42,7 @@ Run one plan at a time, and give all of its unfinished tasks to one implementer,
 
 1. Select the plan's unfinished tasks that come before the first task whose recorded blocker is unresolved; the tasks after a blocked task depend on it. If no task is selected, return `Blocked`. Otherwise, set the selected tasks to `in-progress` and the plan's review to `pending` in its [state file](../plan-from-spec/references/plan-format.md#state-file).
 2. Run the selected tasks under [implementer.md](references/implementer.md). For a plan with a few small tasks, or a host without an `implementer` agent, follow that contract's steps inline. Otherwise, start one `implementer` with the plan path, the selected task IDs in order, the spec path, and the `discovered` entries of this plan and the plans it is blocked by.
-3. When the implementer returns, append to `discovered` what a later task needs to know. Then process each task's outcome in order with the table below, and keep a task incomplete until it returns Done and passes coordinator validation. The implementer stops at the first task it cannot finish:
+3. When the implementer returns, update `discovered` with what a later task needs, consolidating overlapping or obsolete instructions under the state-file rules. Then process each task's outcome in order with the table below, and keep a task incomplete until it returns Done and passes coordinator validation. The implementer stops at the first task it cannot finish:
 
    - To resume the stopped task, continue the same implementer with the answer when the host supports it, so it keeps its context. Otherwise, start a new implementer with the remaining tasks and the updated `discovered` entries.
    - When an outcome returns from this workflow, leave the outcomes after it unprocessed. Set each later task that the implementer reports as not started back to `todo`, and keep each other later task `in-progress`.

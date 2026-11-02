@@ -7,11 +7,13 @@ description: Break an approved spec (SPEC.md and its area files) into a tree of 
 
 Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
 
+Apply [documentation boundaries](../write-spec/references/document-boundaries.md) when writing plans. Use [public decisions](../write-spec/references/decisions.md) when selecting an approach or recording a qualifying settled conclusion.
+
 This skill writes a plan set that implementer sessions can execute without the conversation: a root plan, one child plan per vertical slice, and agent-only state files. Approving a plan does not authorize implementing it; `implement-spec-plan` implements an approved plan set.
 
 ## 1. Establish the baseline
 
-1. Find the spec, using the first that applies: a path the user names, a location in the repository's instructions, or `SPEC.md` at the repository root. Read the root and every area file the requested scope touches, including Explored alternatives.
+1. Find the spec, using the first that applies: a path the user names, a location in the repository's instructions, or `SPEC.md` at the repository root. Read the root and every area file the requested scope touches.
 2. Act on the spec's state:
 
    | State                                       | Action               |
@@ -32,7 +34,7 @@ List the requirement IDs in scope, the ones already satisfied, and the ones out 
 
 ## 4. Settle the approach
 
-Choose files, internal types, algorithms, libraries, and slice boundaries within the spec's permitted choices. Settle the interfaces between slices, module boundaries, and persisted formats the spec leaves open before dividing the work, and drop any mechanism that no requirement forces. Resolve each open question by its kind:
+Choose files, internal types, algorithms, libraries, and slice boundaries within the spec's permitted choices. Settle the interfaces between slices, module boundaries, and persisted formats the spec leaves open before dividing the work. Select mechanisms that serve the requirements; justify additional complexity when a simpler approach cannot meet them. Resolve each open question by its kind:
 
 | Question                                                                                                                | Resolution                                                                                                                                            |
 | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |

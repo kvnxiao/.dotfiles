@@ -11,7 +11,7 @@ A plan set turns an approved spec into work that implementer sessions execute on
   .state/<slice>.yaml    agent-only progress for that child plan
 ```
 
-Name the directory with a kebab-case slug of the spec's subject. Do not create, edit, or recommend a `.gitignore` entry for `.plans/`; whether plans are tracked is the user's choice. Keep each plan file under 40 KB, write each paragraph and list item on one line, and leave out a step or section that has nothing to say.
+Name the directory with a kebab-case slug of the spec's subject. Keep new plan sets private by default under [documentation boundaries](../../write-spec/references/document-boundaries.md). Ensure their path is covered by a repository `.gitignore` unless the user explicitly chooses public plans; do not change global or `.git/` ignore settings. Report existing tracked plans instead of untracking them. Keep each plan file under 40 KB, write each paragraph and list item on one line, and leave out a step or section that has nothing to say.
 
 ## Root plan
 
@@ -29,10 +29,10 @@ Record `spec-baseline` only after reconciling the plan with the approved spec. T
 The root plan has these sections:
 
 - **Outcome and scope:** the observable result when every plan is done, the requirement IDs in scope, and the reason for each `out-of-scope` requirement.
-- **Shared decisions:** what every child plan builds on, fixed before any of them runs: interfaces between slices, module boundaries, and persisted formats the spec leaves open. Give each mechanism the requirement that forces it and the simpler mechanism that fails that requirement. Write a multi-step lifecycle as a state table.
+- **Shared decisions:** what every child plan builds on, fixed before any of them runs: interfaces between slices, module boundaries, and persisted formats the spec leaves open. Cite the requirements each shared mechanism serves. When introducing additional complexity, explain why a simpler approach is insufficient; do not invent rejected alternatives for routine permitted choices. Write a multi-step lifecycle as a state table.
 - **Coverage:** a `Requirement | Owner | Contributors` table. Exactly one plan owns each requirement's full check; contributors implement parts of it. Leave invariants out: every task reads them, and review checks them.
 - **Plans:** a `Plan | Outcome | Blocked by | Parallel-safe` table in execution order, with each plan linked. `check_spec.py --status` picks the next task or pending plan review in this order. Dependencies remain blocked until the prerequisite's tasks and review are done.
-- **Definition of done:** the checks every plan meets, stated once: formatter, linter, tests, and `review-changes`. Assign requirement-specific integration, performance, and deployment checks to their owning tasks or the relevant completion criteria. Record their required outcomes before execution; passing them is a completion condition, not a prerequisite for approving the spec or plan.
+- **Definition of done:** the checks every plan meets, stated once: formatter, linter, tests, and `review-changes`. Assign requirement-specific integration, performance, and deployment checks to their owning tasks or the relevant completion criteria. Record their required outcomes before execution; passing them is a completion condition, not a prerequisite for approving the spec or plan. Update documentation only where the changed reader-facing information belongs; do not require a README edit or public record of test results for every plan.
 
 ## Child plan
 
@@ -101,7 +101,7 @@ A task is `todo`, `in-progress`, `blocked`, or `done`. `review` is `pending` or 
 
 `plan-from-spec` creates state files, adds new tasks as `todo`, removes deleted task entries, and resets review to `pending` for affected plans. `implement-spec-plan` records task execution, review completion, and `discovered`. Before changing a plan's implementation, reset its review to `pending`. Record `review: done` only after the plan's Definition of done and final review pass.
 
-Record in `discovered` only what a later task needs to know, including an investigation's answer. A discovery that changes behavior goes to the spec, and one that changes the plan goes to the plan.
+Keep `discovered` as current knowledge a later task needs, including applicable technical dead ends. Update or consolidate overlapping discoveries instead of appending conflicting instructions. Keep any useful execution history separately in the private plan; handoffs link to authoritative state instead of copying it. A finding that changes the intended contract requires a spec decision; an implementation change within that contract updates the plan.
 
 ## Amending a plan set
 

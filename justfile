@@ -77,8 +77,8 @@ check:
     just test-agent-skills
 
 test-agent-skills:
-    uv run --no-project --python 3.14 python -B -m unittest discover -s agent-configs/shared/skills/write-spec/scripts -p 'test_*.py'
-    uv run --no-project --python 3.14 python -B -m unittest discover -s agent-configs/shared/skills/optimize-agents/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.14 -m unittest discover -s agent-configs/shared/skills/write-spec/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.14 -m unittest discover -s agent-configs/shared/skills/optimize-agents/scripts -p 'test_*.py'
 
 # Full setup: deploy + platform-specific setup
 [windows]

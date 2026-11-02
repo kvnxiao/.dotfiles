@@ -39,7 +39,7 @@ Shared behavioral defaults for agents.
 Code alone determines what runs; comments and docstrings that restate code become misleading noise.
 
 - **Comments and docstrings target zero:** Default to silence. Write one only for facts code cannot express: hazards, ABI/OS quirks, race/lock constraints, compatibility requirements, why the obvious alternative fails, or invariants the signature cannot convey. On public items, write only the docstring the linter requires (a summary line plus bulleted invariants and errors); omit docstrings on private helpers. Delete anything a reader would infer unaided; rename or extract rather than annotating.
-- **No provenance or grievance:** State current constraints directly. Never explain history, tickets, outages, PRs, or why an external dependency is deficient.
+- **No provenance or grievance:** State current constraints directly; omit development chronology and complaints about dependencies. Preserve necessary migration context and the versions and conditions of retained evidence in their owning documents. Record evaluated alternatives that affect requirements or feasibility in public decision records; keep execution history in private plans.
 
 ## Format Each Artifact Type
 

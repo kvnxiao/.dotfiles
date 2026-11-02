@@ -66,7 +66,7 @@ agents. Each definition sets the model and permissions and points at a contract 
 | Claude Code | [spec-researcher.md](claude-code/agents/spec-researcher.md) | [implementer.md](claude-code/agents/implementer.md) |
 | Antigravity | [spec-researcher.md](agy/agents/spec-researcher.md)         | [implementer.md](agy/agents/implementer.md)         |
 
-The researcher writes one dated research document under the
+The researcher investigates one cohesive topic and its relevant questions under the
 [research contract](shared/skills/write-spec/references/research.md). The implementer edits code for
 the assigned tasks of one plan under the
 [implementer contract](shared/skills/implement-spec-plan/references/implementer.md). Both write

@@ -1,31 +1,30 @@
-# Research for a spec
+# Topic research
 
-Research records the evidence behind a spec's decisions as dated documents. It is informative: it never adds requirements, and it is not edited to follow later spec changes. A `spec-researcher` agent follows this file for one assigned question; the coordinating session follows it when it researches in-session.
+Research a user-directed topic to support understanding or a decision. Follow [documentation boundaries](document-boundaries.md). Research is informative and does not add requirements; a recommendation is optional when the objective is exploration.
 
 ## Assignment and boundaries
 
-The assignment names one question, the decision it informs, today's date, and either an authorized output path or conversation-only output. Include any active brainstorm state and follow [Brainstorming boundary and conclusion](../../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). During active brainstorming, use conversation-only output and temporary probes; defer durable documents even when an output path was assigned.
+The assignment names the topic, objective, relevant questions, requested depth, today's date, and either an authorized output path or conversation-only output. Clarification belongs to the coordinator when the user's interests admit materially different scopes. Reuse an existing topic document where appropriate; an assignment does not require a new file.
 
-For conversation-only output, return the evidence, sources, findings, and limitations to the coordinator without saving a report or updating an index. The Document instructions below apply only to authorized durable output when no brainstorm is active.
+Include any active brainstorm state and follow [Brainstorming boundary and conclusion](../../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). During active brainstorming, return findings and sources without saving reports or updating indexes. Defer durable documents even when an output path was assigned.
 
-- For authorized durable output, write only the assigned document. Do not edit the spec, other research, or code.
-- Do not ask the user, start agents, or run workflow skills such as `review-changes`. Return unresolved points to the coordinator.
-- Run bounded probes, such as installing a package or calling an API, only in a temporary directory outside the repository.
+- For authorized durable output, write only the assigned document. Return any needed index, related-document, or public-decision updates to the coordinator.
+- Do not ask the user, start agents, or run workflow skills such as `review-changes`.
+- Run bounded probes only within the authorized scope, in temporary directories outside the repository. Report changes to active settings or external systems that need further authorization instead of assuming an investigation permits them.
 
-## Research
+## Evidence
 
-- Gather the evidence fresh from primary sources: official documentation, source code, standards, and papers. Never write from memory.
-- Pin each source to a version, tag, commit, or retrieval date.
-- Distinguish a shipped feature from an example or proposal, and source inspection from runtime verification.
-- State a paper's publication status and evaluation limits: `Preprint; evaluated on Python repositories only.`
-- Treat download counts and stars as adoption signals dated to their retrieval, not as evidence of quality.
-- Apply [Approval readiness](spec-format.md#approval-readiness): name the design decision an uncertain fact could change, and stop requiring more evidence once that decision has enough support. Optional prototypes and validation can continue within the authorized scope; keep their findings and implementation details here or in supporting probes. Do not require a complete feature prototype by default.
+- Gather evidence from primary sources: official documentation, source code, standards, and papers. Do not substitute memory for investigation.
+- Pin sources to a version, tag, commit, or retrieval date. Distinguish shipped behavior from examples and proposals, and source inspection from runtime verification.
+- State a paper's publication status and evaluation limits. Treat popularity measures as dated adoption signals, not evidence of quality.
+- Retain findings, including negative results, when they serve the research objective, distinguish options, affect confidence, or establish meaningful limitations. Do not collect incidental measurements merely because a probe exposes them.
+- Match depth to the user's objective. For a bounded feasibility question, stop requiring evidence once the decision is sufficiently supported; a requested deep dive can explore further relevant questions without becoming an approval gate.
 
 ## Document
 
-Save the document at the assigned path. It stands alone: a reader understands it without the spec, the session, or other research. Synthesize the evidence; never substitute a link list or raw tool output. Write each paragraph on one line.
+Lead with a synthesis answering the questions and the important applicability limits. Introduce enough context to understand it without the session. Put deeper explanations, relevant findings, methods, and sources after the synthesis; do not substitute raw output or a link list. Write each paragraph on one line.
 
-Start with frontmatter:
+Use this frontmatter, retaining the actual conditions of observations:
 
 ```yaml
 ---
@@ -37,25 +36,19 @@ recheck-when: A store releases a major version or changes its transaction semant
 ---
 ```
 
-Choose headings that fit the topic. The body has:
+Choose headings for the topic. Include:
 
-1. A one-paragraph verdict that answers the questions.
-2. Why the research started: the decision it informs.
-3. Findings. Mark a claim, table cell, or section `**Observed in <version or conditions>:**` when you:
-   - inspected source or documentation at that version.
-   - ran a bounded probe.
-   - measured an outcome under stated conditions.
+- Scope and current applicability, followed by findings that answer the questions.
+- Evidence labels such as `**Observed in <version or conditions>:**` for inspected documentation or source, bounded probes, and measurements. Distinguish inference and external claims.
+- Methods and reproduction conditions needed to assess retained evidence.
+- Alternatives and a recommendation when the objective calls for a choice; use a table when comparing three or more.
+- Uncertainty and limitations, including what evidence would settle a material unknown.
+- Sources.
 
-   Leave reasoning and others' claims unmarked.
-4. The alternatives compared, as a table when there are three or more, with the criteria that separate them.
-5. A recommendation for the decision.
-6. Gaps: separate uncertainty that could change the design decision from implementation and release checks. State what would settle each material uncertainty; an unrun acceptance test alone does not block spec approval.
-7. Sources.
+Keep assigned work, pending acceptance checklists, routine validation commands and results, and project-direction history out of research. Explain an untested boundary when it limits a finding; let plans assign and track the work. Return qualifying requirement-level conclusions to the coordinator for the public decision record.
 
-Do not record provenance about the session, such as who asked or which tools ran.
-
-When the assignment rechecks an existing document, rewrite it in place with the new date and versions.
+On a recheck, update the synthesis, applicability, and frontmatter to reflect the evidence actually refreshed. Preserve dates and conditions for retained older observations; do not relabel them as tested on the new version. Remove obsolete advice and irrelevant material without adding a historical correction section.
 
 ## Return
 
-Return at most 300 words: the verdict, the findings that change the decision's options, the gaps, and the document path if saved. For conversation-only output, include source references needed to assess the evidence.
+Return at most 300 words: the synthesis, consequential findings, limitations, and the saved path if any. For conversation-only output, include sources needed to assess the evidence. The summary limit does not constrain an authorized deep-dive document.

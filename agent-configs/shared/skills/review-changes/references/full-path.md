@@ -30,7 +30,7 @@ Correctness takes precedence over cleanup. Inspect fixes in-session with affecte
 
 ## Documentation and prose
 
-Use `update-docs` with the selected mode to assess documented public behavior and internal design. Search the relevant documentation corpus; report the assessment even when no update is needed. Skip this assessment only for cleanup-only work that preserves documented behavior and design, and state that reason.
+Use `update-docs` with the selected mode to assess affected documentation according to its authority. Apply [documentation boundaries](../../write-spec/references/document-boundaries.md) during existing inspection; flag concrete violations without adding a separate relevance audit, reviewer, or mandatory organization report. Skip this assessment only for cleanup-only work that preserves documented behavior and design, and state that reason.
 
 Use `audit-prose` with the selected mode on added or modified prose and requested prose-cleanup targets; for a reader-facing deliverable, as `audit-prose` defines it, `audit-prose` widens that scope under its own rules. A cleanup request does not skip this step when prose is in scope. In snapshot reviews, audit the selected prose. Skip only when no prose is in scope. Finish documentation before auditing prose; preserve meaning. After a prose correction to a prompt or instruction, recheck that it still directs the same behavior.
 

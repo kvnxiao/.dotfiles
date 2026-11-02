@@ -7,6 +7,8 @@ description: Write, amend, or reconcile a technical specification (SPEC.md and a
 
 Before writing or delegating work, restore any brainstorm state from the conversation or continuation summary and follow [Brainstorming boundary and conclusion](../brainstorm/SKILL.md#brainstorming-boundary-and-conclusion). This rule also applies if brainstorming starts during this workflow.
 
+Apply [documentation boundaries](references/document-boundaries.md) when writing the spec or supporting documents. Consult [public decisions](references/decisions.md) when selecting a direction; record qualifying settled conclusions within the authorized scope.
+
 This skill produces an approved spec: `SPEC.md`, area files when the spec outgrows one file, and the research behind its decisions. Approval does not authorize planning or implementation; `plan-from-spec` plans an approved spec.
 
 ## 1. Establish the baseline
@@ -21,7 +23,7 @@ This skill produces an approved spec: `SPEC.md`, area files when the spec outgro
    | Amend     | The request changes specified behavior.                      |
    | Reconcile | Code changed before its spec, or code exists without a spec. |
 
-4. For Amend and Reconcile, when the spec files are committed in Git, note the current commit (`git rev-parse HEAD`) in the session as the amendment base for section 5's review. Read the root spec, the affected area files, Explored alternatives, and the source and tests the request touches. In Reconcile mode, section 3 classifies each behavior. In Amend mode, map the request to the affected requirement IDs and classify it:
+4. For Amend and Reconcile, when the spec files are committed in Git, note the current commit (`git rev-parse HEAD`) in the session as the amendment base for section 5's review. Read the root spec, the affected area files and the source and tests the request touches. In Reconcile mode, section 3 classifies each behavior. In Amend mode, map the request to the affected requirement IDs and classify it:
 
    | Finding                                                                                 | Action                                                        |
    | --------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -32,16 +34,16 @@ This skill produces an approved spec: `SPEC.md`, area files when the spec outgro
 
 ## 2. Research the facts
 
-Research when a decision depends on facts the session lacks, such as external APIs, versions, comparable products, or published evidence. A small or settled spec does not require new research. Optional prototyping and validation can still strengthen confidence under [Approval readiness](references/spec-format.md#approval-readiness). Finish research before the decision rounds, so the user is asked for preferences, not facts.
+Research when the user requests a topic investigation or a decision depends on facts the session lacks, such as external APIs, versions, comparable products, or published evidence. A small or settled spec does not require new research. Optional prototyping and validation can still strengthen confidence under [Approval readiness](references/spec-format.md#approval-readiness). Finish research before the decision rounds, so the user is asked for preferences, not facts.
 
 During active brainstorming, use conversation-only research assignments under [research.md](references/research.md), with the brainstorm state and temporary-probe restrictions. Return findings to the conversation; defer research documents and index updates until conclusion and authorization to save them. A request to write a spec includes its supporting research; an investigation request alone does not.
 
 Outside active brainstorming, when durable research is authorized:
 
-1. Split the facts into independent questions, one per research document.
-2. If the host has no `spec-researcher` agent, research each question in-session under [research.md](references/research.md). Otherwise, start one `spec-researcher` per question, at most three at a time, and queue the rest. Give each the question, the decision it informs, its output path, and today's date.
-3. Read each returned summary. Open a research document only where a decision needs its detail.
-4. Add each new document to the research directory's `README.md`, a `Document | Question it answers` table. When a new document replaces an old one, delete the old one and its row in the same change.
+1. Scope cohesive topics from the user's interests, objective, and requested depth. Clarify materially different interpretations; do not require an interview when the request is clear. Group related questions and reuse existing topic documents.
+2. If the host has no `spec-researcher` agent, research in-session under [research.md](references/research.md). Otherwise, assign one researcher per independent topic, at most three at a time. Give each the objective, relevant questions, requested depth, output path, and today's date. Do not assign concurrent writers to the same document.
+3. Read each returned synthesis; open detail only where the research objective or a decision needs it.
+4. Keep the research directory's `README.md` as a concise topic index. When consolidating or replacing documents, preserve relevant evidence and repair affected links in the same change; do not create a historical correction index.
 
 If online research is unavailable, report the gap and defer the decisions that need the missing evidence.
 
@@ -74,8 +76,8 @@ Use `brainstorm` for every decision round, including proposed mints and retireme
    ```
 
    If the script cannot run, print its stderr and stop. Otherwise, fix every error.
-4. Run `review-changes mode=apply` on the spec, its area files, and the research directory, as the diff from the amendment base to the working contents, including untracked files in those paths. When no amendment base was noted, review the spec, its area files, and the research documents this run wrote or changed as a snapshot instead. Bring each finding that needs a decision back to the user through `brainstorm`.
-5. Present the spec for approval once the readiness criteria are met. Keep pending implementation and release verification explicit without treating it as an unresolved product decision. When the user approves the complete spec, set `status: approved`. After an amendment, report which existing plan sets need reconciliation through `plan-from-spec`; do not refresh their recorded spec fingerprints or completed task states here.
+4. Run `review-changes mode=apply` on the spec, its area files, affected research, and affected public decisions, as the diff from the amendment base to the working contents, including untracked files in those paths. When no amendment base was noted, review the spec, its area files, and the research and decision documents this run wrote or changed as a snapshot instead. Bring each finding that needs a decision back to the user through `brainstorm`.
+5. Present the spec for approval once the readiness criteria are met. Keep pending implementation and release verification in plans or the conversation until planning is authorized, without treating it as an unresolved product decision. When the user approves the complete spec, set `status: approved`. After an amendment, report which existing plan sets need reconciliation through `plan-from-spec`; do not refresh their recorded spec fingerprints or completed task states here.
 
 ## Return
 

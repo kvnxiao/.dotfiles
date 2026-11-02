@@ -1,6 +1,6 @@
 ---
 name: spec-researcher
-description: Research one assigned question for a spec and write a dated, standalone research document at the assigned path.
+description: Research one assigned topic and its relevant questions; return findings or write the authorized research document.
 model: inherit
 subagent: true
 ---
