@@ -58,6 +58,12 @@ Where the ecosystem requires a form, follow it instead of this table:
 
 Order a multi-line docstring as: (1) what it does, (2) inputs, preconditions, and invariants, (3) bulleted failure paths and side effects.
 
+## Pull requests
+
+When a session's work in one repository is too large for a single PR, prefer a stack for the same feature or closely related changes. Prefer stacking related pieces even when they could merge independently. Keep unrelated work in separate PRs.
+
+Target the first PR at the repository's integration branch. Base each later branch on the preceding PR's branch and target that branch. Where the repository's merge policy permits, prefer integrating the complete stack in a single update to the integration branch, preserving its constituent commits.
+
 ## Reviewing changes
 
 When you finish an implementation or before you commit or open a PR, run `review-changes mode=apply` once on the accumulated change set to apply review fixes. Route requests to review, verify, or clean up changes through `review-changes`. It reviews trivial edits in-session and sends other changes to an independent reviewer, adding specialists only when a change needs them.
