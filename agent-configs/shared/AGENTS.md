@@ -64,6 +64,8 @@ When a session's work in one repository is too large for a single PR, prefer a s
 
 Target the first PR at the repository's integration branch. Base each later branch on the preceding PR's branch and target that branch. Where the repository's merge policy permits, prefer integrating the complete stack in a single update to the integration branch, preserving its constituent commits.
 
+On GitHub, link a stack's PRs with `gh stack link <bottom PR> <next PR> ... <top PR>`, using PR numbers, as soon as all of them are open. Present a ready stack as one merge of the whole stack, `gh stack merge <top PR>` with the repository's merge method flag such as `--squash`, not as a per-PR merge order or one release per PR.
+
 ## Reviewing changes
 
 When you finish an implementation or before you commit or open a PR, run `review-changes mode=apply` once on the accumulated change set to apply review fixes. Route requests to review, verify, or clean up changes through `review-changes`. It reviews trivial edits in-session and sends other changes to an independent reviewer, adding specialists only when a change needs them.
