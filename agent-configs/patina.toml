@@ -293,6 +293,34 @@ remote = "diagram-design"
 source = "commands"
 target = "~/.claude/commands/diagram-design"
 
+# learn-system-design
+[[directory]]
+source = "shared/skills/learn-system-design"
+target = "~/.claude/skills/learn-system-design"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/learn-system-design"
+target = "~/.agents/skills/learn-system-design"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/learn-system-design"
+target = "~/.gemini/config/skills/learn-system-design"
+mode = "symlink"
+
+# learn-coding-dsa
+[[directory]]
+source = "shared/skills/learn-coding-dsa"
+target = "~/.claude/skills/learn-coding-dsa"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/learn-coding-dsa"
+target = "~/.agents/skills/learn-coding-dsa"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/learn-coding-dsa"
+target = "~/.gemini/config/skills/learn-coding-dsa"
+mode = "symlink"
+
 # write-readme
 [[directory]]
 source = "shared/skills/write-readme"
@@ -305,6 +333,20 @@ mode = "symlink"
 [[directory]]
 source = "shared/skills/write-readme"
 target = "~/.gemini/config/skills/write-readme"
+mode = "symlink"
+
+# tutor-system-design
+[[directory]]
+source = "shared/skills/tutor-system-design"
+target = "~/.claude/skills/tutor-system-design"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/tutor-system-design"
+target = "~/.agents/skills/tutor-system-design"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/tutor-system-design"
+target = "~/.gemini/config/skills/tutor-system-design"
 mode = "symlink"
 
 # summarize-codebase

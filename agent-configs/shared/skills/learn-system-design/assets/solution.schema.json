@@ -1,0 +1,661 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "format_version": {
+      "const": 2
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "subtitle": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "mark": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "minItems": 0
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "minItems": 0
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/requirement"
+      },
+      "minItems": 1
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      },
+      "minItems": 0
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/interface"
+      },
+      "minItems": 0
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/step"
+      },
+      "minItems": 2
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "format_version",
+    "title",
+    "subtitle",
+    "mark",
+    "scope",
+    "assumptions",
+    "exclusions",
+    "requirements",
+    "entities",
+    "interfaces",
+    "steps",
+    "sources"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "kind": {
+          "enum": [
+            "functional",
+            "nonfunctional"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "basis": {
+          "enum": [
+            "given",
+            "assumed"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "text",
+        "basis"
+      ]
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "contract": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "uniqueItems": true
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "contract",
+        "requirements",
+        "entities"
+      ]
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "\\S"
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "role": {
+          "enum": [
+            "client",
+            "gateway",
+            "service",
+            "worker",
+            "queue",
+            "store",
+            "cache",
+            "counter",
+            "decision",
+            "external"
+          ]
+        },
+        "shape": {
+          "enum": [
+            "rectangle",
+            "ellipse",
+            "diamond"
+          ]
+        },
+        "bullets": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "\\S"
+          }
+        },
+        "annotation": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 27,
+            "pattern": "\\S"
+          }
+        },
+        "replicated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "column",
+        "row"
+      ]
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "to": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 28
+        },
+        "kind": {
+          "enum": [
+            "sync",
+            "async"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "forward",
+            "both"
+          ]
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "label",
+        "kind"
+      ]
+    },
+    "diagram": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "flow"
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "pattern": "\\S"
+              },
+              "minItems": 2,
+              "maxItems": 4
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "type",
+            "labels",
+            "description"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "graph"
+            },
+            "family": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$"
+            },
+            "nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/node"
+              },
+              "minItems": 1,
+              "maxItems": 9
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/edge"
+              },
+              "maxItems": 12
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "architecture": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "deployment": {
+                  "enum": [
+                    "monolith",
+                    "microservices",
+                    "pipeline"
+                  ]
+                },
+                "entry": {
+                  "enum": [
+                    "external-api",
+                    "persistent",
+                    "internal",
+                    "queue"
+                  ]
+                },
+                "rationale": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "replicated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "deployment",
+                "entry",
+                "rationale",
+                "replicated"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "family",
+            "nodes",
+            "edges",
+            "description"
+          ]
+        }
+      ]
+    },
+    "deepDive": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limitation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "change": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "alternative": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "tradeoff": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "failure": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "diagram_update": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "limitation",
+        "change",
+        "alternative",
+        "tradeoff",
+        "failure",
+        "diagram_update"
+      ]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "phase": {
+          "enum": [
+            "requirements",
+            "entities",
+            "interfaces",
+            "baseline",
+            "deep-dive",
+            "summary"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "lead": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "covers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "uniqueItems": true
+        },
+        "diagram": {
+          "$ref": "#/$defs/diagram"
+        },
+        "deep_dive": {
+          "$ref": "#/$defs/deepDive"
+        },
+        "reveal": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "section": {
+                  "enum": [
+                    "functional",
+                    "nonfunctional",
+                    "entities",
+                    "interfaces"
+                  ]
+                },
+                "ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "section",
+                "ids"
+              ]
+            }
+          ]
+        },
+        "note_target": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "entity_update": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 12,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^(?=.*\\S)[^\\r\\n]+$"
+              }
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "id",
+            "fields",
+            "reason"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "phase",
+        "title",
+        "lead",
+        "body",
+        "notes",
+        "covers",
+        "reveal"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "phase": {
+                "const": "deep-dive"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "deep_dive"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "deep_dive"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://[^\\s]+$"
+        },
+        "retrieved": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "title",
+        "url",
+        "retrieved",
+        "note"
+      ]
+    }
+  }
+}

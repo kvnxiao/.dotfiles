@@ -79,6 +79,8 @@ check:
 test-agent-skills:
     uv run --no-project --managed-python --python 3.15 -m unittest discover -s agent-configs/shared/skills/write-spec/scripts -p 'test_*.py'
     uv run --no-project --managed-python --python 3.15 -m unittest discover -s agent-configs/shared/skills/optimize-agents/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.15 -m unittest discover -s agent-configs/shared/skills/learn-coding-dsa/scripts -p 'test_*.py'
+    uv run --no-project --managed-python --python 3.15 --with markdown-it-py==4.0.0 --with jsonschema==4.23.0 -m unittest discover -s agent-configs/shared/skills/learn-system-design/scripts -p 'test_*.py'
 
 # Full setup: deploy + platform-specific setup
 [windows]

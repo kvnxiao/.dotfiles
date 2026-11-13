@@ -1,0 +1,33 @@
+_failures: list[str] = []
+_ran_sets: set[int] = set()
+_ran_cases = 0
+
+
+def _run_set(candidate: Candidate, number: int) -> None:
+    global _ran_cases
+
+    _ran_sets.add(number)
+    for name, case in list(globals().items()):
+        if not name.startswith(f"test_set_{number}_"):
+            continue
+        _ran_cases += 1
+        try:
+            case(candidate)
+        except Exception as error:  # noqa: BLE001 - Report each failure and continue.
+            _failures.append(name)
+            print(f"FAIL {name} {type(error).__name__} {error}")
+        else:
+            print(f"PASS {name}")
+
+
+def finish_tests(candidate: Candidate) -> int:
+    import sys
+
+    if "--all" in sys.argv:
+        for name in list(globals()):
+            if name.startswith("test_set_"):
+                number = int(name.split("_")[2])
+                if number not in _ran_sets:
+                    _run_set(candidate, number)
+    print(f"SUMMARY {_ran_cases} {len(_failures)}")
+    return 1 if _failures else 0

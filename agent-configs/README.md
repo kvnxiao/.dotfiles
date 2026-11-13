@@ -80,8 +80,11 @@ those files change, planning must reconcile the affected obligations before impl
 resume. Completed tasks stay recorded, and new obligations get new tasks. Each child plan also
 records whether its final checks and review are complete; dependent plans remain blocked until then.
 
-Run `just test-agent-skills` for the checker and analyzer regression tests. `just check` includes
-these tests.
+Run `just test-agent-skills` for the spec checker, agent analyzer, coding practice checker, and
+system design renderer regression tests. `just check` includes these suites. Coding checker tests
+use subprocess test doubles for failure paths and run disposable practice packages with the bundled
+runner. Renderer tests use temporary bundles and require Node.js; they do not test browser
+interactions.
 
 ## Optimization reviews
 
@@ -112,3 +115,52 @@ detail changes. It checks claims against current evidence and uses `audit-prose`
 review. It groups related app features and supports audience-appropriate media placeholders when
 requested. Patina deploys it to the shared skill directories for Codex, Claude Code, and
 Antigravity.
+
+## Interactive system design tutoring
+
+Use [tutor-system-design](shared/skills/tutor-system-design/SKILL.md) to study a Markdown question
+or an existing `learn-system-design` package in conversation. Invoke `$tutor-system-design` in the
+question directory, or pass a question file or package path. Use the host's equivalent skill syntax
+where needed.
+
+The tutor asks about familiar technologies and offers explain-first or try-first practice. It
+develops a baseline with ASCII diagrams (or Mermaid when appropriate), and evolves the design
+through discussion. When you are ready, it asks one practice scenario at a time and gives specific
+feedback. You can ask for clarification, change the explanation depth, or pause quizzes. It does not
+write files unless requested.
+
+Patina deploys the skill to the Claude Code and Antigravity skill directories and to
+`~/.agents/skills/` for Codex and the pi coding agent.
+
+## Coding practice modes
+
+Use [learn-coding-dsa](shared/skills/learn-coding-dsa/SKILL.md) with a Markdown prompt or folder of
+prompts. Guided practice includes approach hints in the starter and follow-up answers in the README.
+Request independent practice to put hints and answers in separate files. Both modes include shared
+tests and a reference solution; contract assumptions remain visible in the starter.
+
+## Codebase summaries
+
+Use [summarize-codebase](shared/skills/summarize-codebase/SKILL.md) to get a high-level summary of
+how a repository works before writing focused prompts about one part of it. Without arguments, it
+summarizes the repository as it is. Text after the command adds instructions, such as an area to
+focus on, a task description to check against the code, or a request to run the tests.
+
+The skill writes a Markdown file of about 150 lines to the session's temporary directory, never to
+the repository. The file has the run and test commands, an annotated file tree, a table of core
+modules, a diagram of the main flow, and the `TODO` comments, stubs, and skipped tests it found. It
+does not run code unless asked.
+
+For repositories with more than 40 source files or 7,000 lines, the skill starts `codebase-scanner`
+subagents in parallel, one per group of about 7,000 lines. The scanners follow the
+[scanner contract](shared/skills/summarize-codebase/references/scanner.md) and run on fast models:
+
+| Client      | Definition                                                    | Model              |
+| ----------- | ------------------------------------------------------------- | ------------------ |
+| Claude Code | [codebase-scanner.md](claude-code/agents/codebase-scanner.md) | `claude-haiku-5-5` |
+| Codex       | [codebase-scanner.toml](codex/agents/codebase-scanner.toml)   | `gpt-6-luna`       |
+| Antigravity | [codebase-scanner.md](agy/agents/codebase-scanner.md)         | inherited          |
+
+The main session writes the overview sections and checks two cited definitions from each scanner
+report. Patina deploys the skill to the Claude Code and Antigravity skill directories and to
+`~/.agents/skills/` for Codex and the pi coding agent.
