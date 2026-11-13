@@ -306,3 +306,26 @@ mode = "symlink"
 source = "shared/skills/write-readme"
 target = "~/.gemini/config/skills/write-readme"
 mode = "symlink"
+
+# summarize-codebase
+[[directory]]
+source = "shared/skills/summarize-codebase"
+target = "~/.claude/skills/summarize-codebase"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/summarize-codebase"
+target = "~/.agents/skills/summarize-codebase"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/summarize-codebase"
+target = "~/.gemini/config/skills/summarize-codebase"
+mode = "symlink"
+[[file]]
+source = "claude-code/agents/codebase-scanner.md"
+target = "~/.claude/agents/codebase-scanner.md"
+[[file]]
+source = "codex/agents/codebase-scanner.toml"
+target = "~/.codex/agents/codebase-scanner.toml"
+[[file]]
+source = "agy/agents/codebase-scanner.md"
+target = "~/.gemini/config/agents/codebase-scanner.md"
