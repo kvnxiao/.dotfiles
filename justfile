@@ -29,16 +29,15 @@ check-zebar: _zebar-install
 _zebar-install:
     pnpm --dir zebar/topbar install --frozen-lockfile
 
-# Deploy dotfiles via patina (also patches scoop config)
+# Check MSYS2 nsswitch.conf, patch scoop config, then deploy dotfiles via patina
 [windows]
-deploy: _ensure-installed
+[script("pwsh", "-NoProfile", "-ExecutionPolicy", "Bypass")]
+deploy:
+    $ErrorActionPreference = 'Stop'
+    $PSNativeCommandUseErrorActionPreference = $true
+    & setup\ensure-installed.ps1
+    & setup\scoop-config.ps1
     patina apply
-    & pwsh -NoProfile -ExecutionPolicy Bypass -File setup\scoop-config.ps1
-
-# Windows pre-deploy environment check (MSYS2 nsswitch.conf)
-[windows]
-_ensure-installed:
-    & pwsh -NoProfile -ExecutionPolicy Bypass -File setup\ensure-installed.ps1
 
 # Set up ~/.zshenv with computed HOSTNAME, LANG, TZ, SHELL (MSYS2 only)
 [windows]
