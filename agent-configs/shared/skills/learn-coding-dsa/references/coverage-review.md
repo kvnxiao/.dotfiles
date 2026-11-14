@@ -1,6 +1,6 @@
 # Coverage review by problem type
 
-Select sections that match the prompt. Treat these as questions to investigate, not additional API requirements. Derive assertions from the prompt or a contract assumption stated in the starter. Keep expected results independent of the reference implementation.
+Select sections that match the prompt. Treat these as questions to investigate, not additional API requirements. Derive assertions from the prompt or a clarifying-question answer stated in the starter. Keep expected results independent of the reference implementation.
 
 ## Concurrency and traversal
 
