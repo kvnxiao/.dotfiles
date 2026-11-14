@@ -75,7 +75,7 @@
   "base_keymap": "JetBrains",
   "icon_theme": {
     "mode": "dark",
-    "light": "Catppuccin Latte",
+    "light": "VSCode Icons for Zed (Light)",
     "dark": "VSCode Icons for Zed (Dark)",
   },
   "theme": {
@@ -142,7 +142,17 @@
   },
   "languages": {
     "Python": {
-      "language_servers": ["ty", "!pyright", "!basedpyright"],
+      "tab_size": 4,
+      "language_servers": ["ty", "ruff", "!pyright", "!basedpyright"],
+      "format_on_save": "off",
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true,
+      },
+      "formatter": {
+        "language_server": {
+          "name": "ruff",
+        },
+      },
     },
   },
 }
