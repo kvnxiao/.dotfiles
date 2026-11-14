@@ -70,6 +70,8 @@ On GitHub, link a stack's PRs with `gh stack link <bottom PR> <next PR> ... <top
 
 When you finish an implementation or before you commit or open a PR, run `review-changes mode=apply` once on the accumulated change set to apply review fixes. Route requests to review, verify, or clean up changes through `review-changes`. It reviews trivial edits in-session and sends other changes to an independent reviewer, adding specialists only when a change needs them.
 
+Run `audit-prose mode=apply` on prose you write before you commit it, push it, or send it to an external service such as GitHub. Audit commit messages, PR titles and descriptions, review and issue comments, code comments, and docstrings in one in-session read without starting a `cold-prose-reader` subagent, and audit documents and instruction files with the skill's full method. For example, audit a PR description before `gh pr create` and a commit message before `git commit`.
+
 ## Tool routing
 
 Use the preferred tool when available. Use an entry under `Avoid` only as a fallback, when the current machine lacks the required tooling.

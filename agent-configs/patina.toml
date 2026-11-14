@@ -95,6 +95,15 @@ mode = "symlink"
 source = "shared/skills/audit-prose"
 target = "~/.gemini/config/skills/audit-prose"
 mode = "symlink"
+[[file]]
+source = "claude-code/agents/cold-prose-reader.md"
+target = "~/.claude/agents/cold-prose-reader.md"
+[[file]]
+source = "codex/agents/cold-prose-reader.toml"
+target = "~/.codex/agents/cold-prose-reader.toml"
+[[file]]
+source = "agy/agents/cold-prose-reader.md"
+target = "~/.gemini/config/agents/cold-prose-reader.md"
 
 # brainstorm
 [[directory]]

@@ -21,7 +21,7 @@ Launches without the local profile can write local state into the shared base fi
 
 ## Reviewer agents
 
-Both clients use the
+All three clients use the
 [shared reviewer contract](shared/skills/review-changes/references/review-execution.md). The client
 definitions set the model, effort, and available permissions:
 
@@ -31,9 +31,10 @@ definitions set the model, effort, and available permissions:
 | Claude Code | [reviewer.md](claude-code/agents/reviewer.md) | [reviewer-deep.md](claude-code/agents/reviewer-deep.md) |
 | Antigravity | [reviewer.md](agy/agents/reviewer.md)         | [reviewer-deep.md](agy/agents/reviewer-deep.md)         |
 
-Patina symlinks the definitions into each client's user-level `agents` directory. Both clients read
-the shared contract directly from `~/.agents/skills/review-changes/references/review-execution.md`.
-See [review-changes](shared/skills/review-changes/SKILL.md) for modes and scope, and the
+Patina symlinks the definitions into each client's user-level `agents` directory. All three clients
+read the shared contract directly from
+`~/.agents/skills/review-changes/references/review-execution.md`. See
+[review-changes](shared/skills/review-changes/SKILL.md) for modes and scope, and the
 [full workflow](shared/skills/review-changes/references/full-path.md) for delegation, effort, and
 acceptance rules.
 
@@ -53,6 +54,30 @@ session after changing the agent definitions so it discovers the updated profile
 Definition formats follow the official
 [Codex subagent documentation](https://developers.openai.com/codex/subagents) and
 [Claude Code subagent documentation](https://code.claude.com/docs/en/sub-agents).
+
+## Prose audit reader agent
+
+Before [audit-prose](shared/skills/audit-prose/SKILL.md) audits a document or instruction file that
+the current agent session wrote, it starts a `cold-prose-reader` subagent. The reader gets the file,
+the line ranges in scope, and the intended audience. It does not get the session history or
+explanations of terms. It reads the file and the local files the file links to, and returns a flag
+for each word, phrase, heading, and label whose meaning that text does not make clear. The session
+that started the reader decides which flags to fix. When the reader flags wording in a linked file,
+the session lists it for the user and does not edit that file.
+
+The reader follows the instructions in
+[cold-prose-reader.md](shared/skills/audit-prose/references/cold-prose-reader.md) and runs on fast
+models:
+
+| Client      | Definition                                                      | Model                                     |
+| ----------- | --------------------------------------------------------------- | ----------------------------------------- |
+| Claude Code | [cold-prose-reader.md](claude-code/agents/cold-prose-reader.md) | `claude-haiku-5-5`, high reasoning effort |
+| Codex       | [cold-prose-reader.toml](codex/agents/cold-prose-reader.toml)   | `gpt-6-luna`, high reasoning effort       |
+| Antigravity | [cold-prose-reader.md](agy/agents/cold-prose-reader.md)         | `flash` model tier, no effort setting     |
+
+Antigravity agent files accept a model tier (`inherit`, `flash`, or `pro`) in place of a model ID.
+Antigravity 1.5.9 does not load an agent file whose `model` is a model ID such as
+`gemini-4-hydrogen-high`, so the reader cannot be pinned to a specific Gemini model.
 
 ## Spec workflow agents
 
@@ -111,10 +136,10 @@ delegation is unavailable.
 The [write-readme](shared/skills/write-readme/SKILL.md) skill writes repository introductions for
 their primary audience. It adapts the reading order to applications, command-line tools, libraries,
 and collections, and moves detailed guidance into linked documents when the audience or level of
-detail changes. It checks claims against current evidence and uses `audit-prose` for a cold-reader
-review. It groups related app features and supports audience-appropriate media placeholders when
-requested. Patina deploys it to the shared skill directories for Codex, Claude Code, and
-Antigravity.
+detail changes. It checks claims against current evidence and uses `audit-prose` for a
+[cold-prose-reader pass](#prose-audit-reader-agent). It groups related app features and supports
+audience-appropriate media placeholders when requested. Patina deploys it to the shared skill
+directories for Codex, Claude Code, and Antigravity.
 
 ## Interactive system design tutoring
 

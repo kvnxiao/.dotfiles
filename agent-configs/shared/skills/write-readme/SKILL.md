@@ -94,6 +94,6 @@ Check the README as a whole after drafting or restructuring:
 - Has useful relocated material been preserved, with links that work from its new location?
 - Does the prose make sense without session history, repository shorthand, or explanations outside the document?
 
-Use the available `audit-prose` skill on the completed prose, passing the intended audience explicitly and reusing any existing cold-reader findings. Its independent reader receives only the artifact and audience. If that skill is unavailable, perform the checks above directly and report that an independent cold-reader pass did not run. Keep the README workflow usable without installing another skill.
+Use the available `audit-prose` skill on the completed prose, passing the intended audience explicitly and reusing any existing cold-prose-reader findings. Its `cold-prose-reader` subagent receives the artifact and the audience, and does not receive session history or explanations of terms. If that skill is unavailable, perform the checks above directly and report that the cold-prose-reader pass did not run. Keep the README workflow usable without installing another skill.
 
 Report the files changed, substantive relocations, validation results, and unresolved facts or missing assets. For a proposed README saved separately for comparison with the current README, identify its location and any steps needed before it can replace the repository README. Do not describe a draft as installed or published.

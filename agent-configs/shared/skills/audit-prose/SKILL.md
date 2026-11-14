@@ -1,6 +1,6 @@
 ---
 name: audit-prose
-description: Lightweight prose audit to remove AI tells, simplify diction into natural English, replace rhetorical phrasing with literal statements a cold reader understands, chunk dense multi-condition sentences into lists, and preserve semantic fidelity. Use for PR copy, commit messages, docs, comments, and instructions.
+description: Lightweight prose audit to remove AI tells, simplify diction into natural English, replace rhetorical phrasing with literal statements a reader without the session's context understands, chunk dense multi-condition sentences into lists, and preserve semantic fidelity. Use for PR copy, commit messages, docs, comments, and instructions.
 ---
 
 # Audit Prose
@@ -18,7 +18,7 @@ Apply the same lenses in both modes. In report mode, instructions below to delet
 
 > **Meaning takes precedence over style.** Treat wording and structure rules as defaults: preserve clear, accurate, idiomatic prose, and rewrite only when the change improves clarity, precision, or usefulness. Banned AI tells and semantic fidelity are firm: never alter verified behavior, invent facts, or drop technical caveats. Preserve deliberately non-conforming or bad prose in quoted examples, error messages, test fixtures, and anti-pattern documentation.
 
-After resolving scope and running any required cold-reader pass (both described below the lenses), apply these five review lenses in order:
+After resolving scope and running any required cold-prose-reader pass (both described below the lenses), apply these five review lenses in order:
 
 ## 1. Direct Diction & Simplicity
 
@@ -38,7 +38,7 @@ After resolving scope and running any required cold-reader pass (both described 
   - _Reject:_ `makes no modifications to the database`
   - _Apply:_ `does not modify the database`
 - **No Verbing Nouns Without a Verb Sense:** Reject a noun used as a verb when it has no established verb sense (`PR the fix`, `ticket the follow-up`, `mutex the map`); write the verb phrase instead. Words with an established verb sense stay (`cache`, `log`, `commit`, `transition`, `architect`, `impact`). If a reader would pause on the verb, use the verb phrase.
-- **No Inanimate Intent or Possession:** Code, files, records, and data structures have no feelings or intent. Reject verbs of intent or perception: `code wants`, `test decides`, `file prefers`, `build earns its keep`, and `the scheduler cannot see paused jobs`. Reject `holds`, `carries`, and `gains` as stand-ins for `has` when a file, record, message, or change possesses content (`the record holds five fields`, `this PR carries the fix`), and `lives in` as a stand-in for `is stored in`; use `has`, `stores`, `records`, `includes`, or `is stored in`. Established technical idioms stay where they fit: a variable holds a value, a thread holds a lock, an invariant holds, a function expects or accepts an argument, and a parser sees a token. Stative descriptions (`has no timeout`, `needs credentials`) are natural and standard.
+- **No Inanimate Intent or Possession:** Code, files, records, and data structures have no feelings, intent, or memory. Reject any verb that credits an inanimate entity with an action it does not perform, and name the actor and the mechanism instead. Reject verbs of intent or perception: `code wants`, `test decides`, `file prefers`, `build earns its keep`, and `the scheduler cannot see paused jobs`. Reject `keeps`, `retains`, and `remembers` when another component causes the state (`a deleted file keeps its name until its handles close`; write `Windows does not remove a deleted file's path until its last handle closes`), and ask the caller for the actor when the text does not name it. A component that decides what it retains can keep data (`the cache keeps the newest 100 entries`). Reject `holds`, `carries`, and `gains` as stand-ins for `has` when a file, record, message, or change possesses content (`the record holds five fields`, `this PR carries the fix`), and `lives in` as a stand-in for `is stored in`; use `has`, `stores`, `records`, `includes`, or `is stored in`. Established technical idioms stay where they fit: a variable holds a value, a thread holds a lock, an invariant holds, a function expects or accepts an argument, and a parser sees a token. Stative descriptions (`has no timeout`, `needs credentials`) are natural and standard.
 
 ## 2. Literal Over Rhetorical
 
@@ -100,27 +100,28 @@ Resolve scope before auditing:
 - With no named target, audit staged changes, unstaged changes, and untracked files (the union of `git diff HEAD` and untracked files reported by `git status --porcelain`). Audit and rewrite only the prose lines added or modified within that resolved scope.
 - For a reader-facing deliverable (a document, page, proposal, README, or PR description written for people to read as a whole, not agent instructions or code comments), audit the whole artifact each time this skill runs, even when the caller supplies a diff scope, unless the user explicitly limits the scope. Earlier passes may have missed violations in unchanged lines. For a diff of a spec amendment, audit each changed section whole instead: from the nearest heading above a changed or deleted line through the line before the next heading with the same or fewer `#` characters. A change before the first heading covers the lines up to that heading.
 
-For commit messages, PR drafts, and small snippets, keep the output to corrections or the rewritten artifact as the selected mode requires.
+Audit short prose in one in-session read: commit messages, PR and issue titles and descriptions, review and issue comments, code comments, and docstrings. Apply every lens and skip the cold-prose-reader pass. A PR description still gets the whole-artifact scope above. Keep the output to corrections or the rewritten artifact as the selected mode requires.
 
-## Run a cold-reader pass with a fresh subagent
+## Run a cold-prose-reader pass
 
-The writer knows its own shorthand, so it cannot judge what a reader without that context understands. Run a cold-reader pass before applying the lenses when both of these hold:
+The writer knows its own shorthand, so it cannot judge what a reader without that context understands. A cold-prose-reader pass gives the prose to a subagent that has only the text and asks it which wording it cannot understand. Run the pass before applying the lenses when both of these hold:
 
 - The prose is a reader-facing deliverable or an instruction file (a skill, prompt, agent definition, or repository instruction file).
 - The agent running this audit, or the agent that delegated it, wrote the prose, or authorship is unknown.
 
-Skip the pass for commit messages, code comments, docstrings, and other short snippets. When the delegating agent already ran the pass and supplied its flags, use those flags instead of spawning another reader.
+Skip the pass for the short prose listed under [Resolve scope and output](#resolve-scope-and-output), including PR descriptions of any length. When the delegating agent already ran the pass and supplied its flags and referenced-file suggestions, use them instead of starting another reader.
 
-1. Spawn a fresh subagent and give it only the text: the whole artifact that contains the scoped prose, and the intended audience when known. Give it no session history, other project files, or explanations of terms beyond what the artifact states.
-2. Ask it to quote every word, phrase, heading, and label whose meaning it cannot determine from the text alone, and to give its best guess at what each one means. Tell it not to judge style.
-3. Treat each flag inside the resolved scope as a Literal Over Rhetorical violation. Dismiss a flag only when the artifact defines the term, the term is common across software engineering, or the stated audience (by default, an engineer outside the project) already knows it. Never dismiss a flag because the session context explains it. Rewrite each violation in apply mode or report it in report mode.
+1. Start a `cold-prose-reader` subagent. Pass it the artifact's absolute file path (or the text inline when it is not in a file), the line ranges in scope, the intended audience when known, the repository root, and the absolute path of this skill's [references/cold-prose-reader.md](references/cold-prose-reader.md). Give it no session history and no explanations of terms beyond what the artifact states. If the harness has no `cold-prose-reader` agent, start a read-only subagent on the fastest available model with the same assignment, and tell it to read and follow the contract at that path.
+2. The reader follows its contract: it reads the whole artifact and the local files it references, and returns flags on the scoped lines and suggestions for the referenced files.
+3. Treat each flag in scope as a Literal Over Rhetorical violation. Dismiss a flag only when the artifact or a file it references defines the term, the term is common across software engineering, or the stated audience (by default, an engineer outside the project) already knows it. Never dismiss a flag because the session context explains it. Rewrite each violation in apply mode or report it in report mode.
+4. Apply the same dismissal rules to the suggestions for referenced files. Do not edit those files; list each remaining suggestion with its `path:line` for the user in both modes.
 
-If the harness cannot spawn a subagent or the user forbids subagents, state that the cold-reader pass did not run.
+If the harness cannot start a subagent or the user forbids subagents, state that the cold-prose-reader pass did not run.
 
 ## Operational Constraints
 
-- Rewrite a line only when you can name the rule it violates and what the rewrite improves; otherwise leave it unchanged. Literal Over Rhetorical is a nameable rule: a phrase that fails one of its tests, or a cold-reader flag that step 3 does not dismiss, violates it.
+- Rewrite a line only when you can name the rule it violates and what the rewrite improves; otherwise leave it unchanged. Literal Over Rhetorical is a nameable rule: a phrase that fails one of its tests, or a cold-prose-reader flag that step 3 does not dismiss, violates it.
 - Touch only prose lines (comments, docstrings, docs, markdown, commit messages).
 - Never modify code logic, string literals (except docstrings that a CLI prints as usage text), identifiers, or test assertions.
 - Do not enforce arbitrary line wrapping or column limits; let deterministic formatters handle layout.
-- Do not run formatters, linters, tests, or build commands. Do not spawn subagents other than the cold reader.
+- Do not run formatters, linters, tests, or build commands. Do not start subagents other than the cold prose reader.

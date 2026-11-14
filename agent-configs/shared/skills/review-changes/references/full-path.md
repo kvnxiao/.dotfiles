@@ -34,7 +34,7 @@ Use `update-docs` with the selected mode to assess affected documentation accord
 
 Use `audit-prose` with the selected mode on added or modified prose and requested prose-cleanup targets; for a reader-facing deliverable, as `audit-prose` defines it, `audit-prose` widens that scope under its own rules. A cleanup request does not skip this step when prose is in scope. In snapshot reviews, audit the selected prose. Skip only when no prose is in scope. Finish documentation before auditing prose; preserve meaning. After a prose correction to a prompt or instruction, recheck that it still directs the same behavior.
 
-The coordinator applies edits. If documentation or prose investigation is delegated, require `mode=report` and apply accepted corrections in-session. Before delegating a prose audit that needs a cold-reader pass, run that pass in-session and pass its flags to the delegate.
+The coordinator applies edits. If documentation or prose investigation is delegated, require `mode=report` and apply accepted corrections in-session. Before delegating a prose audit that needs the cold-prose-reader pass from `audit-prose`, start the `cold-prose-reader` subagent from the coordinating session and pass its flags and referenced-file suggestions to the delegate.
 
 ## Validate and finish
 
