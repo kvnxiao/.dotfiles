@@ -4,7 +4,7 @@ Select sections that match the prompt. Treat these as questions to investigate, 
 
 ## Concurrency and traversal
 
-Check whether unfinished work can discover more work after other workers finish. Exercise duplicate discovery, cycles, worker failures, and the smallest supported worker count. Use events or barriers with bounded waits to establish ordering; avoid sleeps and speed assertions. For URLs, distinguish parsed-host matching from substring matching and test only the required normalization.
+Check whether unfinished work can discover more work after other workers finish. Exercise duplicate discovery, cycles, worker failures, and the smallest supported worker count. Use events or barriers with bounded waits to establish ordering; avoid sleeps and speed assertions. For URLs, distinguish parsed-host matching from substring matching and test only the URL normalization the prompt requires.
 
 ## Stateful caches and persistence
 
@@ -12,16 +12,23 @@ Check capacity boundaries, access-order eviction, falsy values, repeated calls, 
 
 ## Files and transformation pipelines
 
-Check empty worksets, identical names in separate directories, binary contents, and differences beyond a read-chunk boundary. Distinguish equal size or prefix from equal contents. For pipelines, exercise operation order, parameter-sensitive branches, empty pipelines, nested destinations, and worker error propagation. Use discriminating pixel values rather than uniform images when testing spatial transformations. Respect the documented policy for unreadable files and symlinks; avoid fixtures requiring platform-specific privileges.
+Check no input files, identical names in separate directories, binary contents, and differences beyond a read-chunk boundary. Distinguish equal size or prefix from equal contents. For pipelines, exercise operation order, parameter-sensitive branches, empty pipelines, missing output subdirectories, and worker error propagation. Test spatial transformations with position-dependent pixels, not single-color images. Follow the prompt's rules for unreadable files and symlinks; avoid fixtures requiring platform-specific privileges.
 
 ## Numeric and distributed algorithms
 
-Check ties, allowed numeric limits, empty partitions, one worker, and unequal partition sizes. Construct examples where combining local answers gives the wrong global answer. Validate cost accounting against the stated communication model without prescribing an unstated algorithm.
+Check ties, allowed numeric limits, empty partitions, one worker, and unequal partition sizes. Construct examples where combining local answers gives the wrong global answer. Check reported communication cost against the prompt's cost model; do not require an unstated algorithm.
 
 ## Parsers, tokenizers, and instruction execution
 
-Check partial matches at the end, zero-valued identifiers, sentinel collisions, Unicode units, and progress when empty tokens exist. For execution, distinguish the last executed instruction from a repeated target. Check the specified behavior when the instruction pointer moves before the first instruction or past the last one. Reject malformed input only when its behavior is defined.
+Check partial matches at the end of input, zero-valued identifiers, sentinel collisions, non-ASCII text, and advancing past empty tokens. For execution, distinguish the last executed instruction from a revisited jump target. Check the specified behavior when the instruction pointer moves before the first instruction or past the last one. Reject malformed input only when its behavior is defined.
 
-## Stack histories and incremental confirmation
+## Call-stack samples and confirmation
 
-Check recursion by depth, preserved prefixes, replacement of an entire suffix, and live frames at end of input. Exercise confirmation thresholds of one and more than the available observations. When confirmation requires consecutive samples, check that a missing frame resets its count and unconfirmed frames do not emit closing events. Check equal or invalid timestamps only under the stated ordering contract.
+Check:
+
+- Recursion.
+- Samples that change only inner frames, and samples that change every frame.
+- Frames still open at end of input.
+- Confirmation thresholds (samples needed before a frame counts) of one and of more than the sample count.
+- With consecutive-sample confirmation: a gap resets the count, and unconfirmed frames do not emit end events.
+- Equal or invalid timestamps, only under the stated ordering contract.
