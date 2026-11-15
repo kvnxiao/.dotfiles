@@ -1,6 +1,6 @@
 # Spec format
 
-Define the intended end state for human review and implementation. Apply [documentation boundaries](document-boundaries.md); these format rules govern `SPEC.md` and its area files.
+Define the intended end state for human review and implementation. Apply [documentation boundaries](../../write-spec/references/document-boundaries.md); these format rules govern `SPEC.md` and its area files.
 
 ## Invariants
 
@@ -41,7 +41,7 @@ Present a spec for approval when:
 
 Require a preapproval investigation only for a concrete uncertainty whose answer could change required behavior, architecture, or an essential dependency. Identify the assumption and the design consequence before proposing more research. Use documentation, source inspection, or a bounded probe in proportion to that risk, and stop when the decision has enough support. Honor an explicitly requested prototype or approval condition.
 
-Allow optional prototyping and validation within the authorized scope to test claims, compare approaches, or strengthen confidence in the direction. These experiments can be useful before approval even when the design is already feasible. Do not turn optional validation into an approval prerequisite merely because it remains possible or incomplete. Record its evidence and limitations under [the research output boundary](research.md#assignment-and-boundaries), using conversation-only findings during active brainstorming.
+Allow optional prototyping and validation within the authorized scope to test claims, compare approaches, or strengthen confidence in the direction. These experiments can be useful before approval even when the design is already feasible. Do not turn optional validation into an approval prerequisite merely because it remains possible or incomplete. Record its evidence and limitations under [the research output boundary](../../write-spec/references/research.md#assignment-and-boundaries), using conversation-only findings during active brainstorming.
 
 Treat missing features, unrun integration tests, and ordinary implementation defects as implementation work. Do not require a complete feature prototype merely to approve its requirements. For example, a spec can require cancellation to restore the current target while the implementation plan assigns the cancellation code and tests.
 
@@ -125,7 +125,7 @@ Open the Conformance section with the clause, adapted to the spec:
 
 > A conforming implementation satisfies every requirement and invariant in this spec and its area files, the stated constraints and non-goals, the exact names and formats in external contracts, and the transitions in each state or flow diagram that lists every transition. Present-tense statements in these parts are mandatory. Uppercase SHOULD marks a recommendation an implementation may decline with a documented reason; uppercase MAY marks an allowed option. Text labeled Example or Note, background, requirements overviews linking authoritative blocks, supporting evidence, other diagrams, linked research, and public decisions are informative.
 
-State obligations in plain present tense: "The command exits with status 3", not "The command should exit with status 3". Use uppercase SHOULD or MAY only for a real exception or option, and state its condition. A lowercase "should" or "may" in a requirement block leaves its force unclear; the `review-changes` spec review judges each one.
+State obligations in plain present tense: "The command exits with status 3", not "The command should exit with status 3". Use uppercase SHOULD or MAY only for a real exception or option, and state its condition. A lowercase "should" or "may" in a requirement block leaves its force unclear; `review-spec` judges each one.
 
 ## Size and spec sets
 

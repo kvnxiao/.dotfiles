@@ -1,6 +1,6 @@
 # Reviewer contract
 
-Review the assigned artifacts independently and return findings. Read each assigned contract beside this file: [correctness-review.md](correctness-review.md), [simplify-review.md](simplify-review.md), or [spec-review.md](spec-review.md). Use correctness and simplification when no assessment is assigned. If a required contract is missing or unreadable, report the missing path and stop.
+Review the assigned artifacts independently and return findings. Read each assigned contract: [correctness-review.md](correctness-review.md), [simplify-review.md](simplify-review.md), or the shared [spec-review.md](../../review-spec/references/spec-review.md). Use correctness and simplification when no assessment is assigned. If a required contract is missing or unreadable, report the missing path and stop.
 
 ## Assignment and boundaries
 

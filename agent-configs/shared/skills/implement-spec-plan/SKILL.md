@@ -27,7 +27,7 @@ A request to implement authorizes edits within the plan's scope; commits, pushes
 3. Print the progress and the next task from the repository root, resolving the root plan's `spec` path relative to the root plan:
 
    ```sh
-   uv run "$HOME/.agents/skills/write-spec/scripts/check_spec.py" <path/to/SPEC.md> --plans .plans/<spec-slug> --status
+   uv run "$HOME/.agents/skills/review-spec/scripts/check_spec.py" <path/to/SPEC.md> --plans .plans/<spec-slug> --status
    ```
 
    If the script cannot run, print its stderr and stop. If it reports errors in the spec or its area files, including an unapproved spec, return `Needs spec`. If it reports errors only in the plan files, including a missing or mismatched `spec-baseline`, return `Needs plan`. Never update the baseline here to bypass reconciliation.

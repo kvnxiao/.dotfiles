@@ -2,7 +2,7 @@
 
 ## Assign review coverage
 
-Assign one reviewer both [correctness-review.md](correctness-review.md) and [simplify-review.md](simplify-review.md), or only simplification for a cleanup request. When the scope has only a spec, its area files, and its research, assign [spec-review.md](spec-review.md) alone; when it has them alongside other changes, also assign spec-review.md to that reviewer. When the scope includes a plan set under `.plans/`, pass `~/.agents/skills/plan-from-spec/references/plan-format.md` as a rule file. Add a specialist only for a distinct contract or repository rule requiring separate investigation; name that concern and the reviewer assigned to it. Run independent assignments in parallel when available.
+Assign one reviewer both [correctness-review.md](correctness-review.md) and [simplify-review.md](simplify-review.md), or only simplification for a cleanup request. When the scope has only a spec, its area files, and supporting research or public decisions, assign the shared [spec-review.md](../../review-spec/references/spec-review.md) alone. When it has them alongside other changes, also assign that contract to the reviewer. Read the assessment contract directly; do not invoke the `review-spec` coordinator workflow again. When the scope includes a plan set under `.plans/`, pass `~/.agents/skills/plan-from-spec/references/plan-format.md` as a rule file. Add a specialist only for a distinct contract or repository rule requiring separate investigation; name that concern and the reviewer assigned to it. Run independent assignments in parallel when available.
 
 Pass the resolved assignment from [SKILL.md](../SKILL.md#resolve-the-assignment), the selected profile, and the assigned contract paths. Include intended behavior and known uncertainties without copying the conversation or presenting the author's conclusions as evidence. Require inspection of the actual artifacts.
 
@@ -39,6 +39,8 @@ The coordinator applies edits. If documentation or prose investigation is delega
 ## Validate and finish
 
 Run relevant formatting, linting, type-checking, and tests after the final edits. Follow the mode's side-effect boundary in [SKILL.md](../SKILL.md). Reuse passed checks only while their inputs remain unchanged. For suggestion-only cleanup, run a check only when needed to establish a proposal.
+
+When the scope includes a spec set, the coordinator runs `uv run "$HOME/.agents/skills/review-spec/scripts/check_spec.py" <path/to/SPEC.md>`, passing `--research <dir>` when research lives outside `docs/research/`. Reuse current results supplied by `review-spec`; rerun after changes to checker inputs. Report an unavailable checker as incomplete validation, and handle reported errors under the selected mode.
 
 For a failure, establish its cause before changing code. Classify it as pre-existing only when a baseline run or other evidence establishes that; a failure on a line the change did not touch does not prove the failure is pre-existing. Fix in-scope causes in apply mode and rerun affected checks. Do not repeat an unchanged failing command without new evidence. After two attempts with no new evidence or progress, stop that retry loop, report the blocker and failing command, and continue independent work. Report mode records the failure without repairing it.
 

@@ -21,7 +21,7 @@ This skill writes a plan set that implementer sessions can execute without the c
    | No spec, `status: draft`, or open questions | Return `Needs spec`. |
    | `status: approved`                          | Continue.            |
 
-3. Treat pending feature, integration, performance, and deployment checks as plan inputs under [Approval readiness](../write-spec/references/spec-format.md#approval-readiness). Their absence alone does not invalidate an approved spec.
+3. Treat pending feature, integration, performance, and deployment checks as plan inputs under [Approval readiness](../review-spec/references/spec-format.md#approval-readiness). Their absence alone does not invalidate an approved spec.
 4. Read the research findings the planned behavior depends on. Recheck an `Observed in` finding against the installed version when the plan relies on it.
 
 ## 2. Inspect the repository
@@ -53,13 +53,13 @@ If the plan set already exists, amend it under the format's amendment rules inst
 3. After reconciling the plan's obligations with the approved spec, run the checker with `--fingerprint` and copy its `spec-baseline` field into the root plan:
 
    ```sh
-   uv run "$HOME/.agents/skills/write-spec/scripts/check_spec.py" <path/to/SPEC.md> --fingerprint
+   uv run "$HOME/.agents/skills/review-spec/scripts/check_spec.py" <path/to/SPEC.md> --fingerprint
    ```
 
    If the check fails, fix the errors before recording a baseline. Then check the plans against the spec from the repository root:
 
    ```sh
-   uv run "$HOME/.agents/skills/write-spec/scripts/check_spec.py" <path/to/SPEC.md> --plans .plans/<spec-slug>
+   uv run "$HOME/.agents/skills/review-spec/scripts/check_spec.py" <path/to/SPEC.md> --plans .plans/<spec-slug>
    ```
 
    If the script cannot run, print its stderr and stop. Otherwise, fix every error, and add each requirement the coverage warning names to a plan or to the root plan's `out-of-scope` list with the reason.

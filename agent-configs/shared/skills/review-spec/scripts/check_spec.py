@@ -32,7 +32,7 @@ SLUG = re.compile(r"^REQ-[a-z0-9]+(?:-[a-z0-9]+)*$")
 REQ_REF = re.compile(r"(?<![\w/#-])REQ-[a-z0-9]+(?:-[a-z0-9]+)*")
 FENCE = re.compile(r"^\s*(`{3,}|~{3,})(.*)$")
 LINK = re.compile(r"\[([^\]]*)\]\(<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\)")
-SCENARIOS = re.compile(r"\*\*Scenarios?:\*\*", re.IGNORECASE)
+SCENARIOS = re.compile(r"^\s*\*\*Scenarios?:\*\*", re.IGNORECASE)
 OPEN_QUESTIONS = re.compile(r"^##\s+Open questions\s*$", re.IGNORECASE)
 TASK_HEADING = re.compile(r"^###\s+(T\d+)\b")
 TASK_REQUIREMENTS = re.compile(r"^\*\*Requirements:\*\*", re.IGNORECASE)
@@ -235,6 +235,7 @@ def extract_requirements(doc: Doc, report: Report) -> list[Requirement]:
     found: list[Requirement] = []
     current: Requirement | None = None
     current_level = 0
+    in_scenarios = False
     section = ""
     for number, line in content_lines(doc):
         heading = HEADING.match(line)
@@ -242,6 +243,7 @@ def extract_requirements(doc: Doc, report: Report) -> list[Requirement]:
             section = heading.group(2).lower()
         if heading and current and len(heading.group(1)) <= current_level:
             current = None
+            in_scenarios = False
         match = REQ_HEADING.match(line)
         if match:
             slug = match.group(2)
@@ -256,9 +258,23 @@ def extract_requirements(doc: Doc, report: Report) -> list[Requirement]:
                 slug, match.group(3), doc.path, number, False, "invariant" in section
             )
             current_level = len(match.group(1))
+            in_scenarios = False
             found.append(current)
-        elif current and SCENARIOS.search(line):
-            current.has_scenarios = True
+        elif current:
+            scenarios = SCENARIOS.match(line)
+            if scenarios:
+                in_scenarios = True
+                scenario_text = line[scenarios.end() :].strip()
+            elif re.match(
+                r"^\s*\*\*(?:Intent|Failure behavior|Permitted choices):\*\*", line, re.IGNORECASE
+            ):
+                in_scenarios = False
+                continue
+            else:
+                scenario_text = line.strip()
+            if in_scenarios and not heading:
+                scenario_text = re.sub(r"^(?:[-+*]|\d+[.)])(?:\s+|$)", "", scenario_text)
+                current.has_scenarios |= bool(scenario_text.strip())
     return found
 
 
@@ -378,7 +394,7 @@ def check_spec_set(docs: list[Doc], report: Report) -> list[Requirement]:
             report.error(
                 requirement.path,
                 requirement.line,
-                f"{requirement.slug} has no **Scenarios:** field",
+                f"{requirement.slug} needs a nonempty **Scenarios:** field",
             )
     internal = {doc.path.resolve() for doc in docs}
     defined = set(seen)

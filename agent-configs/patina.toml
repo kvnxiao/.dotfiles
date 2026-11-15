@@ -203,6 +203,34 @@ source = "shared/skills/plan-from-spec"
 target = "~/.gemini/config/skills/plan-from-spec"
 mode = "symlink"
 
+# reconstruct-spec
+[[directory]]
+source = "shared/skills/reconstruct-spec"
+target = "~/.claude/skills/reconstruct-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/reconstruct-spec"
+target = "~/.agents/skills/reconstruct-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/reconstruct-spec"
+target = "~/.gemini/config/skills/reconstruct-spec"
+mode = "symlink"
+
+# review-spec
+[[directory]]
+source = "shared/skills/review-spec"
+target = "~/.claude/skills/review-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/review-spec"
+target = "~/.agents/skills/review-spec"
+mode = "symlink"
+[[directory]]
+source = "shared/skills/review-spec"
+target = "~/.gemini/config/skills/review-spec"
+mode = "symlink"
+
 # review-changes
 [[directory]]
 source = "shared/skills/review-changes"

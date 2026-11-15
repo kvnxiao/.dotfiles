@@ -1,6 +1,6 @@
 interface:
   display_name: "Write Spec"
-  short_description: "Write, amend, or reconcile a technical spec backed by dated research."
+  short_description: "Specify proposed behavior and amend existing contracts"
   default_prompt: "Use $write-spec to write or amend the spec for this."
 
 policy:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reconstruct Spec"
+  short_description: "Recover an existing system's intended specification"
+  default_prompt: "Use $reconstruct-spec to investigate this repository and reconstruct its specification with me."

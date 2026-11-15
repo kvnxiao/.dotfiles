@@ -81,9 +81,10 @@ Antigravity 1.5.9 does not load an agent file whose `model` is a model ID such a
 
 ## Spec workflow agents
 
-The [write-spec](shared/skills/write-spec/SKILL.md) and
-[implement-spec-plan](shared/skills/implement-spec-plan/SKILL.md) skills delegate to two more
-agents. Each definition sets the model and permissions and points at a contract in its skill:
+The [write-spec](shared/skills/write-spec/SKILL.md),
+[reconstruct-spec](shared/skills/reconstruct-spec/SKILL.md), and
+[implement-spec-plan](shared/skills/implement-spec-plan/SKILL.md) skills use researcher and
+implementer agents. Each definition sets the model and permissions and points at a shared contract:
 
 | Client      | Researcher                                                  | Implementer                                         |
 | ----------- | ----------------------------------------------------------- | --------------------------------------------------- |
@@ -99,7 +100,22 @@ files, so Codex runs them in the `workspace-write` sandbox and Claude Code grant
 `Edit`. The Codex researcher also has network access for package and API probes. As with the
 reviewers, the parent session's runtime permissions can override the Codex sandbox.
 
-The workflow runs through `write-spec`, [plan-from-spec](shared/skills/plan-from-spec/SKILL.md), and
+Use `write-spec` for a proposed project, capability, or known contract change. Amendments can
+reconcile existing code, compatibility obligations, and changes implemented before their spec
+updates. Use `reconstruct-spec` when an existing repository or subsystem needs investigation to
+establish its intended contract. Reconstruction alternates repository research with an active
+brainstorm, then writes the spec and supporting research after the consolidated design is confirmed.
+
+Both writers use [review-spec](shared/skills/review-spec/SKILL.md) for the shared format, structural
+checker, and substantive review before approval. Invoke it directly to review an existing spec; it
+reports findings by default and applies corrections when requested. It uses the independent
+`review-changes` workflow and does not grant spec approval. The spec review contract is stored in
+`review-spec`; general change reviews use that contract directly for spec changes.
+
+Patina deploys `reconstruct-spec` and `review-spec` to the Claude Code and Antigravity skill
+directories and to `~/.agents/skills/` for Codex and the pi coding agent.
+
+After spec approval, use [plan-from-spec](shared/skills/plan-from-spec/SKILL.md), then
 `implement-spec-plan`. A ready plan records a fingerprint of its approved spec and area files. When
 those files change, planning must reconcile the affected obligations before implementation can
 resume. Completed tasks stay recorded, and new obligations get new tasks. Each child plan also

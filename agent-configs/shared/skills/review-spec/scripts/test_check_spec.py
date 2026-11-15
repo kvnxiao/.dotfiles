@@ -8,6 +8,135 @@ from unittest.mock import patch
 import check_spec
 
 
+class SpecChecks(unittest.TestCase):
+    def setUp(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.spec = self.root / "SPEC.md"
+        self.document = (
+            "---\nstatus: draft\n---\n# Export\n\n## Requirements\n\n"
+            "### REQ-export-file - Export file\n\n"
+            "The command writes UTF-8 CSV to an absent destination and exits 0.\n\n"
+            "**Scenarios:**\n\n"
+            "- Given one record and an absent destination, export: write that record and exit 0.\n"
+        )
+        self.spec.write_text(self.document, encoding="utf-8")
+
+    def check(self, document: str | None = None) -> check_spec.Report:
+        if document is not None:
+            self.spec.write_text(document, encoding="utf-8")
+        report = check_spec.Report()
+        docs = check_spec.load_spec_set(self.spec, report)
+        check_spec.check_spec_set(docs, report)
+        return report
+
+    def test_spec_with_scenario_is_valid(self) -> None:
+        self.assertEqual(self.check().errors, [])
+
+    def test_inline_scenario_is_valid(self) -> None:
+        document = self.document.replace("**Scenarios:**\n\n- ", "**Scenarios:** ")
+        self.assertEqual(self.check(document).errors, [])
+
+    def test_scenarios_can_have_subheadings(self) -> None:
+        document = self.document.replace("**Scenarios:**\n\n", "**Scenarios:**\n\n#### Success\n\n")
+        self.assertEqual(self.check(document).errors, [])
+
+    def test_scenarios_can_have_bold_labels(self) -> None:
+        prefix = self.document.split("**Scenarios:**", 1)[0] + "**Scenarios:**\n\n"
+        for scenario in (
+            "**Absent destination:** Given one record, export to an absent destination: "
+            "write the record and exit 0.\n",
+            "**Given:** One record and an absent destination.\n\n"
+            "**When:** Run export.\n\n**Then:** Write the record and exit 0.\n",
+        ):
+            with self.subTest(scenario=scenario):
+                self.assertEqual(self.check(prefix + scenario).errors, [])
+
+    def test_empty_scenario_field_is_rejected(self) -> None:
+        prefix = self.document.split("**Scenarios:**", 1)[0] + "**Scenarios:**\n\n"
+        for suffix in (
+            "",
+            "-\n",
+            "1.\n",
+            "## Non-goals\n\nThe command does not contact remote services.\n",
+            "**Failure behavior:** Report write failures.\n",
+            "### REQ-export-empty - Empty export\n\nThe command writes a header.\n\n"
+            "**Scenarios:** Empty input; export: write a header and exit 0.\n",
+            "```markdown\n**Scenarios:**\n\n- Example text.\n```\n",
+        ):
+            with self.subTest(suffix=suffix):
+                errors = self.check(prefix + suffix).errors
+                self.assertTrue(any("REQ-export-file" in error for error in errors), errors)
+
+    def test_scenario_label_mentioned_in_prose_is_not_a_field(self) -> None:
+        document = self.document.split("**Scenarios:**", 1)[0]
+        document += "The help text prints **Scenarios:** before its examples.\n"
+        errors = self.check(document).errors
+        self.assertTrue(any("REQ-export-file" in error for error in errors), errors)
+
+    def test_scenario_field_in_code_example_is_ignored(self) -> None:
+        document = self.document.split("**Scenarios:**", 1)[0]
+        document += "```markdown\n**Scenarios:**\n\n- Export succeeds.\n```\n"
+        errors = self.check(document).errors
+        self.assertTrue(any("REQ-export-file" in error for error in errors), errors)
+
+    def test_invalid_status_is_rejected(self) -> None:
+        errors = self.check(self.document.replace("status: draft", "status: ready")).errors
+        self.assertTrue(any("status" in error for error in errors), errors)
+
+    def test_missing_area_is_rejected(self) -> None:
+        document = self.document.replace("status: draft", "status: draft\nareas: [missing.md]")
+        errors = self.check(document).errors
+        self.assertTrue(any("missing.md" in error for error in errors), errors)
+
+    def test_duplicate_ids_across_areas_are_rejected(self) -> None:
+        area = self.root / "export.md"
+        area.write_text(self.document.replace("status: draft", "spec: SPEC.md"), encoding="utf-8")
+        document = self.document.replace("status: draft", "status: draft\nareas: [export.md]")
+        errors = self.check(document).errors
+        self.assertTrue(
+            any("REQ-export-file is already defined" in error for error in errors), errors
+        )
+
+    def test_area_dependency_cycle_is_rejected(self) -> None:
+        (self.root / "a.md").write_text(
+            "---\nspec: SPEC.md\ndepends-on: [b.md]\n---\n# Area A\n", encoding="utf-8"
+        )
+        (self.root / "b.md").write_text(
+            "---\nspec: SPEC.md\ndepends-on: [a.md]\n---\n# Area B\n", encoding="utf-8"
+        )
+        document = self.document.replace("status: draft", "status: draft\nareas: [a.md, b.md]")
+        errors = self.check(document).errors
+        self.assertTrue(any("cycle" in error for error in errors), errors)
+
+    def test_undefined_requirement_reference_is_rejected(self) -> None:
+        errors = self.check(self.document + "\nSee REQ-export-missing.\n").errors
+        self.assertTrue(
+            any("REQ-export-missing is not defined" in error for error in errors), errors
+        )
+
+    def test_approved_spec_with_open_questions_is_rejected(self) -> None:
+        document = self.document.replace("status: draft", "status: approved")
+        document += "\n## Open questions\n\nWhich output format is required?\n"
+        errors = self.check(document).errors
+        self.assertTrue(any("open questions" in error for error in errors), errors)
+
+    def test_draft_spec_with_open_questions_is_valid(self) -> None:
+        document = self.document + "\n## Open questions\n\nWhich output format is required?\n"
+        self.assertEqual(self.check(document).errors, [])
+
+    def test_research_without_metadata_or_index_is_rejected(self) -> None:
+        research = self.root / "research"
+        research.mkdir()
+        (research / "export.md").write_text("# Export\n\nA local observation.\n", encoding="utf-8")
+        report = check_spec.Report()
+        check_spec.check_research(research, report)
+        self.assertTrue(any("README.md" in error for error in report.errors), report.errors)
+        self.assertTrue(any("date" in error for error in report.errors), report.errors)
+        self.assertTrue(any("questions" in error for error in report.errors), report.errors)
+
+
 class PlanChecks(unittest.TestCase):
     def setUp(self) -> None:
         temporary = tempfile.TemporaryDirectory()

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Spec"
+  short_description: "Review spec structure, contracts, and supporting evidence"
+  default_prompt: "Use $review-spec to review this specification for structure, consistency, and completeness."
