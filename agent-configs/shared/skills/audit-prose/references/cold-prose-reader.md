@@ -21,7 +21,7 @@ The agent that started this reader passes:
 
 ## Flag unclear wording
 
-Flag a word, phrase, heading, or label when the intended audience cannot determine its meaning from the artifact and the files it references. For example, flag a coined term used before its definition, a status word the project coined (such as `Parked` for postponed work), an abbreviation that is never expanded, and a heading that only makes sense after reading its section. Do not flag terms common across software engineering, such as `idempotent` or `p99`.
+Flag a word, phrase, heading, or label when the intended audience cannot determine its meaning from the artifact and the files it references. For example, flag a coined term used before its definition, a status word the project coined (such as `Parked` for postponed work), an abbreviation that is never expanded, and a heading that only makes sense after reading its section. Do not flag terms common across software engineering, such as `idempotent` or `p99`. Do not flag a phrase with only one plausible reading.
 
 ## Return the report
 
