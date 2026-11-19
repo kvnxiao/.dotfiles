@@ -7,8 +7,8 @@ if status is-interactive
     command codex $options $argv
   end
 
-  set -l ASTRA_MODEL gpt-6-astra
-  set -l SOL_MODEL gpt-6.1-sol
+  set -l ASTRA_MODEL gpt-6.2-astra
+  set -l SOL_MODEL gpt-6.2-sol
   set -l LUNA_MODEL gpt-6-luna
   set -l EFFORT_NAMES '' high med low
   set -l EFFORT_VALUES xhigh high medium low

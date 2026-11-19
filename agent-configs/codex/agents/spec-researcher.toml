@@ -1,6 +1,6 @@
 name = "spec-researcher"
 description = "Research one assigned topic and its relevant questions; return findings or write the authorized research document."
-model = "gpt-6-astra"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = "Read and follow ~/.agents/skills/write-spec/references/research.md before researching. If it is missing or unreadable, report the missing contract and stop."
