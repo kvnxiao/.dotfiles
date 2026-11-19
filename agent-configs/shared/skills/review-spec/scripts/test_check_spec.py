@@ -200,7 +200,7 @@ class PlanChecks(unittest.TestCase):
         _, _, report = self.load()
         self.assertEqual(report.errors, [])
 
-    def test_resume_selects_first_unfinished_task(self) -> None:
+    def status_with_task_states(self, t1: str, t2: str) -> str:
         self.add_plan()
         child = self.plans / "export.md"
         child.write_text(
@@ -209,14 +209,28 @@ class PlanChecks(unittest.TestCase):
             encoding="utf-8",
         )
         (self.plans / ".state" / "export.yaml").write_text(
-            "tasks:\n  T1: todo\n  T2: in-progress\nreview: pending\n", encoding="utf-8"
+            f"tasks:\n  T1: {t1}\n  T2: {t2}\nreview: pending\n", encoding="utf-8"
         )
         root, plans, report = self.load()
         self.assertEqual(report.errors, [])
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             check_spec.print_status(root, plans)
-        self.assertRegex(output.getvalue(), r"next: .*export\.md T1")
+        return output.getvalue()
+
+    def test_resume_selects_first_unfinished_task(self) -> None:
+        self.assertRegex(
+            self.status_with_task_states("todo", "in-progress"), r"next: .*export\.md T1"
+        )
+
+    def test_tasks_before_a_blocked_task_stay_runnable(self) -> None:
+        self.assertRegex(self.status_with_task_states("todo", "blocked"), r"next: .*export\.md T1")
+
+    def test_blocked_first_unfinished_task_stops_the_plan(self) -> None:
+        self.assertIn("next: none", self.status_with_task_states("blocked", "todo"))
+
+    def test_done_tasks_before_a_blocked_task_do_not_make_the_plan_runnable(self) -> None:
+        self.assertIn("next: none", self.status_with_task_states("done", "blocked"))
 
     def test_empty_plan_set_reports_uncovered_requirements(self) -> None:
         self.plan_root.write_text(

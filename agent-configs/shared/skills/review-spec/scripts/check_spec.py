@@ -660,9 +660,14 @@ def print_status(root: Doc, plans: list[Plan]) -> None:
             f"  {display(plan.doc.path)}  {done}/{len(plan.tasks)} done"
             + (f"  {'; '.join(notes)}" if notes else "")
         )
-        if not next_task and not blockers and not stuck and not is_complete(plan):
-            pending = [task for task in plan.tasks if plan.state.get(task, "todo") != "done"]
-            next_task = f"{display(plan.doc.path)} {pending[0] if pending else 'review'}"
+        first = next((task for task in plan.tasks if plan.state.get(task) != "done"), None)
+        if (
+            not next_task
+            and not blockers
+            and plan.state.get(first) != "blocked"
+            and not is_complete(plan)
+        ):
+            next_task = f"{display(plan.doc.path)} {first or 'review'}"
     print(f"next: {next_task or 'none'}")
 
 
