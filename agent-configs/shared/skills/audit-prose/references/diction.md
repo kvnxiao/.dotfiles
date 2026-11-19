@@ -1,16 +1,8 @@
 # Diction Reference
 
-Lookup data for the `audit-prose` diction and literal-over-rhetorical lenses: banned AI tells, plain-English substitutions, and rhetorical patterns.
+Lookup data for lens 1 (Direct Diction & Simplicity) and lens 2 (Literal Over Rhetorical) of the `audit-prose` skill: plain-English substitutions and rhetorical patterns. Lens 1 in `SKILL.md` lists the banned AI tells.
 
-## 1. Never Generate (Synthetic AI Tells)
-
-Delete or rewrite these phrases. An entry with a stated sense applies only in that sense:
-
-`delve` · `load-bearing` · `seam` / `seams` (as a metaphor) · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` / `less about X than about Y` · `plethora` · `crucial` / `pivotal` · `leverage` (as a verb) · `fostering` · `unpacks` (meaning explains) · `interrogates` (meaning examines)
-
-Cut every false profundity (a sentence that sounds deep but states nothing), thesis-framing opener (`The key insight is`), and superlative justification. Contrasts other than the listed formulas fall under the Literal Over Rhetorical lens. A trailing clause that justifies a step with an absence (`the migration drops the column, which no code reads`) is a tell: state the cause first (`Because no code reads the column, the migration drops it`) or drop the justification. Do not repair it by joining the clauses with `and` (`no code reads the column, and the migration drops it`). State what the change does and stop. The Literal Over Rhetorical lens covers figures of speech; section 3 lists examples.
-
-## 2. Diction Upgrades: Natural Programmer English
+## 1. Diction Upgrades: Natural Programmer English
 
 Replace stiff, formal, or Latinate substitutes with everyday, natural words **when the meaning is equivalent**:
 
@@ -32,7 +24,7 @@ Replace stiff, formal, or Latinate substitutes with everyday, natural words **wh
 | `reverses the transaction that the record describes`         | `reverses the recorded transaction`                  | Clear referent without pedantic clutter                                      |
 | `the smallest edit that X, and it Y`                         | What the option changes (`only changes three lines`) | Justifying a recommendation                                                  |
 
-## 3. Rhetorical Patterns: Literal Over Rhetorical
+## 2. Rhetorical Patterns: Literal Over Rhetorical
 
 Each row fails the named test, which belongs to the Literal Over Rhetorical lens unless the row names lens 1. The rewrites assume the writer knows the facts they add; an auditor without those facts asks for them.
 

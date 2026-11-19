@@ -22,7 +22,12 @@ After resolving scope and running any required cold-prose-reader pass (both desc
 
 ## 1. Direct Diction & Simplicity
 
-- **Purge AI Tells:** Remove the AI tells listed in section 1 of [references/diction.md](references/diction.md), and apply its substitution table.
+- **Purge AI Tells:** Delete or rewrite these phrases. An entry with a sense in parentheses, such as `(as a metaphor)`, applies only in that sense:
+
+  `delve` · `load-bearing` · `seam` / `seams` (as a metaphor) · `steelman` / `steelmanning` · `tapestry` · `showcasing` · `seamless` · `testament to` · `at its core` / `at its heart` · `sits at the intersection of` · `underscores the importance` · `it's not just X, it's Y` / `less about X than about Y` · `plethora` · `crucial` / `pivotal` · `leverage` (as a verb) · `fostering` · `unpacks` (meaning explains) · `interrogates` (meaning examines)
+
+  Cut every false profundity (a sentence that sounds deep but states nothing), thesis-framing opener (`The key insight is`), and superlative justification. Contrasts other than the listed formulas fall under lens 2, Literal Over Rhetorical. A trailing clause that justifies a step with an absence (`the migration drops the column, which no code reads`) is a tell: state the cause first (`Because no code reads the column, the migration drops it`) or drop the justification. Do not repair it by joining the clauses with `and` (`no code reads the column, and the migration drops it`). State what the change does and stop.
+- **Plain-English Substitutions:** Apply the "Diction Upgrades" table in [references/diction.md](references/diction.md).
 - **No Conversational Preamble:** Cut `Basically`, `Note that`, `Here is what you need to know`, and `The reality is`. State the fact and stop.
 - **Natural Engineering Verbs:** Use direct technical verbs (`has`, `stores`, `runs`, `executes`, `prints`, `outputs`, `writes`) rather than bureaucratic phrasing (`names on stderr`, `holds files`). Prefer `has` over `contains` where simpler (e.g., `has no files`), while keeping `contains` when describing collection membership or substrings. Use `skips` when an operation bypasses an item, and `does not modify` or `does not change` when an item is inspected without mutation.
 - **Direct Phrasing Over Negative Evasions:** Say what happens directly. Reject convoluted circumlocutions invented to avoid restrictive adverbs such as `only`:
@@ -121,6 +126,7 @@ If the harness cannot start a subagent or the user forbids subagents, state that
 ## Operational Constraints
 
 - Rewrite a line only when you can name the rule it violates and what the rewrite improves; otherwise leave it unchanged. Literal Over Rhetorical is a nameable rule: a phrase that fails one of its tests, or a cold-prose-reader flag that step 3 does not dismiss, violates it.
+- **Rewrite at the lowest cost:** Fix each violation with the fewest changed words; replace or delete a word before adding a clause, and use a pronoun when its referent is unambiguous. After the lenses, reread each rewritten paragraph beside the original. Split any rewritten sentence that makes more than one claim or passes about 25 words, and cut detail the reader does not need. Keep the original wording when the rewrite does not read better.
 - Touch only prose lines (comments, docstrings, docs, markdown, commit messages).
 - Never modify code logic, string literals (except docstrings that a CLI prints as usage text), identifiers, or test assertions.
 - Do not enforce arbitrary line wrapping or column limits; let deterministic formatters handle layout.
