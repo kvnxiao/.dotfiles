@@ -10,7 +10,7 @@ class AntigravityChecks(unittest.TestCase):
     def setUp(self) -> None:
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        self.root = Path(temporary.name)
+        self.root = Path(temporary.name).resolve()
         self.repo = self.root / "repo"
         (self.repo / ".git").mkdir(parents=True)
         home = patch.object(analyze, "HOME", self.root / "home")
